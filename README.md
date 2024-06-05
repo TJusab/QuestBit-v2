@@ -36,9 +36,9 @@ To run QuestBit on your device, follow these steps:
 
 ## Technologies Used
 
-- **ReactNative** Utilized for building cross-platform native mobile applications with JavaScript and React.
-- **NativeWind** Integrated for styling components with utility-first CSS, similar to Tailwind CSS for web.
-- **AppWrite** Used for backend services, offering a self-hosted solution for managing databases, authentication, and more.
-- **Expo** Used to streamline the development process and provide a platform for universal React apps.
+- **ReactNative:** Utilized for building cross-platform native mobile applications with JavaScript and React.
+- **NativeWind:** Integrated for styling components with utility-first CSS, similar to Tailwind CSS for web.
+- **AppWrite:** Used for backend services, offering a self-hosted solution for managing databases, authentication, and more.
+- **Expo:** Used to streamline the development process and provide a platform for universal React apps.
   
 
