@@ -1,7 +1,6 @@
-import { View, Text, ScrollView, ImageBackground } from "react-native";
+import { View, ScrollView, ImageBackground } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import FormField from "../../components/FormField";
 import Form from "../../components/Form";
 
 const LogIn = () => {
@@ -11,8 +10,8 @@ const LogIn = () => {
   });
 
   const formFields = [
-    { title: 'Email', name: 'email', keyboardType: 'email-address' },
-    { title: 'Password', name: 'password'}
+    { title: "Email", name: "email", keyboardType: "email-address" },
+    { title: "Password", name: "password" },
   ];
 
   return (
@@ -24,11 +23,12 @@ const LogIn = () => {
             className="flex-1 items-center justify-center"
             resizeMode="cover"
           >
-            <Form 
+            <Form
               form={form}
               setForm={setForm}
               formFields={formFields}
               linkText="Don't have an account?"
+              link="/sign-up"
               buttonText="Log In"
             />
           </ImageBackground>

@@ -6,10 +6,10 @@ const PixelButton = ({ text }) => {
       <Image
         source={require("../assets/images/small-pixel-btn.png")}
         resizeMode="contain"
-        className="w-[30vw]"
+        className="w-[25vw]"
       />
       <Text
-        className="text-white font-zcool absolute text-2xl"
+        className="text-white font-zcool absolute text-xl"
       >
         {text}
       </Text>
