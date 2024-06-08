@@ -14,7 +14,8 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.tjusab.questbit"
+      "bundleIdentifier": "com.tjusab.questbit",
+      "package": "com.tjusab.questbit"
     },
     "android": {
       "adaptiveIcon": {

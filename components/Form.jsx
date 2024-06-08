@@ -3,7 +3,7 @@ import FormField from "./FormField";
 import PixelButton from "./PixelButton";
 import { Link } from "expo-router";
 
-const Form = ({ form, setForm, formFields, linkText, link, buttonText }) => {
+const Form = ({ form, setForm, formFields, linkText, link, buttonText, buttonPress, isLoading }) => {
   const handleChangeText = (name, value) => {
     setForm({ ...form, [name]: value });
   };
@@ -21,7 +21,7 @@ const Form = ({ form, setForm, formFields, linkText, link, buttonText }) => {
         <Link href={link} className="text-justify px-2 text-base text-white font-zcool underline">
           {linkText}
         </Link>
-        <PixelButton text={buttonText}/>
+        <PixelButton text={buttonText} onPress={buttonPress} isLoading={isLoading} />
       </View>
     </View>
   );

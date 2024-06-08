@@ -1,9 +1,14 @@
-import { View, ScrollView, ImageBackground } from "react-native";
+import { View, ScrollView, ImageBackground, Alert } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Form from "../../components/Form";
+import { register } from "../../lib/appwrite";
+import { useGlobalContext } from "../../context/GlobalProvider";
+import { router } from "expo-router";
 
 const SignUp = () => {
+  const { setUser, setIsLogged } = useGlobalContext();
+
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -15,6 +20,27 @@ const SignUp = () => {
     { title: "Email", name: "email", keyboardType: "email-address" },
     { title: "Password", name: "password" },
   ];
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const submit = async () => {
+    if (form.username === "" || form.email === "" || form.password === "") {
+      Alert.alert("Error", "Please fill in all fields");
+    }
+
+    setIsSubmitting(true);
+    try {
+      const result = await register(form.email, form.password, form.username);
+      setUser(result);
+      setIsLogged(true);
+
+      router.replace("/home");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView className="bg-blue-300 h-full">
@@ -32,6 +58,8 @@ const SignUp = () => {
               linkText="Have an account already?"
               link="/log-in"
               buttonText="Sign Up"
+              buttonPress={submit}
+              isLoading={isSubmitting}
             />
           </ImageBackground>
         </View>
