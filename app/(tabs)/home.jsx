@@ -1,5 +1,6 @@
-import { View, Text, FlatList, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Adjust the icon based on the package you're using
 import { getQuests } from '../../lib/database';
 
 const Home = () => {
@@ -21,6 +22,37 @@ const Home = () => {
     fetchQuests();
   }, []);
 
+  const renderQuestItem = ({ item }) => (
+    <TouchableOpacity
+      className="mb-10 p-5 bg-blue-200 rounded-xl"
+      onPress={() => handleQuestPress(item)}
+    >
+      <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+        <View className="p-4" style={{ flex: 1 }}>
+          <Text className="font-press text-2xl text-white" style={styles.questTitle}>{item.title}</Text>
+          <Text style={styles.questDescription}>{item.description}</Text>
+        </View>
+        <TouchableOpacity
+          onPress={() => handleMoreOptionsPress(item)}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Adjust the hitSlop values as needed
+        >
+          <Icon name="ellipsis-v" size={20} color="white" />
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+
+  const handleQuestPress = (quest) => {
+    // Handle when a quest item is pressed
+    console.log('Quest Pressed:');
+  };
+
+  const handleMoreOptionsPress = (quest) => {
+    // Handle when the more options button is pressed
+    console.log('More Options Pressed:');
+    // Example: You can open a modal or show a context menu here
+  };
+
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -31,19 +63,23 @@ const Home = () => {
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
-      <Text style={{ fontSize: 24, marginBottom: 20 }}>Quests</Text>
+      <Text className="text-3xl mt-20 font-press text-navy">Pick your </Text>
+      <Text className="text-3xl mb-20 mt-3 font-press text-navy">Quest!</Text>
       <FlatList
         data={quests}
         keyExtractor={(item) => item.$id}
-        renderItem={({ item }) => (
-          <View style={{ marginBottom: 15, padding: 15, backgroundColor: '#f9f9f9', borderRadius: 5 }}>
-            <Text style={{ fontSize: 18 }}>{item.title}</Text>
-            <Text>{item.description}</Text>
-          </View>
-        )}
+        renderItem={renderQuestItem}
       />
     </View>
   );
+};
+
+const styles = {
+  questTitle: {
+    textShadowColor: 'rgba(0, 0, 0, 1)',
+    textShadowOffset: { width: 3, height: 3 },
+    textShadowRadius: 1,
+  }
 };
 
 export default Home;
