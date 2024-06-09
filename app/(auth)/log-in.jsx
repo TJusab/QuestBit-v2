@@ -2,7 +2,7 @@ import { View, ScrollView, ImageBackground, Alert } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Form from "../../components/Form";
-import { login } from "../../lib/appwrite";
+import { getCurrentUser, login } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { router } from "expo-router";
 
@@ -28,7 +28,8 @@ const LogIn = () => {
 
     setIsSubmitting(true);
     try {
-      const result = await login(form.email, form.password);
+      await login(form.email, form.password);
+      const result = await getCurrentUser();
       setUser(result);
       setIsLogged(true);
 

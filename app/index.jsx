@@ -8,14 +8,14 @@ import {
   TouchableOpacity,
   Image
 } from "react-native";
-import { router } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useGlobalContext } from "../context/GlobalProvider";
 
 export default function App() {
-  const {isLoading, isLoggedIn} = useGlobalContext();
+  const { loading, isLogged } = useGlobalContext();
 
-  if (!isLoading && isLoggedIn) return <Redirect href="/home" />
+  if (!loading && isLogged) return <Redirect href="/home" />
 
   const [heartsVisible, setHeartsVisible] = useState([false, false, false, false, false]);
   const [continueVisible, setContinueVisible] = useState(false);
