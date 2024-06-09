@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, Alert } from 'react-native'
 import PixelButton from "../../components/PixelButton";
-import { logout } from '../../lib/appwrite';
+import { logout } from '../../lib/account';
 import { router } from 'expo-router';
 
 const Profile = () => {

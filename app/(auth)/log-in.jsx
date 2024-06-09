@@ -2,7 +2,7 @@ import { View, ScrollView, ImageBackground, Alert } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Form from "../../components/Form";
-import { getCurrentUser, login } from "../../lib/appwrite";
+import { getCurrentUser, login } from "../../lib/account";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { router } from "expo-router";
 
