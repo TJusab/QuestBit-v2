@@ -1,6 +1,6 @@
 import { View, Text, FlatList, ActivityIndicator, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { getQuests } from '../../lib/database'; // Update the path accordingly
+import { getQuests } from '../../lib/database';
 
 const Home = () => {
   const [quests, setQuests] = useState([]);
@@ -10,7 +10,7 @@ const Home = () => {
     const fetchQuests = async () => {
       try {
         const response = await getQuests();
-        setQuests(response.documents); // Assuming response has a `documents` field with the list of quests
+        setQuests(response); // Set the quests state with the response
       } catch (error) {
         Alert.alert('Error', error.message);
       } finally {
