@@ -43,6 +43,22 @@ const TabsLayout = () => {
             />
 
             <Tabs.Screen
+                name="quest"
+                options={{
+                    title: 'Quest',
+                    headerShown: false,
+                    tabBarIcon: ({ color, focused }) => (
+                        <TabIcon
+                            icon="home"
+                            color={color}
+                            focused={focused}
+                        />
+                    )
+                }}
+            />
+
+
+            <Tabs.Screen
                 name="questbitdetails"
                 options={{
                     title: 'QuestBitDetails',
