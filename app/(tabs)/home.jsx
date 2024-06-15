@@ -22,8 +22,7 @@ const Home = () => {
     fetchQuests();
   }, []);
 
-  const renderQuestItem = ({ item }) => (
-    <TouchableOpacity
+  const renderQuestItem = ({ item }) => (  <TouchableOpacity
       className="mb-10 p-5 bg-blue-200 rounded-xl"
       onPress={() => handleQuestPress(item)}
     >
