@@ -58,8 +58,8 @@ const QuestBitDetails = () => {
         <View style={styles.row}>
           {item.assignees.map(assignee => (
             <View key={assignee.id} style={styles.assignee}>
-              <Image source={{ uri: assignee.avatar }} style={styles.avatar} />
-              <Text style={styles.assigneeName}>{assignee.name}</Text>
+              <Image source={require("../../assets/pixelArt/character_48X48.png")} style={styles.scroll} resizeMethod='stretch' />
+              <Text style={styles.username}>{assignee.username}</Text>
             </View>
           ))}
         </View>
@@ -67,6 +67,12 @@ const QuestBitDetails = () => {
       <View style={styles.section}>
         <Text style={styles.label}>QuestBit Diary</Text>
       </View>
+      <View style={styles.section}>
+      <Image source={require("../../assets/pixelArt/scroll.png")} style={styles.scroll} resizeMethod='stretch' />
+      </View>
+
+
+
     </ScrollView>
   );
 
@@ -91,6 +97,16 @@ const styles = StyleSheet.create({
   scrollView: {
     padding: 30,
   },
+  scroll: {
+    width: 100,
+    height: 100,
+    marginBottom: 10,
+  },
+  username : {
+    fontFamily: 'ZCOOL', 
+    marginBottom: 5,
+    fontSize: 20,
+  },  
   header: {
     marginTop:20,
     fontSize: 20,
