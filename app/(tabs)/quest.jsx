@@ -26,8 +26,8 @@ const Quest = () => {
       className="mb-10 p-5 bg-blue-200 rounded-xl"
       onPress={() => handleQuestPress(item)}
     >
-      <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-        <View className="p-4" style={{ flex: 1 }}>
+      <View className="flex-row align-items-start">
+        <View className="p-4 flex-1">
           <Text className="font-press text-2xl text-white" style={styles.questTitle}>{item.title}</Text>
           <Text style={styles.questDescription}>{item.description}</Text>
         </View>
@@ -54,14 +54,14 @@ const Quest = () => {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View className="flex-1 align-items-center" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" />
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1, padding: 20 }}>
+    <View className="flex-1 p-5">
       <Text className="text-3xl mt-20 font-press text-navy">Pick your </Text>
       <Text className="text-3xl mb-20 mt-3 font-press text-navy">Quest!</Text>
       <FlatList
