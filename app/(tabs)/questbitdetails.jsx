@@ -38,7 +38,7 @@ const QuestBitDetails = () => {
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingRight: 20}}>
         <View style={styles.section}>
           <Text style={styles.label}>Title</Text>
-          <Text style={styles.value}>{item.title}</Text>
+          <Text style={styles.title}>{item.title}</Text>
         </View>
         <View style={styles.section}>
           <Text style={styles.label}>Status</Text>
@@ -94,7 +94,7 @@ const QuestBitDetails = () => {
           <View style={styles.section}>
             <Text style={styles.label}>Title</Text>
             <TextInput
-              style={styles.input}
+              style={styles.title}
               value={title}
               onChangeText={setTitle}
             />
@@ -163,7 +163,6 @@ const QuestBitDetails = () => {
 
   return (
     <View style={{ flex: 1, padding: 30 }}>
-      
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
           <MaterialIcons name="keyboard-backspace" size={30} color="black" />
           <TouchableOpacity onPress={toggleEditing}>
