@@ -1,12 +1,21 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import CustomCalendar from '../../components/CustomCalendar';
 
-const Calendar = () => {
+const CalendarView = () => {
   return (
-    <View>
-      <Text>Calendar</Text>
+    <View className="mt-20" style={styles.container}>
+      <CustomCalendar />
     </View>
-  )
-}
+  );
+  
+};
 
-export default Calendar
+const styles = StyleSheet.create({
+  container: {
+    width: '90%', // Set the desired width here
+    alignSelf: 'center', // Center the calendar horizontally
+  },
+});
+
+export default CalendarView;
