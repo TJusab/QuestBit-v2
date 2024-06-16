@@ -23,7 +23,7 @@ const TabsLayout = () => {
                     tabBarActiveTintColor: '#7F4D2E',
                     tabBarInactiveTintColor: '#FFFFFF',
                     tabBarStyle: {
-                        backgroundColor: '#5C944A'
+                        backgroundColor: '#A3C254'
                     },
                 }}
             >
