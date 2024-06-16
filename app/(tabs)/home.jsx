@@ -1,84 +1,75 @@
-import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Adjust the icon based on the package you're using
-import { getQuests } from '../../lib/database';
+import {
+  Text,
+  View,
+  SafeAreaView,
+  Alert,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
+import { useState, useEffect } from "react";
+import Header from "../../components/Header";
+import { useGlobalContext } from "../../context/GlobalProvider";
+import { getQuestBits } from "../../lib/database";
+import QuestBit from "../../components/QuestBit";
 
 const Home = () => {
-  const [quests, setQuests] = useState([]);
+  const { user } = useGlobalContext();
+  const filters = ["Today", "Upcoming", "Due Soon", "Completed"];
+  const [questbits, setQuestBits] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchQuests = async () => {
+    const fetchQuestBits = async () => {
       try {
-        const response = await getQuests();
-        setQuests(response); // Set the quests state with the response
+        const response = await getQuestBits();
+        setQuestBits(response);
       } catch (error) {
-        Alert.alert('Error', error.message);
+        Alert.alert("Error", error.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchQuests();
+    fetchQuestBits();
   }, []);
 
-  const renderQuestItem = ({ item }) => (  <TouchableOpacity
-      className="mb-10 p-5 bg-blue-200 rounded-xl"
-      onPress={() => handleQuestPress(item)}
-    >
-      <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-        <View className="p-4" style={{ flex: 1 }}>
-          <Text className="font-press text-2xl text-white" style={styles.questTitle}>{item.title}</Text>
-          <Text style={styles.questDescription}>{item.description}</Text>
-        </View>
-        <TouchableOpacity
-          onPress={() => handleMoreOptionsPress(item)}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Adjust the hitSlop values as needed
-        >
-          <Icon name="ellipsis-v" size={20} color="white" />
-        </TouchableOpacity>
-      </View>
-    </TouchableOpacity>
-  );
-
-  const handleQuestPress = (quest) => {
-    // Handle when a quest item is pressed
-    console.log('Quest Pressed:');
-  };
-
-  const handleMoreOptionsPress = (quest) => {
-    // Handle when the more options button is pressed
-    console.log('More Options Pressed:');
-    // Example: You can open a modal or show a context menu here
-  };
-
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
-
   return (
-    <View style={{ flex: 1, padding: 20 }}>
-      <Text className="text-3xl mt-20 font-press text-navy">Pick your </Text>
-      <Text className="text-3xl mb-20 mt-3 font-press text-navy">Quest!</Text>
-      <FlatList
-        data={quests}
-        keyExtractor={(item) => item.$id}
-        renderItem={renderQuestItem}
-      />
-    </View>
+    <SafeAreaView className="bg-blue-50 h-full">
+      {loading ? (
+        <View className="flex justify-center items-center">
+          <ActivityIndicator color="#6E7591" size="large" />
+        </View>
+      ) : (
+        <FlatList
+          data={questbits}
+          keyExtractor={(item) => item.$id}
+          renderItem={QuestBit}
+          ListHeaderComponent={() => (
+            <View>
+              <Header />
+              <View className="flex-1 w-full h-full">
+                <Text className="font-press text-3xl text-navy text-center">
+                  Hello {user.username}!
+                </Text>
+                <View className="mt-10 mx-5">
+                  <Text className="font-press text-xl text-navy text-justify">
+                    My QuestBits
+                  </Text>
+                  <View className="flex-row justify-between mt-2 mb-5">
+                    {filters.map((word, index) => (
+                      <Text key={index} className="font-zcool text-lg">
+                        {word}
+                      </Text>
+                    ))}
+                  </View>
+                </View>
+              </View>
+            </View>
+          )}
+        />
+      )}
+    </SafeAreaView>
   );
-};
-
-const styles = {
-  questTitle: {
-    textShadowColor: 'rgba(0, 0, 0, 1)',
-    textShadowOffset: { width: 3, height: 3 },
-    textShadowRadius: 1,
-  }
 };
 
 export default Home;

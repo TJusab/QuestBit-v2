@@ -23,7 +23,7 @@ const TabsLayout = () => {
                     tabBarActiveTintColor: '#7F4D2E',
                     tabBarInactiveTintColor: '#FFFFFF',
                     tabBarStyle: {
-                        backgroundColor: '#5C944A'
+                        backgroundColor: '#A3C254'
                     },
                 }}
             >
@@ -49,7 +49,7 @@ const TabsLayout = () => {
                     headerShown: false,
                     tabBarIcon: ({ color, focused }) => (
                         <TabIcon
-                            icon="home"
+                            icon="edit-document"
                             color={color}
                             focused={focused}
                         />
