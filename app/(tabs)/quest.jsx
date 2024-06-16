@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Adjust the icon based on the package you're using
 import { getQuests } from '../../lib/database';
 import { getQuestIcon } from '../../lib/icon';
+import { globalStyles } from '../global_css';
 
 const Quest = () => {
   const [quests, setQuests] = useState([]);
@@ -51,11 +52,11 @@ const Quest = () => {
         </TouchableOpacity>
       </View>
       <View className="py-4 flex-1">
-        <Text className="font-press text-2xl text-white">{item.title}</Text>
+        <Text className="font-press text-2xl" style={globalStyles.title}>{item.title}</Text>
         <Text className="font-zcool text-lg text-white">{item.questInfo}</Text>
       </View>
-      <View style={styles.progress_bar}>
-        <View style={[styles.progress, { width: `${item.progress}%` }]} />
+      <View style={globalStyles.progress_bar}>
+        <View style={[globalStyles.progress, { width: `${item.progress}%` }]} />
       </View>
       <View className="flex-row justify-between items-center">
         <Text className="font-zcool text-lg text-white">Progress</Text>
@@ -90,26 +91,6 @@ const Quest = () => {
       />
     </View>
   );
-};
-
-const styles = {
-  questTitle: {
-    textShadowColor: 'rgba(0, 0, 0, 1)',
-    textShadowOffset: { width: 3, height: 3 },
-    textShadowRadius: 1,
-  },
-  progress_bar: {
-    height: 5,
-    width: '100%',
-    backgroundColor: '#8AD1F0',
-    borderRadius: 5,
-    overflow: 'hidden',
-  },
-  progress: {
-    height: '100%',
-    backgroundColor: 'white',
-    borderRadius: 5,
-  },
 };
 
 export default Quest;
