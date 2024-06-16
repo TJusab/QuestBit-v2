@@ -30,7 +30,7 @@ const Profile = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>My Profile!</Text>
-      <Image source={getUserIcon("icon")} style={styles.avatar} />
+      <Image source={getUserIcon("Default")} style={styles.avatar} />
       
       <Text style={styles.label}>Nickname</Text>
       <TextInput
@@ -72,11 +72,13 @@ const Profile = () => {
           text="SAVE!" 
           onPress={submit} 
           isLoading={isSubmitting}
+          color="green"
         />    
         <PixelButton 
           text="LOGOUT!" 
           onPress={submit} 
           isLoading={isSubmitting}
+          color="red"
         />
       </View>
     </View>
