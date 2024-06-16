@@ -1,17 +1,29 @@
-import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Adjust the icon based on the package you're using
 import { getQuests } from '../../lib/database';
+import { getQuestIcon } from '../../lib/icon';
 
 const Quest = () => {
   const [quests, setQuests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [icons, setIcons] = useState({});
 
   useEffect(() => {
-    const fetchQuests = async () => {
+    const fetchQuestsAndIcon = async () => {
       try {
+        // Fetch quests
         const response = await getQuests();
         setQuests(response); // Set the quests state with the response
+
+        // Fetch icons
+        const iconsToFetch = {};
+        for (const quest of response) {
+          const questIcon = await getQuestIcon(quest.icon);
+          iconsToFetch[quest.id] = { questIcon };
+        }
+        setIcons(iconsToFetch);
+
       } catch (error) {
         Alert.alert('Error', error.message);
       } finally {
@@ -19,24 +31,34 @@ const Quest = () => {
       }
     };
 
-    fetchQuests();
+    fetchQuestsAndIcon();
   }, []);
 
   const renderQuestItem = ({ item }) => (  <TouchableOpacity
       className="mb-10 p-5 bg-blue-200 rounded-xl"
       onPress={() => handleQuestPress(item)}
     >
-      <View className="flex-row align-items-start">
-        <View className="p-4 flex-1">
-          <Text className="font-press text-2xl text-white" style={styles.questTitle}>{item.title}</Text>
-          <Text style={styles.questDescription}>{item.description}</Text>
-        </View>
+      <View className="flex-row justify-between items-center">
+          {icons[item.id] && (
+            <Image source={icons[item.id]} style={{ width: 48, height: 48 }} />
+          )}
         <TouchableOpacity
           onPress={() => handleMoreOptionsPress(item)}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Adjust the hitSlop values as needed
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           <Icon name="ellipsis-v" size={20} color="white" />
         </TouchableOpacity>
+      </View>
+      <View className="py-4 flex-1">
+        <Text className="font-press text-2xl text-white" style={styles.questTitle}>{item.title}</Text>
+        <Text className="font-zcool text-lg text-white">{item.questInfo}</Text>
+      </View>
+      <View style={styles.progress_bar}>
+        <View style={[styles.progress, { width: `${item.progress}%` }]} />
+      </View>
+      <View className="flex-row justify-between items-center">
+        <Text className="font-zcool text-lg text-white">Progress</Text>
+        <Text className="font-zcool text-lg text-white">{item.progress}%</Text>
       </View>
     </TouchableOpacity>
   );
@@ -62,8 +84,7 @@ const Quest = () => {
 
   return (
     <View className="flex-1 p-5">
-      <Text className="text-3xl mt-20 font-press text-navy">Pick your </Text>
-      <Text className="text-3xl mb-20 mt-3 font-press text-navy">Quest!</Text>
+      <Text className="text-3xl mt-20 mb-10 mx-auto font-press text-navy">My Quests!</Text>
       <FlatList
         data={quests}
         keyExtractor={(item) => item.$id}
@@ -78,7 +99,19 @@ const styles = {
     textShadowColor: 'rgba(0, 0, 0, 1)',
     textShadowOffset: { width: 3, height: 3 },
     textShadowRadius: 1,
-  }
+  },
+  progress_bar: {
+    height: 5,
+    width: '100%',
+    backgroundColor: '#8AD1F0',
+    borderRadius: 5,
+    overflow: 'hidden',
+  },
+  progress: {
+    height: '100%',
+    backgroundColor: 'white',
+    borderRadius: 5,
+  },
 };
 
 export default Quest;
