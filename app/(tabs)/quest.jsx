@@ -10,7 +10,7 @@ const Quest = () => {
   const [icons, setIcons] = useState({});
 
   useEffect(() => {
-    const fetchQuestsAndIcon = async () => {
+    const fetchQuestsAndIcons = async () => {
       try {
         // Fetch quests
         const response = await getQuests();
@@ -19,8 +19,8 @@ const Quest = () => {
         // Fetch icons
         const iconsToFetch = {};
         for (const quest of response) {
-          const questIcon = await getQuestIcon(quest.icon);
-          iconsToFetch[quest.id] = { questIcon };
+          const questIcon = getQuestIcon(quest.icon);
+          iconsToFetch[quest.$id] = questIcon;
         }
         setIcons(iconsToFetch);
 
@@ -31,17 +31,18 @@ const Quest = () => {
       }
     };
 
-    fetchQuestsAndIcon();
+    fetchQuestsAndIcons();
   }, []);
 
-  const renderQuestItem = ({ item }) => (  <TouchableOpacity
+  const renderQuestItem = ({ item }) => (
+    <TouchableOpacity
       className="mb-10 p-5 bg-blue-200 rounded-xl"
       onPress={() => handleQuestPress(item)}
     >
       <View className="flex-row justify-between items-center">
-          {icons[item.id] && (
-            <Image source={icons[item.id]} style={{ width: 48, height: 48 }} />
-          )}
+        {icons[item.$id] && (
+          <Image source={icons[item.$id]} style={{ width: 48, height: 48 }} />
+        )}
         <TouchableOpacity
           onPress={() => handleMoreOptionsPress(item)}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
@@ -50,7 +51,7 @@ const Quest = () => {
         </TouchableOpacity>
       </View>
       <View className="py-4 flex-1">
-        <Text className="font-press text-2xl text-white" style={styles.questTitle}>{item.title}</Text>
+        <Text className="font-press text-2xl text-white">{item.title}</Text>
         <Text className="font-zcool text-lg text-white">{item.questInfo}</Text>
       </View>
       <View style={styles.progress_bar}>
@@ -64,14 +65,11 @@ const Quest = () => {
   );
 
   const handleQuestPress = (quest) => {
-    // Handle when a quest item is pressed
-    console.log('Quest Pressed:');
+    console.log('Quest Pressed:', quest);
   };
 
   const handleMoreOptionsPress = (quest) => {
-    // Handle when the more options button is pressed
-    console.log('More Options Pressed:');
-    // Example: You can open a modal or show a context menu here
+    console.log('More Options Pressed:', quest);
   };
 
   if (loading) {

@@ -42,11 +42,11 @@ const LogIn = () => {
   };
 
   return (
-    <SafeAreaView className="bg-blue-300 h-full">
+    <SafeAreaView className="bg-sky h-full">
       <ScrollView contentContainerStyle={{ height: "100%" }}>
         <View className="flex-1 w-full h-full">
           <ImageBackground
-            source={require("../../assets/images/log-in.png")}
+            source={require("../../assets/HD/background_no_scroll.png")}
             className="flex-1 items-center justify-center"
             resizeMode="cover"
           >

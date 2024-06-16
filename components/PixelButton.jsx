@@ -1,14 +1,13 @@
-import { ActivityIndicator, TouchableOpacity, Text, Image } from "react-native";
+import { View, ActivityIndicator, TouchableOpacity, Text, Image } from "react-native";
 
 const PixelButton = ({ text, onPress, isLoading }) => {
   return (
     <TouchableOpacity className="items-center justify-center" onPress={onPress}>
       <Image
-        source={require("../assets/images/small-pixel-btn.png")}
-        resizeMode="contain"
-        className="w-[25vw]"
+        source={require("../assets/HD/button_empty.png")}
+        className="w-[25vw] h-10"
       />
-      <Text className="text-white font-zcool absolute text-xl">{text}</Text>
+      <Text className="text-white font-zcool absolute text-xl pb-1">{text}</Text>
 
       {isLoading && (
         <ActivityIndicator

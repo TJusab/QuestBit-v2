@@ -57,7 +57,7 @@ export default function App() {
                 visible && (
                   <Animated.Image
                     key={index}
-                    source={require("../assets/images/heart.png")}
+                    source={require("../assets/HD/heart_small.png")}
                     style={{
                       width: 65,
                       height: 65,
@@ -71,16 +71,16 @@ export default function App() {
 
             {continueVisible && (
               <TouchableOpacity
-                className="absolute justify-center items-center w-[70%] h-[30%]"
+                className="absolute justify-center items-center w-[60%] h-[30%]"
                 onPress={() => router.push('/log-in')}
               >
                 <Image
-                  source={require("../assets/images/pixelButton.png")}
+                  source={require("../assets/HD/button_empty.png")}
                   className="w-full h-full"
                   resizeMode="contain"
                 />
                 <Text
-                  className="bottom-[58%] font-zcool text-4xl text-white"
+                  className="bottom-[60%] font-zcool text-4xl text-white"
                   style={{
                     textShadowColor: "#1E3445",
                     textShadowOffset: { width: -1, height: -1 },
