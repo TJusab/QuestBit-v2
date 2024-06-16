@@ -49,7 +49,7 @@ const TabsLayout = () => {
                     headerShown: false,
                     tabBarIcon: ({ color, focused }) => (
                         <TabIcon
-                            icon="home"
+                            icon="edit-document"
                             color={color}
                             focused={focused}
                         />
