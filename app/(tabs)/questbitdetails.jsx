@@ -30,9 +30,15 @@ const QuestBitDetails = () => {
       <AntDesign name="form" size={25} color="black" />
     </View>
       <Text style={styles.header}>QuestBit Details</Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingRight: 20}}>
       <View style={styles.section}>
         <Text style={styles.label}>Title</Text>
         <Text style={styles.title}>{item.title}</Text>
+      </View>
+      <View style={styles.section}>
+        <Text style={styles.label}>Status</Text>
+        <View style={styles.status}></View>
+      </View>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingRight: 20}}>
       <View style={styles.section}>
@@ -47,10 +53,7 @@ const QuestBitDetails = () => {
         <Text style={styles.value}>Annually</Text>
       </View>
       </View>
-      <View style={styles.section}>
-        <Text style={styles.label}>Status</Text>
-        <View style={styles.status}></View>
-      </View>
+      
       <View style={styles.section}>
         <Text style={styles.label}>Description</Text>
         <Text style={styles.value}>{item.description}</Text>
@@ -60,7 +63,7 @@ const QuestBitDetails = () => {
         <View style={styles.row}>
           {item.assignees.map(assignee => (
             <View key={assignee.id} style={styles.assignee}>
-              <Image source={require("../../assets/pixelArt/character_48X48.png")} style={styles.character} resizeMethod='stretch' />
+              <Image source={require("../../assets/HD/character_48X48.png")} style={styles.character} resizeMethod='stretch' />
               <Text style={styles.username}>{assignee.username}</Text>
             </View>
           ))}
@@ -70,7 +73,7 @@ const QuestBitDetails = () => {
         <Text style={styles.label}>QuestBit Diary</Text>
       </View>
       <View style={styles.log}>
-      <Image source={require("../../assets/pixelArt/scroll.png")} style={styles.scroll} resizeMethod='stretch' />
+      <Image source={require("../../assets/HD/scroll.png")} style={styles.scroll} resizeMethod='stretch' />
       </View>
 
 
@@ -101,13 +104,13 @@ const styles = StyleSheet.create({
   },
   log: {
     height: 400,
-    alignItems: 'center', // Optional: Center the image horizontally
-    justifyContent: 'center', // Optional: Center the image vertically
+    alignItems: 'center', 
+    justifyContent: 'center',
     padding: 30
   },
   scroll: {
-    width: '130%', // Use '100%' for responsive width
-    height: '100%', // Use '100%' for responsive height
+    width: '130%', 
+    height: '100%', 
     marginBottom: 10,
     marginTop: -130,
   },
@@ -118,7 +121,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'ZCOOL', 
-    fontSize: 34,
+    fontSize: 40,
     marginTop: -8
   },
   username : {
