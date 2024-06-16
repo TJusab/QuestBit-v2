@@ -51,6 +51,7 @@ const SignUp = () => {
             className="flex-1 items-center justify-center"
             resizeMode="cover"
           >
+            <Text className="font-press text-3xl" style={globalStyles.title}>SIGN UP</Text>
             <Form
               form={form}
               setForm={setForm}

@@ -1,10 +1,11 @@
-import { View, ScrollView, ImageBackground, Alert } from "react-native";
+import { View, Text, ScrollView, ImageBackground, Alert } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Form from "../../components/Form";
 import { getCurrentUser, login } from "../../lib/account";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { router } from "expo-router";
+import { globalStyles } from '../global_css';
 
 const LogIn = () => {
   const { setUser, setIsLogged } = useGlobalContext();
@@ -42,14 +43,15 @@ const LogIn = () => {
   };
 
   return (
-    <SafeAreaView className="bg-blue-300 h-full">
+    <SafeAreaView className="bg-sky h-full">
       <ScrollView contentContainerStyle={{ height: "100%" }}>
         <View className="flex-1 w-full h-full">
           <ImageBackground
-            source={require("../../assets/images/log-in.png")}
+            source={require("../../assets/HD/background_no_scroll.png")}
             className="flex-1 items-center justify-center"
             resizeMode="cover"
           >
+            <Text className="font-press text-3xl" style={globalStyles.title}>LOG IN</Text>
             <Form
               form={form}
               setForm={setForm}
