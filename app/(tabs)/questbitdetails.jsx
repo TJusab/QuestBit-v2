@@ -60,7 +60,7 @@ const QuestBitDetails = () => {
         <View style={styles.row}>
           {item.assignees.map(assignee => (
             <View key={assignee.id} style={styles.assignee}>
-              <Image source={require("../../assets/pixelArt/character_48X48.png")} style={styles.scroll} resizeMethod='stretch' />
+              <Image source={require("../../assets/pixelArt/character_48X48.png")} style={styles.character} resizeMethod='stretch' />
               <Text style={styles.username}>{assignee.username}</Text>
             </View>
           ))}
@@ -69,7 +69,7 @@ const QuestBitDetails = () => {
       <View style={styles.section}>
         <Text style={styles.label}>QuestBit Diary</Text>
       </View>
-      <View style={styles.section}>
+      <View style={styles.log}>
       <Image source={require("../../assets/pixelArt/scroll.png")} style={styles.scroll} resizeMethod='stretch' />
       </View>
 
@@ -99,9 +99,21 @@ const styles = StyleSheet.create({
   scrollView: {
     padding: 30,
   },
+  log: {
+    height: 400,
+    alignItems: 'center', // Optional: Center the image horizontally
+    justifyContent: 'center', // Optional: Center the image vertically
+    padding: 30
+  },
   scroll: {
-    width: 100,
-    height: 100,
+    width: '130%', // Use '100%' for responsive width
+    height: '100%', // Use '100%' for responsive height
+    marginBottom: 10,
+    marginTop: -130,
+  },
+  character: {
+    width: 90,
+    height: 90,
     marginBottom: 10,
   },
   title: {
@@ -122,7 +134,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   section: {
-    marginBottom: 20,
+    marginBottom: 15,
   },
   label: {
     fontSize: 23,
