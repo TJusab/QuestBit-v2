@@ -8,7 +8,7 @@ module.exports = {
           50: "#F7FDFF",
           100: "#8AD1F0",
           200: "#61C6ED",
-          300: "#2BBCEE",
+          300: "#2BBCEE"
         },
         green: {
           100: "#A3C254",
@@ -18,11 +18,16 @@ module.exports = {
         black: "#0D101C",
         gray: "#6E7591",
         red: "#C1161C",
+        lightbrown: {
+          100: "#e3d2c2",
+          200: "#b58d74"
+        },
         brown: {
           100: "#945835",
           200: "#7F4D2E"
         },
         white: "#FFFFFF",
+        sky: "#35a4f8"
       }
     },
     fontFamily: {
