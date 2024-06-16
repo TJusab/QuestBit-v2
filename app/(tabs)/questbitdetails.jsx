@@ -32,8 +32,9 @@ const QuestBitDetails = () => {
       <Text style={styles.header}>QuestBit Details</Text>
       <View style={styles.section}>
         <Text style={styles.label}>Title</Text>
-        <Text style={styles.value}>{item.title}</Text>
+        <Text style={styles.title}>{item.title}</Text>
       </View>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingRight: 20}}>
       <View style={styles.section}>
         <Text style={styles.label}>Due Date</Text>
         <View style={styles.row}>
@@ -44,6 +45,7 @@ const QuestBitDetails = () => {
       <View style={styles.section}>
         <Text style={styles.label}>Recurrence</Text>
         <Text style={styles.value}>Annually</Text>
+      </View>
       </View>
       <View style={styles.section}>
         <Text style={styles.label}>Status</Text>
@@ -102,14 +104,19 @@ const styles = StyleSheet.create({
     height: 100,
     marginBottom: 10,
   },
+  title: {
+    fontFamily: 'ZCOOL', 
+    fontSize: 34,
+    marginTop: -8
+  },
   username : {
     fontFamily: 'ZCOOL', 
-    marginBottom: 5,
-    fontSize: 20,
+    marginBottom: 7,
+    fontSize: 18,
   },  
   header: {
     marginTop:20,
-    fontSize: 20,
+    fontSize: 18,
     marginBottom: 20,
     fontFamily: 'PressStart2P', 
     color: 'black',
@@ -118,14 +125,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: {
-    fontSize: 14,
+    fontSize: 23,
     fontWeight: 'bold',
-    fontFamily: 'PressStart2P',
+    fontFamily: 'ZCOOL',
     color: 'grey',
     marginBottom: 8,
   },
   value: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'ZCOOL', 
   },
   row: {
@@ -140,14 +147,6 @@ const styles = StyleSheet.create({
   assignee: {
     alignItems: 'center',
     marginRight: 10,
-  },
-  avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-  },
-  assigneeName: {
-    textAlign: 'center',
   },
   centered: {
     flex: 1,
