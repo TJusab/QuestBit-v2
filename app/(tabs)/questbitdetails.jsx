@@ -15,6 +15,7 @@ const QuestBitDetails = () => {
       try {
         const response = await getQuestBits();
         setQuestBits(response); 
+        console.log(response);
       } catch (error) {
         Alert.alert('Error', error.message);
       } finally {
@@ -175,7 +176,7 @@ const QuestBitDetails = () => {
       ) : (
         <FlatList
           data={questbits}
-          keyExtractor={(item) => item.$id.toString()} 
+          keyExtractor={(item) => item.$id} 
           renderItem={renderQuestItem}
         />
       )}
@@ -225,7 +226,7 @@ const styles = StyleSheet.create({
     fontSize: 23,
     fontWeight: 'bold',
     fontFamily: 'ZCOOL',
-    color: 'grey',
+    color: 'gray',
     marginBottom: 8,
   },
   value: {
