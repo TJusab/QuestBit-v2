@@ -35,40 +35,39 @@ const Home = () => {
 
   return (
     <SafeAreaView className="bg-blue-50 h-full">
-      <Header />
-      <View className="flex-1 w-full h-full">
-        <Text className="font-press text-3xl text-navy text-center">
-          Hello {user.username}!
-        </Text>
-        <View className="mt-10 mx-5">
-          <Text className="font-press text-xl text-navy text-justify">
-            My QuestBits
-          </Text>
-          <View className="flex-row justify-between mt-2">
-            {filters.map((word, index) => (
-              <Text key={index} className="font-zcool text-lg">
-                {word}
-              </Text>
-            ))}
-          </View>
+      {loading ? (
+        <View className="flex justify-center items-center">
+          <ActivityIndicator color="#6E7591" size="large" />
         </View>
-        <View className="mx-5 mt-5">
-          {loading ? (
-            <View className="flex justify-center items-center">
-              <ActivityIndicator
-                color="#6E7591"
-                size="large"
-              />
+      ) : (
+        <FlatList
+          data={questbits}
+          keyExtractor={(item) => item.$id}
+          renderItem={QuestBit}
+          ListHeaderComponent={() => (
+            <View>
+              <Header />
+              <View className="flex-1 w-full h-full">
+                <Text className="font-press text-3xl text-navy text-center">
+                  Hello {user.username}!
+                </Text>
+                <View className="mt-10 mx-5">
+                  <Text className="font-press text-xl text-navy text-justify">
+                    My QuestBits
+                  </Text>
+                  <View className="flex-row justify-between mt-2 mb-5">
+                    {filters.map((word, index) => (
+                      <Text key={index} className="font-zcool text-lg">
+                        {word}
+                      </Text>
+                    ))}
+                  </View>
+                </View>
+              </View>
             </View>
-          ) : (
-            <FlatList
-              data={questbits}
-              keyExtractor={(item) => item.$id}
-              renderItem={QuestBit}
-            />
           )}
-        </View>
-      </View>
+        />
+      )}
     </SafeAreaView>
   );
 };

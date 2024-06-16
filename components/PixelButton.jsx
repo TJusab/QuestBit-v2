@@ -2,7 +2,7 @@ import { ActivityIndicator, TouchableOpacity, Text, Image } from "react-native";
 
 const PixelButton = ({ text, onPress = null, isLoading = false, imageStyle = {}, textStyle = {} }) => {
   return (
-    <TouchableOpacity className="items-center justify-center" onPress={onPress}>
+    <TouchableOpacity className="items-center justify-center mr-5" onPress={onPress}>
       <Image
         source={require("../assets/images/small-pixel-btn.png")}
         resizeMode="contain"
