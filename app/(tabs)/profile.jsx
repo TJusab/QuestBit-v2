@@ -4,11 +4,13 @@ import PixelButton from "../../components/PixelButton";
 import { logout } from '../../lib/account';
 import { router } from 'expo-router';
 import { getUserIcon } from '../../lib/icon.js'
+import { getCurrentUser, login } from "../../lib/account";
 
 const Profile = () => {
+  const result = getCurrentUser();
   const [nickname, setNickname] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState(result.username);
+  const [email, setEmail] = useState(result.email);
   const [password, setPassword] = useState('');
   const [notifications, setNotifications] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
