@@ -77,7 +77,7 @@ export default function App() {
                 onPress={() => router.push('/log-in')}
               >
                 <Image
-                  source={require("../assets/HD/button_empty.png")}
+                  source={require("../assets/HD/button_green.png")}
                   className="w-full h-full"
                   resizeMode="contain"
                 />

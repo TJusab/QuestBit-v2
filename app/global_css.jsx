@@ -17,4 +17,8 @@ export const globalStyles = {
       backgroundColor: 'white',
       borderRadius: 5,
     },
+    border: {
+        borderWidth: 1, // Optional: Add border width
+        borderColor: '#dddddd', // Optional: Add border color
+    }
 };
