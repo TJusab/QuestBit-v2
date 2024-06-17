@@ -1,19 +1,36 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import PixelButton from "../../components/PixelButton";
-import { logout } from '../../lib/account';
+import { logout, getCurrentUser } from '../../lib/account';
 import { router } from 'expo-router';
-import { getUserIcon } from '../../lib/icon.js'
-import { getCurrentUser, login } from "../../lib/account";
+import { getUserIcon } from '../../lib/icon.js';
 
 const Profile = () => {
-  const result = getCurrentUser();
   const [nickname, setNickname] = useState('');
-  const [username, setUsername] = useState(result.username);
-  const [email, setEmail] = useState(result.email);
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [icon, setIcon] = useState('');
   const [notifications, setNotifications] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const result = await getCurrentUser();
+        setUsername(result.username);
+        setEmail(result.email);
+        setIcon(getUserIcon("Default"));
+      } catch (error) {
+        Alert.alert("Error", "Failed to load user data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
 
   const submit = async () => {
     setIsSubmitting(true);
@@ -29,61 +46,69 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>My Profile!</Text>
-      <Image source={getUserIcon("Default")} style={styles.avatar} />
-      
-      <Text style={styles.label}>Nickname</Text>
-      <TextInput
-        style={styles.input}
-        value={nickname}
-        onChangeText={setNickname}
-      />
-      
-      <Text style={styles.label}>Username</Text>
-      <TextInput
-        style={styles.input}
-        value={username}
-        onChangeText={setUsername}
-      />
-      
-      <Text style={styles.label}>Email</Text>
-      <TextInput
-        style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-      />
-      
-      <Text style={styles.label}>Password</Text>
-      <TextInput
-        style={styles.input}
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      
-      <View style={styles.notificationContainer}>
-        <Text style={styles.label}>Notifications</Text>
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator color="#6E7591" size="large" />
+        </View>
+      ) : (
+        <>
+          <Text style={styles.header}>My Profile!</Text>
+          <Image source={icon} style={styles.avatar} />
 
+          <Text style={styles.label}>Nickname</Text>
+          <TextInput
+            style={styles.input}
+            value={nickname}
+            onChangeText={setNickname}
+          />
 
-      </View>
-      
-      <View style={styles.buttonContainer}>
-        <PixelButton 
-          text="SAVE!" 
-          onPress={submit} 
-          isLoading={isSubmitting}
-          color="green"
-        />    
-        <PixelButton 
-          text="LOGOUT!" 
-          onPress={submit} 
-          isLoading={isSubmitting}
-          color="red"
-        />
-      </View>
+          <Text style={styles.label}>Username</Text>
+          <TextInput
+            style={styles.input}
+            value={username}
+            onChangeText={setUsername}
+          />
+
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            style={styles.input}
+            value={email}
+            onChangeText={setEmail}
+          />
+
+          <Text style={styles.label}>Password</Text>
+          <TextInput
+            style={styles.input}
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+
+          <View style={styles.notificationContainer}>
+            <Text style={styles.label}>Notifications</Text>
+            {/* Add CheckBox or other components here */}
+          </View>
+
+          <View style={styles.buttonContainer}>
+            <PixelButton 
+              text="SAVE!" 
+              onPress={submit} 
+              isLoading={isSubmitting}
+              color="green"
+            />
+            <PixelButton 
+              text="LOGOUT!" 
+              onPress={submit} 
+              isLoading={isSubmitting}
+              color="red"
+            />
+          </View>
+        </>
+      )}
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

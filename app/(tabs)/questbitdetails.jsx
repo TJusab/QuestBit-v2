@@ -164,13 +164,14 @@ const QuestBitDetails = () => {
 
   return (
     <View style={{ flex: 1, padding: 30 }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 35 }}>
           <MaterialIcons name="keyboard-backspace" size={30} color="black" />
           <TouchableOpacity onPress={toggleEditing}>
           <AntDesign name="form" size={25} color="black" />
           </TouchableOpacity>
         </View>
       <Text style={styles.header}>QuestBit Details</Text>
+      <Text style={styles.quest}>Quest: to do later</Text>
       {isEditing ? (
         <EditableQuestItem item={questbits[0]} /> 
       ) : (
@@ -215,6 +216,12 @@ const styles = StyleSheet.create({
   header: {
     marginTop:20,
     fontSize: 18,
+    marginBottom: 10,
+    fontFamily: 'PressStart2P', 
+    color: 'black',
+  },
+  quest: { 
+    fontSize: 12,
     marginBottom: 20,
     fontFamily: 'PressStart2P', 
     color: 'black',
