@@ -36,16 +36,10 @@ const QuestBitDetails = () => {
 
   const renderQuestItem = ({ item }) => (
     <View>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingRight: 20}}>
         <View style={styles.section}>
           <Text style={styles.label}>Title</Text>
           <Text style={styles.title}>{item.title}</Text>
         </View>
-        <View style={styles.section}>
-          <Text style={styles.label}>Status</Text>
-          <View style={styles.status}></View>
-        </View>
-      </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingRight: 20}}>
         <View style={styles.section}>
           <Text style={styles.label}>Due Date</Text>
@@ -59,6 +53,10 @@ const QuestBitDetails = () => {
           <Text style={styles.value}>Annually</Text>
         </View>
       </View>
+      <View style={styles.section}>
+          <Text style={styles.label}>Status</Text>
+          <View style={styles.status}></View>
+        </View>
       <View style={styles.section}>
         <Text style={styles.label}>Description</Text>
         <Text style={styles.value}>{item.description}</Text>
@@ -171,7 +169,10 @@ const QuestBitDetails = () => {
           </TouchableOpacity>
         </View>
       <Text style={styles.header}>QuestBit Details</Text>
-      <Text style={styles.quest}>Quest: to do later</Text>
+      <View style={styles.section}>
+          <Text style={styles.label}>Quest</Text>
+          <Text style={styles.quest}>to do later</Text>
+        </View>
       {isEditing ? (
         <EditableQuestItem item={questbits[0]} /> 
       ) : (
@@ -205,7 +206,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'ZCOOL', 
-    fontSize: 40,
+    fontSize: 32,
     marginTop: -8
   },
   username : {
@@ -216,14 +217,13 @@ const styles = StyleSheet.create({
   header: {
     marginTop:20,
     fontSize: 18,
-    marginBottom: 10,
+    marginBottom: 20,
     fontFamily: 'PressStart2P', 
     color: 'black',
   },
   quest: { 
-    fontSize: 12,
-    marginBottom: 20,
-    fontFamily: 'PressStart2P', 
+    fontSize: 32,
+    fontFamily: 'ZCOOL', 
     color: 'black',
   },
   section: {
