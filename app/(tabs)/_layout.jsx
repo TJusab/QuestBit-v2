@@ -23,7 +23,7 @@ const TabsLayout = () => {
                     tabBarActiveTintColor: '#7F4D2E',
                     tabBarInactiveTintColor: '#FFFFFF',
                     tabBarStyle: {
-                        backgroundColor: '#5C944A'
+                        backgroundColor: '#A3C254'
                     },
                 }}
             >
@@ -35,6 +35,37 @@ const TabsLayout = () => {
                     tabBarIcon: ({ color, focused }) => (
                         <TabIcon
                             icon="home"
+                            color={color}
+                            focused={focused}
+                        />
+                    )
+                }}
+            />
+
+            <Tabs.Screen
+                name="quest"
+                options={{
+                    title: 'Quest',
+                    headerShown: false,
+                    tabBarIcon: ({ color, focused }) => (
+                        <TabIcon
+                            icon="edit-document"
+                            color={color}
+                            focused={focused}
+                        />
+                    )
+                }}
+            />
+
+
+            <Tabs.Screen
+                name="questbitdetails"
+                options={{
+                    title: 'QuestBitDetails',
+                    headerShown: false,
+                    tabBarIcon: ({ color, focused }) => (
+                        <TabIcon
+                            icon="archive"
                             color={color}
                             focused={focused}
                         />

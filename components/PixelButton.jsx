@@ -1,15 +1,29 @@
-import { ActivityIndicator, TouchableOpacity, Text, Image } from "react-native";
+import { View, ActivityIndicator, TouchableOpacity, Text, Image } from "react-native";
 
-const PixelButton = ({ text, onPress, isLoading }) => {
+const PixelButton = ({ text, onPress = null, isLoading = false, imageStyle = {}, textStyle = {}, color}) => {
+  const getButtonImage = (color) => {
+    switch (color) {
+      case "red":
+        return require("../assets/HD/button_red.png");
+      case "blue":
+        return require("../assets/HD/button_blue.png");
+      case "pink":
+        return require("../assets/HD/button_pink.png");
+      case "yellow":
+        return require("../assets/HD/button_yellow.png");
+      case "green":
+      default:
+        return require("../assets/HD/button_green.png");
+    }
+  };
+
   return (
-    <TouchableOpacity className="items-center justify-center" onPress={onPress}>
+    <TouchableOpacity className="items-center justify-center mr-5" onPress={onPress}>
       <Image
-        source={require("../assets/images/small-pixel-btn.png")}
-        resizeMode="contain"
-        className="w-[25vw]"
+        source={getButtonImage(color)}
+        className={`w-[25vw] h-10 ${imageStyle}`}
       />
-      <Text className="text-white font-zcool absolute text-xl">{text}</Text>
-
+      <Text className={`text-white font-zcool absolute text-xl pb-1 ${textStyle}`}>{text}</Text>
       {isLoading && (
         <ActivityIndicator
           animating={isLoading}
