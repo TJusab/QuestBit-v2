@@ -15,7 +15,6 @@ const QuestBitDetails = () => {
       try {
         const response = await getQuestBits();
         setQuestBits(response); 
-        console.log(response);
       } catch (error) {
         Alert.alert('Error', error.message);
       } finally {
