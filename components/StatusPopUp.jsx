@@ -1,10 +1,22 @@
-// CustomModal.jsx
-import React from 'react';
-import { View, Text, Modal, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Modal, ImageBackground } from 'react-native';
 import PixelButton from './PixelButton';
-import DropdownMenu from './StatusDropdown'
+import DropdownMenu from './StatusDropdown';
+import { updateQuestBitStatus } from '../lib/database';
 
-const CustomModal = ({ visible, onClose, value }) => {
+const StatusPopUp = ({ visible, onClose, value, questbitId, onUpdate }) => {
+  const [newStatus, setNewStatus] = useState(value);
+
+  const handleUpdate = async () => {
+    try {
+      await updateQuestBitStatus(questbitId, newStatus);
+      onUpdate(); // Refresh the questbit list
+      onClose(); // Close the modal after update
+    } catch (error) {
+      console.error('Error updating questbit status:', error);
+    }
+  };
+
   return (
     <Modal
       animationType="slide"
@@ -20,9 +32,11 @@ const CustomModal = ({ visible, onClose, value }) => {
             resizeMode="contain"
           >
             <View>
-              <Text className="font-zcool text-xl text-brown-200 text-center px-10 pt-5">Select the new state of the QuestBit</Text>
+              <Text className="font-zcool text-xl text-brown-200 text-center px-10 pt-5">
+                Select the new state of the QuestBit
+              </Text>
               <View className="w-3/5 m-auto my-8 z-10">
-                <DropdownMenu initialValue={value} />
+                <DropdownMenu initialValue={newStatus} onChangeValue={setNewStatus} />
               </View>
               <View className="flex-row items-center justify-center ml-10">
                 <PixelButton
@@ -32,9 +46,9 @@ const CustomModal = ({ visible, onClose, value }) => {
                   onPress={onClose}
                 />
                 <PixelButton
-                  text="Change"
+                  text="Update"
                   textStyle="text-sm"
-                  onPress={onClose}
+                  onPress={handleUpdate}
                 />
               </View>
             </View>
@@ -45,4 +59,4 @@ const CustomModal = ({ visible, onClose, value }) => {
   );
 };
 
-export default CustomModal;
+export default StatusPopUp;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-const DropdownMenu = ({ initialValue }) => {
+const DropdownMenu = ({ initialValue, onChangeValue }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
@@ -17,6 +17,11 @@ const DropdownMenu = ({ initialValue }) => {
     }
   }, [initialValue]);
 
+  const handleChangeValue = (newValue) => {
+    setValue(newValue);
+    onChangeValue(newValue);
+  };
+
   return (
     <View className="">
       <DropDownPicker
@@ -24,7 +29,7 @@ const DropdownMenu = ({ initialValue }) => {
         value={value}
         items={items}
         setOpen={setOpen}
-        setValue={setValue}
+        setValue={handleChangeValue}
         setItems={setItems}
         placeholder="Select an item"
         style={styles.dropdown}
