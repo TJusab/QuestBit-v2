@@ -4,7 +4,7 @@ Welcome to **QuestBit** – a powerful and user-friendly group task management a
 
 ## Features
 
-- **8-bit Pixel Art UI:** A nostalgic, retro look that provides a visually appealing and engaging user experience.
+- **Pixel Art UI:** A nostalgic, retro look that provides a visually appealing and engaging user experience.
 - **Group Task Management:** Efficiently create and assign QuestBits to group members with ease.
 - **Task Tracking:** Monitor the progress of individual QuestBits and ensure the timely completion of the overall Quest.
 - **Real-time Notifications:** Stay updated with instant notifications for task assignments and deadlines.
