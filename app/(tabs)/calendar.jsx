@@ -15,7 +15,7 @@ const CustomCalendar = () => {
     
     useEffect(() => {
         // Simulated fetch from database
-        const fetchQuestBitss = async () => {
+        const fetchQuestBits = async () => {
             try {
                 // Replace this with your actual fetch logic
                 const response = await getQuests(); // Replace with your fetch function
@@ -40,7 +40,7 @@ const CustomCalendar = () => {
             }
         };
 
-        fetchQuestBitss();
+        fetchQuestBits();
     }, []);
 
     // Function to handle day press

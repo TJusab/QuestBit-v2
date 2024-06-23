@@ -26,6 +26,7 @@ const Profile = () => {
         text="Sign Out" 
         onPress={submit} 
         isLoading={isSubmitting}
+        color="green"
       />
     </View>
   );
