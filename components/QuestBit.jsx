@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
-import PixelButton from "./PixelButton";
+import StatusButton from "./StatusButton";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { globalStyles } from "../app/global_css";
 import CustomModal from "./StatusPopUp"; // Adjust the import path as needed
@@ -13,6 +13,28 @@ const QuestBit = ({ item, onUpdate }) => {
 
   const options = { year: "numeric", month: "long", day: "numeric" };
   const formattedDate = new Intl.DateTimeFormat("en-US", options).format(date);
+
+  const getColorFromStatus = (status) => {
+    switch (status) {
+      case "Unassigned":
+        return "yellow";
+      case "OnGoing":
+        return "blue";
+      case "Assigned":
+        return "pink";
+      case "Completed":
+        return "green";
+    }
+  }
+
+  const getTextFromStatus = (status) => {
+    switch (status) {
+      case "OnGoing":
+        return "On Going";
+      default: 
+        return status;
+    }
+  }
 
   return (
     <View>
@@ -27,8 +49,9 @@ const QuestBit = ({ item, onUpdate }) => {
             {item.description}
           </Text>
           <View className="flex-row justify-between w-[80%] items-center">
-            <PixelButton
-              text={`${item.status}`}
+            <StatusButton
+              color={getColorFromStatus(item.status)}
+              text={getTextFromStatus(item.status)}
               textStyle="text-sm"
               onPress={() => setModalVisible(true)}
             />
