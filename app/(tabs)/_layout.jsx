@@ -60,21 +60,6 @@ const TabsLayout = () => {
                 />
 
                 <Tabs.Screen
-                    name="questbitdetails"
-                    options={{
-                        title: 'QuestBitDetails',
-                        headerShown: false,
-                        tabBarIcon: ({ color, focused }) => (
-                            <TabIcon
-                                source={require('../../assets/HD/icons/quest.png')}
-                                color={color}
-                                focused={focused}
-                            />
-                        ),
-                    }}
-                />
-
-                <Tabs.Screen
                     name="calendar"
                     options={{
                         title: 'Calendar',

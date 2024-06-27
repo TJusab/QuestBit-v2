@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, SafeAreaView, Alert, FlatList, ActivityIndicator } from "react-native";
+import {
+  Text,
+  View,
+  SafeAreaView,
+  Alert,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import Header from "../../components/Header";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { getQuestBits } from "../../lib/database";
 import QuestBit from "../../components/QuestBit";
-import SearchInput from "../../components/SearchInput";
-import SelectCountryScreen from "../../components/Dropdown";
 
 const Home = () => {
   const { user } = useGlobalContext();
@@ -43,7 +48,9 @@ const Home = () => {
         <FlatList
           data={questbits}
           keyExtractor={(item) => item.$id}
-          renderItem={({ item }) => <QuestBit item={item} onUpdate={handleQuestBitUpdate} />}
+          renderItem={({ item }) => (
+            <QuestBit item={item} onUpdate={handleQuestBitUpdate} />
+          )}
           ListHeaderComponent={() => (
             <View>
               <Header />
@@ -51,10 +58,6 @@ const Home = () => {
                 <Text className="font-press text-3xl text-navy text-center">
                   Hello {user.username}!
                 </Text>
-                <View className="flex-row mt-5 mx-5 items-center space-x-5">
-                  <SearchInput value="Search questbits..." />
-                  <SelectCountryScreen />
-                </View>
                 <View className="mt-10 mx-5">
                   <Text className="font-press text-xl text-navy text-justify">
                     My QuestBits

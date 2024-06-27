@@ -1,9 +1,10 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import PixelButton from "./PixelButton";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { globalStyles } from '../app/global_css';
-import CustomModal from './StatusPopUp'; // Adjust the import path as needed
+import { globalStyles } from "../app/global_css";
+import CustomModal from "./StatusPopUp"; // Adjust the import path as needed
+import { router } from "expo-router";
 
 const QuestBit = ({ item, onUpdate }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -16,23 +17,19 @@ const QuestBit = ({ item, onUpdate }) => {
   return (
     <View>
       <TouchableOpacity
-      style={globalStyles.border}
-      className="bg-white rounded-xl flex-row items-center justify-between p-2 shadow-xl my-2 mx-5"
-    >
+        style={globalStyles.border}
+        className="bg-white rounded-xl flex-row items-center justify-between p-2 shadow-xl my-2 mx-5"
+        onPress={() => router.push({ pathname: '/pages/questbitdetails', params: { questbit: JSON.stringify(item) } })}
+      >
         <View className="flex-col">
-        <View className="flex-row items-center">
-          <Image
-            source={getQuestIcon(item.quests.icon)}
-            style={{ width: 25, height: 25 }}
-            className="mr-5"
-          />
-            <Text className="font-zcool text-2xl text-justify">{item.title}</Text>
-          </View>
+          <Text className="font-zcool text-2xl text-justify">{item.title}</Text>
+          <Text className="font-zcool text-md text-gray my-3">
+            {item.description}
+          </Text>
           <View className="flex-row justify-between w-[80%] items-center">
             <PixelButton
               text={`${item.status}`}
               textStyle="text-sm"
-            status={`${item.status}`}
               onPress={() => setModalVisible(true)}
             />
             <View className="flex-row items-center">

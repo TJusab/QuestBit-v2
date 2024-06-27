@@ -39,7 +39,7 @@ const CustomCalendar = () => {
         fetchQuestBits();
     }, []);
 
-    const handleDayPress = (day) => {
+    const handleDayPress = (day) => { 
         setSelectedDate(day.dateString);
         const questbitsForSelectedDate = quests
             .flatMap(quest => quest.questbits)
