@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -6,7 +7,6 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
-import { useState, useEffect } from "react";
 import Header from "../../components/Header";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { getQuestBits } from "../../lib/database";
@@ -18,32 +18,39 @@ const Home = () => {
   const [questbits, setQuestBits] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchQuestBits = async () => {
-      try {
-        const response = await getQuestBits();
-        setQuestBits(response);
-      } catch (error) {
-        Alert.alert("Error", error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchQuestBits = async () => {
+    try {
+      const response = await getQuestBits();
+      setQuestBits(response);
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchQuestBits();
   }, []);
+
+  const handleQuestBitUpdate = async () => {
+    setLoading(true);
+    await fetchQuestBits();
+  };
 
   return (
     <SafeAreaView className="bg-blue-50 h-full">
       {loading ? (
-        <View className="flex justify-center items-center">
+        <View className="flex-1 justify-center items-center">
           <ActivityIndicator color="#6E7591" size="large" />
         </View>
       ) : (
         <FlatList
           data={questbits}
           keyExtractor={(item) => item.$id}
-          renderItem={QuestBit}
+          renderItem={({ item }) => (
+            <QuestBit item={item} onUpdate={handleQuestBitUpdate} />
+          )}
           ListHeaderComponent={() => (
             <View>
               <Header />

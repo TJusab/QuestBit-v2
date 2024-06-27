@@ -1,41 +1,44 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ActivityIndicator, Alert, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { getQuestBits } from '../../lib/database'; 
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  Alert,
+  Image,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { router, useLocalSearchParams } from "expo-router";
 
 const QuestBitDetails = () => {
-  const [questbits, setQuestBits] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false); 
-
-  useEffect(() => {
-    const fetchQuestBits = async () => {
-      try {
-        const response = await getQuestBits();
-        setQuestBits(response); 
-        console.log(response);
-      } catch (error) {
-        Alert.alert('Error', error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchQuestBits(); 
-  }, []); 
+  const { questbit } = useLocalSearchParams();
+  const item = JSON.parse(questbit);
+  const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const toggleEditing = () => {
-    setIsEditing(!isEditing); 
+    setIsEditing(!isEditing);
   };
 
   const handleRecurrenceChange = (value) => {
     // Implement logic to handle recurrence change
-    console.log('Recurrence changed:', value);
+    console.log("Recurrence changed:", value);
   };
 
-  const renderQuestItem = ({ item }) => (
+  const renderQuestBitDetails = () => (
     <View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingRight: 20,
+        }}
+      >
         <View style={styles.section}>
           <Text style={styles.label}>Title</Text>
           <Text style={styles.title}>{item.title}</Text>
@@ -45,7 +48,9 @@ const QuestBitDetails = () => {
           <Text style={styles.label}>Due Date</Text>
           <View style={styles.row}>
             <MaterialIcons name="event" size={20} color="black" />
-            <Text style={styles.value}>{item.dueDates[0].substring(0, 10)}</Text>
+            <Text style={styles.value}>
+              {item.dueDates[0].substring(0, 10)}
+            </Text>
           </View>
         </View>
         <View style={styles.section}>
@@ -64,9 +69,13 @@ const QuestBitDetails = () => {
       <View style={styles.section}>
         <Text style={styles.label}>Assignee(s)</Text>
         <View style={styles.row}>
-          {item.assignees.map(assignee => (
+          {item.assignees.map((assignee) => (
             <View key={assignee.id} style={styles.assignee}>
-              <Image source={require("../../assets/HD/character_48X48.png")} style={styles.character} resizeMethod='stretch' />
+              <Image
+                source={require("../../assets/HD/character_48X48.png")}
+                style={styles.character}
+                resizeMethod="stretch"
+              />
               <Text style={styles.username}>{assignee.username}</Text>
             </View>
           ))}
@@ -76,7 +85,11 @@ const QuestBitDetails = () => {
         <Text style={styles.label}>QuestBit Diary</Text>
       </View>
       <View style={styles.log}>
-        <Image source={require("../../assets/HD/scroll_small.png")} style={styles.scroll} resizeMethod='stretch' />
+        <Image
+          source={require("../../assets/HD/scroll_small.png")}
+          style={styles.scroll}
+          resizeMethod="stretch"
+        />
       </View>
     </View>
   );
@@ -86,10 +99,16 @@ const QuestBitDetails = () => {
     const [status, setStatus] = useState(item.status);
     const [recurrence, setRecurrence] = useState(item.recurrence);
     const [description, setDescription] = useState(item.description);
-  
+
     return (
       <View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingRight: 20 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingRight: 20,
+          }}
+        >
           <View style={styles.section}>
             <Text style={styles.label}>Title</Text>
             <TextInput
@@ -107,12 +126,20 @@ const QuestBitDetails = () => {
             />
           </View>
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingRight: 20 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingRight: 20,
+          }}
+        >
           <View style={styles.section}>
             <Text style={styles.label}>Due Date</Text>
             <View style={styles.row}>
               <MaterialIcons name="event" size={20} color="black" />
-              <Text style={styles.value}>{item.dueDates[0].substring(0, 10)}</Text>
+              <Text style={styles.value}>
+                {item.dueDates[0].substring(0, 10)}
+              </Text>
             </View>
           </View>
           <View style={styles.section}>
@@ -140,9 +167,13 @@ const QuestBitDetails = () => {
         <View style={styles.section}>
           <Text style={styles.label}>Assignee(s)</Text>
           <View style={styles.row}>
-            {item.assignees.map(assignee => (
+            {item.assignees.map((assignee) => (
               <View key={assignee.id} style={styles.assignee}>
-                <Image source={require("../../assets/HD/character_48X48.png")} style={styles.character} resizeMode='stretch' />
+                <Image
+                  source={require("../../assets/HD/character_48X48.png")}
+                  style={styles.character}
+                  resizeMode="stretch"
+                />
                 <Text style={styles.username}>{assignee.username}</Text>
               </View>
             ))}
@@ -166,36 +197,32 @@ const QuestBitDetails = () => {
           <MaterialIcons name="keyboard-backspace" size={30} color="black" />
           <TouchableOpacity onPress={toggleEditing}>
           <AntDesign name="form" size={25} color="black" />
-          </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
+      </View>
       <Text style={styles.header}>QuestBit Details</Text>
       <View style={styles.section}>
           <Text style={styles.label}>Quest</Text>
           <Text style={styles.quest}>to do later</Text>
         </View>
       {isEditing ? (
-        <EditableQuestItem item={questbits[0]} /> 
+        <EditableQuestItem item={item} />
       ) : (
-        <FlatList
-          data={questbits}
-          keyExtractor={(item) => item.$id} 
-          renderItem={renderQuestItem}
-        />
+        renderQuestBitDetails()
       )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   log: {
     height: 190,
-    alignItems: 'center', 
-    justifyContent: 'center',
-    padding: 30
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 30,
   },
   scroll: {
-    width: '120%', 
-    height: '100%', 
+    width: "120%",
+    height: "100%",
     marginBottom: 10,
     marginTop: -70,
   },
@@ -209,17 +236,17 @@ const styles = StyleSheet.create({
     fontSize: 32,
     marginTop: -8
   },
-  username : {
-    fontFamily: 'ZCOOL', 
+  username: {
+    fontFamily: "ZCOOL",
     marginBottom: 7,
     fontSize: 18,
-  },  
+  },
   header: {
-    marginTop:20,
+    marginTop: 20,
     fontSize: 18,
     marginBottom: 20,
-    fontFamily: 'PressStart2P', 
-    color: 'black',
+    fontFamily: "PressStart2P",
+    color: "black",
   },
   quest: { 
     fontSize: 32,
@@ -231,47 +258,47 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 23,
-    fontWeight: 'bold',
-    fontFamily: 'ZCOOL',
-    color: 'gray',
+    fontWeight: "bold",
+    fontFamily: "ZCOOL",
+    color: "gray",
     marginBottom: 8,
   },
   value: {
     fontSize: 18,
-    fontFamily: 'ZCOOL', 
+    fontFamily: "ZCOOL",
   },
   row: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   status: {
     width: 100,
     height: 20,
-    backgroundColor: 'gray',
+    backgroundColor: "gray",
   },
   assignee: {
-    alignItems: 'center',
+    alignItems: "center",
     marginRight: 10,
   },
   centered: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   input: {
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: "black",
     borderRadius: 5,
     padding: 8,
     fontSize: 18,
-    fontFamily: 'ZCOOL',
+    fontFamily: "ZCOOL",
     marginBottom: 10,
   },
   picker: {
     height: 50,
-    width: '100%',
+    width: "100%",
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: "black",
     borderRadius: 5,
     marginBottom: 10,
   },

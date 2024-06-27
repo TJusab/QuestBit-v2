@@ -29,7 +29,6 @@ const FormField = ({ title, value, handleChangeText }) => {
               name={showPassword ? "eye" : "eye-with-line"}
               size={16}
               color="#945835"
-              
             />
           </TouchableOpacity>
         )}

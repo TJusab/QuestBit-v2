@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, ActivityIndicator, TouchableOpacity, Text, Image } from "react-native";
+import StatusPopUp from './StatusPopUp'; // Adjust the import path as needed
 
-const PixelButton = ({ text, onPress = null, isLoading = false, imageStyle = {}, textStyle = {}, color}) => {
+const StatusButton = ({ text, questbitId, isLoading = false, imageStyle = {}, textStyle = {}, color}) => {
+  const [modalVisible, setModalVisible] = useState(false);
   const getButtonImage = (color) => {
     switch (color) {
       case "red":
@@ -20,7 +22,7 @@ const PixelButton = ({ text, onPress = null, isLoading = false, imageStyle = {},
 
   return (
     <View>
-      <TouchableOpacity className="items-center justify-center mr-5" onPress={onPress}>
+      <TouchableOpacity className="items-center justify-center mr-5" onPress={() => setModalVisible(true)}>
         <Image
           source={getButtonImage(color)}
           className={`w-[25vw] h-10 ${imageStyle}`}
@@ -35,8 +37,14 @@ const PixelButton = ({ text, onPress = null, isLoading = false, imageStyle = {},
           />
         )}
       </TouchableOpacity>
+      <StatusPopUp
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        value={text}
+        questbitId={questbitId}
+      />
     </View>
   );
 };
 
-export default PixelButton;
+export default StatusButton;

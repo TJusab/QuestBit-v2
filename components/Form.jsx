@@ -26,7 +26,7 @@ const Form = ({ form, setForm, formFields, linkText, link, buttonText, buttonPre
             {linkText}
           </Link>
           <View className="pt-2">
-            <PixelButton text={buttonText} onPress={buttonPress} isLoading={isLoading} />
+            <PixelButton text={buttonText} onPress={buttonPress} isLoading={isLoading} color="green"/>
           </View>
         </View>
       </View>

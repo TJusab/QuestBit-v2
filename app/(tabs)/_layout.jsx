@@ -1,18 +1,20 @@
-import { View, Text, Image } from 'react-native'
-import { Tabs, Redirect } from 'expo-router';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { View, Image } from 'react-native';
+import { Tabs } from 'expo-router';
 
-const TabIcon = ({ icon, color, name, focused }) => {
+const TabIcon = ({ source, color, name, focused }) => {
     return (
         <View className="items-center justify-center">
-            <MaterialIcons
-                name={icon}
-                color={color}
-                size={30}
+            <Image
+                source={source}
+                style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: color, // Apply the tint color to the image
+                }}
             />
         </View>
-    )
-}
+    );
+};
 
 const TabsLayout = () => {
     return (
@@ -23,103 +25,87 @@ const TabsLayout = () => {
                     tabBarActiveTintColor: '#7F4D2E',
                     tabBarInactiveTintColor: '#FFFFFF',
                     tabBarStyle: {
-                        backgroundColor: '#A3C254'
+                        backgroundColor: '#A3C254',
                     },
                 }}
             >
-            <Tabs.Screen
-                name="home"
-                options={{
-                    title: 'Home',
-                    headerShown: false,
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabIcon
-                            icon="home"
-                            color={color}
-                            focused={focused}
-                        />
-                    )
-                }}
-            />
+                <Tabs.Screen
+                    name="home"
+                    options={{
+                        title: 'Home',
+                        headerShown: false,
+                        tabBarIcon: ({ color, focused }) => (
+                            <TabIcon
+                                source={require('../../assets/HD/icons/home.png')}
+                                color={color}
+                                focused={focused}
+                            />
+                        ),
+                    }}
+                />
 
-            <Tabs.Screen
-                name="quest"
-                options={{
-                    title: 'Quest',
-                    headerShown: false,
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabIcon
-                            icon="edit-document"
-                            color={color}
-                            focused={focused}
-                        />
-                    )
-                }}
-            />
+                <Tabs.Screen
+                    name="quest"
+                    options={{
+                        title: 'Quest',
+                        headerShown: false,
+                        tabBarIcon: ({ color, focused }) => (
+                            <TabIcon
+                                source={require('../../assets/HD/icons/quest.png')}
+                                color={color}
+                                focused={focused}
+                            />
+                        ),
+                    }}
+                />
 
+                <Tabs.Screen
+                    name="calendar"
+                    options={{
+                        title: 'Calendar',
+                        headerShown: false,
+                        tabBarIcon: ({ color, focused }) => (
+                            <TabIcon
+                                source={require('../../assets/HD/icons/calendar.png')}
+                                color={color}
+                                focused={focused}
+                            />
+                        ),
+                    }}
+                />
 
-            <Tabs.Screen
-                name="questbitdetails"
-                options={{
-                    title: 'QuestBitDetails',
-                    headerShown: false,
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabIcon
-                            icon="archive"
-                            color={color}
-                            focused={focused}
-                        />
-                    )
-                }}
-            />
+                <Tabs.Screen
+                    name="create"
+                    options={{
+                        title: 'Create',
+                        headerShown: false,
+                        tabBarIcon: ({ color, focused }) => (
+                            <TabIcon
+                                source={require('../../assets/HD/icons/quest.png')}
+                                color={color}
+                                focused={focused}
+                            />
+                        ),
+                    }}
+                />
 
-            <Tabs.Screen
-                name="calendar"
-                options={{
-                    title: 'Calendar',
-                    headerShown: false,
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabIcon
-                            icon="calendar-month"
-                            color={color}
-                            focused={focused}
-                        />
-                    )
-                }}
-            />
-
-            <Tabs.Screen
-                name="create"
-                options={{
-                    title: 'Create',
-                    headerShown: false,
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabIcon
-                            icon="create"
-                            color={color}
-                            focused={focused}
-                        />
-                    )
-                }}
-            />
-
-            <Tabs.Screen
-                name="profile"
-                options={{
-                    title: 'Profile',
-                    headerShown: false,
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabIcon
-                            icon="person"
-                            color={color}
-                            focused={focused}
-                        />
-                    )
-                }}
-            />
-        </Tabs >
+                <Tabs.Screen
+                    name="profile"
+                    options={{
+                        title: 'Profile',
+                        headerShown: false,
+                        tabBarIcon: ({ color, focused }) => (
+                            <TabIcon
+                                source={require('../../assets/HD/icons/profile.png')}
+                                color={color}
+                                focused={focused}
+                            />
+                        ),
+                    }}
+                />
+            </Tabs>
         </>
-    )
-}
+    );
+};
 
 export default TabsLayout;
