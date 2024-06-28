@@ -20,6 +20,7 @@ const QuestBitDetails = () => {
 
   const toggleEditing = () => {
     setIsEditing(!isEditing);
+    console.log(item);
   };
 
   const back = () => {
@@ -60,7 +61,7 @@ const QuestBitDetails = () => {
         <Text style={styles.label}>Assignee(s)</Text>
         <View style={styles.row}>
           {item.assignees.map((assignee) => (
-            <View key={assignee.id}>
+            <View key={assignee.$id} style={{ alignItems: "center", marginRight: 10 }}>
               <Image
                 source={require("../../assets/HD/character_48X48.png")}
                 style={styles.character}
@@ -135,7 +136,7 @@ const QuestBitDetails = () => {
         <Text style={styles.label}>Assignee(s)</Text>
         <View style={{ flexDirection: "row" }}>
           {item.assignees.map((assignee) => (
-            <View key={assignee.id} style={{ alignItems: "center", marginRight: 10 }}>
+            <View key={assignee.$id} style={{ alignItems: "center", marginRight: 10 }}>
               <Image
                 source={require("../../assets/HD/character_48X48.png")}
                 style={{ width: 90, height: 90, marginBottom: 10 }}
