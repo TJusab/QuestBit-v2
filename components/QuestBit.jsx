@@ -10,7 +10,7 @@ import { getQuestIcon, getUserIcon } from "../lib/icon";
 const QuestBit = ({ item, onUpdate }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const dateString = item.dueDates[0];
-  const date = new Date(dateString);
+  const date = new Date(dateString);  
 
   const options = { year: "numeric", month: "long", day: "numeric" };
   const formattedDate = new Intl.DateTimeFormat("en-US", options).format(date);
