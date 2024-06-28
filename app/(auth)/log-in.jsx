@@ -34,7 +34,7 @@ const LogIn = () => {
       setUser(result);
       setIsLogged(true);
 
-      router.replace("/calendar");
+      router.replace("/home");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {

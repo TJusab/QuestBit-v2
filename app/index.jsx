@@ -16,7 +16,7 @@ import { globalStyles } from './global_css';
 export default function App() {
   const { loading, isLogged } = useGlobalContext();
 
-  if (!loading && isLogged) return <Redirect href="/calendar" />
+  if (!loading && isLogged) return <Redirect href="/home" />
 
   const [heartsVisible, setHeartsVisible] = useState([false, false, false, false, false]);
   const [continueVisible, setContinueVisible] = useState(false);
