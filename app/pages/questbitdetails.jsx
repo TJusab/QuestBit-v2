@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     width: "120%",
     height: "100%",
     marginBottom: 10,
-    marginTop: 0,
+    marginTop: -35,
   },
   character: {
     width: 90,
@@ -192,12 +192,11 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'ZCOOL', 
     fontSize: 32,
-    marginTop: -8,
   },
   username: {
     fontFamily: "ZCOOL",
-    marginBottom: 7,
     fontSize: 18,
+    marginBottom: -10,
   },
   header: {
     marginTop: 20,
@@ -219,7 +218,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontFamily: "ZCOOL",
     color: "gray",
-    marginBottom: 8,
+    marginBottom: 3,
+    marginTop: 9,
   },
   value: {
     fontSize: 18,
