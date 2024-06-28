@@ -12,11 +12,35 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useLocalSearchParams } from "expo-router";
 import { router } from "expo-router";
+import StatusButton from "../../components/StatusButton";
 
 const QuestBitDetails = () => {
   const { questbit } = useLocalSearchParams();
   const item = questbit ? JSON.parse(questbit) : null;
   const [isEditing, setIsEditing] = useState(false);
+
+  
+  const getColorFromStatus = (status) => {
+    switch (status) {
+      case "Unassigned":
+        return "yellow";
+      case "OnGoing":
+        return "blue";
+      case "Assigned":
+        return "pink";
+      case "Completed":
+        return "green";
+    }
+  };
+
+  const getTextFromStatus = (status) => {
+    switch (status) {
+      case "OnGoing":
+        return "On Going";
+      default:
+        return status;
+    }
+  };
 
   const toggleEditing = () => {
     setIsEditing(!isEditing);
@@ -51,8 +75,17 @@ const QuestBitDetails = () => {
         <Text style={styles.value}>Annually</Text>
       </View>
       <View>
-        <Text style={styles.label}>Status</Text>
+        <Text style={styles.label}> Status</Text>
+        <View pointerEvents="none" style={{ flexDirection: "row", alignItems: "flex-start" }}>
+        <StatusButton
+          style={{ alignSelf: "flex-start" }}
+          color={getColorFromStatus(item.status)}
+          text={getTextFromStatus(item.status)}
+          textStyle="text-sm"
+        />
+        </View>
       </View>
+
       <View>
         <Text style={styles.label}>Description</Text>
         <Text style={styles.value}>{item.description}</Text>
@@ -169,7 +202,6 @@ const QuestBitDetails = () => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   log: {
