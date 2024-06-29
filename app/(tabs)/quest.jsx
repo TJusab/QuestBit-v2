@@ -16,7 +16,6 @@ const Quest = () => {
         // Fetch quests
         const response = await getQuests();
         setQuests(response); // Set the quests state with the response
-        console.log(response);
 
         // Fetch icons
         const iconsToFetch = {};

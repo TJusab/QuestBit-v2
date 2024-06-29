@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, SafeAreaView, Alert, FlatList, ActivityIndicator } from "react-native";
+import {
+  Text,
+  View,
+  SafeAreaView,
+  Alert,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import Header from "../../components/Header";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { getQuestBits } from "../../lib/database";
@@ -41,7 +48,9 @@ const Home = () => {
         <FlatList
           data={questbits}
           keyExtractor={(item) => item.$id}
-          renderItem={({ item }) => <QuestBit item={item} onUpdate={handleQuestBitUpdate} />}
+          renderItem={({ item }) => (
+            <QuestBit item={item} onUpdate={handleQuestBitUpdate} />
+          )}
           ListHeaderComponent={() => (
             <View>
               <Header />
