@@ -10,7 +10,7 @@ import { getQuestIcon, getUserIcon } from "../lib/icon";
 const QuestBit = ({ item, onUpdate }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const dateString = item.dueDates[0];
-  const date = new Date(dateString);  
+  const date = new Date(dateString);
 
   const options = { year: "numeric", month: "long", day: "numeric" };
   const formattedDate = new Intl.DateTimeFormat("en-US", options).format(date);
@@ -40,8 +40,7 @@ const QuestBit = ({ item, onUpdate }) => {
   return (
     <View>
       <TouchableOpacity
-        style={globalStyles.border}
-        className="bg-white rounded-xl flex-row items-center justify-between p-2 shadow-xl my-2 mx-5"
+        className="bg-white rounded-xl flex-row items-center justify-between p-2 my-2 mx-5 border-2 border-navy"
         onPress={() =>
           router.push({
             pathname: "/pages/questbitdetails",
@@ -50,7 +49,7 @@ const QuestBit = ({ item, onUpdate }) => {
         }
       >
         <View className="flex-col">
-          <View className="flex-row items-center">
+          <View className="flex-row items-center mb-3">
             <Image
               source={getQuestIcon(item.quests.icon)}
               style={{ width: 30, height: 30 }}
@@ -60,27 +59,32 @@ const QuestBit = ({ item, onUpdate }) => {
               {item.title}
             </Text>
           </View>
-          <View className="flex-row mt-3 mr-3 mb-2">
-              {item.assignees.length > 0 &&
-                item.assignees.map((assignee) => (
-                  <View className="items-center">
-                    <Image
-                      key={assignee.id}
-                      source={getUserIcon(assignee.icon)}
-                      style={{ width: 50, height: 50 }}
-                      resizeMode="stretch"
-                    />
-                    <Text className="font-zcool text-justify text-gray">{assignee.username}</Text>
-                  </View>
-                ))}
-          </View>
-          <View className="flex-row justify-between w-[80%] items-center">
+          <Text className="font-zcool text-md text-justify text-gray mb-2">
+            {item.description}
+          </Text>
+          <View className="flex-row items-center">
             <StatusButton
               color={getColorFromStatus(item.status)}
               text={getTextFromStatus(item.status)}
               textStyle="text-sm"
               onPress={() => setModalVisible(true)}
             />
+            <View className="flex-row mx-3">
+              {item.assignees.length > 0 &&
+                item.assignees.map((assignee) => (
+                  <View className="items-center mx-1">
+                    <Image
+                      key={assignee.id}
+                      source={getUserIcon(assignee.icon)}
+                      style={{ width: 30, height: 30 }}
+                      resizeMode="stretch"
+                    />
+                    {/* <Text className="font-zcool text-justify text-gray">
+                      {assignee.username}
+                    </Text> */}
+                  </View>
+                ))}
+            </View>
             <View className="flex-row items-center">
               <Icon name="clock-o" size={20} color="#6E7591" />
               <Text className="font-zcool text-gray text-md px-2">

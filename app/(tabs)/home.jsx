@@ -56,26 +56,15 @@ const Home = () => {
           )}
           ListHeaderComponent={() => (
             <View>
-              <Header />
+              <Header header={`Hello ${user.username}!`} />
               <View className="flex-1 w-full h-full">
-                <Text className="font-press text-3xl text-center" style={globalStyles.title}>
-                  Hello {user.username}!
-                </Text>
-                <View className="flex flex-row w-full items-center justify-between">
-                  <SearchInput />
-                  <DropdownMenu />
-                </View>
-                <View className="mt-10 mx-5">
-                  <Text className="font-press text-xl text-navy text-justify">
+                <View className="mx-5">
+                  <View className="mt-3 mb-5">
+                  <SearchInput value={"Search QuestBit..."}/>
+                  </View>
+                  <Text className="font-press text-lg text-black text-justify mt-5">
                     My QuestBits
                   </Text>
-                  <View className="flex-row justify-between mt-2 mb-5">
-                    {filters.map((word, index) => (
-                      <Text key={index} className="font-zcool text-lg">
-                        {word}
-                      </Text>
-                    ))}
-                  </View>
                 </View>
               </View>
             </View>

@@ -22,7 +22,7 @@ const StatusButton = ({ text, questbitId, isLoading = false, imageStyle = {}, te
 
   return (
     <View>
-      <TouchableOpacity className="items-center justify-center mr-5" onPress={() => setModalVisible(true)}>
+      <TouchableOpacity className="items-center justify-center" onPress={() => setModalVisible(true)}>
         <Image
           source={getButtonImage(color)}
           className={`w-[25vw] h-10 ${imageStyle}`}

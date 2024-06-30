@@ -53,7 +53,7 @@ export default function App() {
             className="flex-1 items-center justify-center"
             resizeMode="stretch"
           >
-              <Text className="font-press text-3xl mb-20" style={globalStyles.title}>QuestBit</Text>
+              <Text className="font-press text-3xl mb-20" style={globalStyles.title}>QUESTBIT</Text>
              <View className="flex-row justify-center items-center mb-40">
               {heartsVisible.map((visible, index) => (
                 visible && (

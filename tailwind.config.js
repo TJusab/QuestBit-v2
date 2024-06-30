@@ -12,7 +12,7 @@ module.exports = {
         },
         green: {
           100: "#6abe30",
-          200: "#408c28",
+          200: "#408C28",
         },
         navy: "#2E3A59",
         black: "#0D101C",
