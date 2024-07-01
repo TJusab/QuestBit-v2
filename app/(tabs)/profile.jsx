@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -23,6 +23,24 @@ const Profile = () => {
   const [password, setPassword] = useState("");
   const [notifications, setNotifications] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const result = await getCurrentUser();
+        setUsername(result.username);
+        setEmail(result.email);
+        setIcon(getUserIcon("Default"));
+      } catch (error) {
+        Alert.alert("Error", "Failed to load user data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
 
 
   const submit = async () => {
@@ -89,6 +107,7 @@ const Profile = () => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
