@@ -1,9 +1,18 @@
-import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, Image } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Adjust the icon based on the package you're using
-import { getQuests } from '../../lib/database';
-import { getQuestIcon } from '../../lib/icon';
-import { globalStyles } from '../global_css';
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  Alert,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { getQuests } from "../../lib/database";
+import { getQuestIcon } from "../../lib/icon";
+import { globalStyles } from "../global_css";
+import Header from "../../components/Header";
 
 const Quest = () => {
   const [quests, setQuests] = useState([]);
@@ -24,9 +33,8 @@ const Quest = () => {
           iconsToFetch[quest.$id] = questIcon;
         }
         setIcons(iconsToFetch);
-
       } catch (error) {
-        Alert.alert('Error', error.message);
+        Alert.alert("Error", error.message);
       } finally {
         setLoading(false);
       }
@@ -37,7 +45,7 @@ const Quest = () => {
 
   const renderQuestItem = ({ item }) => (
     <TouchableOpacity
-      className="mb-10 p-5 bg-blue-200 rounded-xl"
+      className="mb-10 p-5 bg-blue-200 rounded-xl mx-5"
       onPress={() => handleQuestPress(item)}
     >
       <View className="flex-row justify-between items-center">
@@ -52,7 +60,9 @@ const Quest = () => {
         </TouchableOpacity>
       </View>
       <View className="py-4 flex-1">
-        <Text className="font-press text-2xl" style={globalStyles.title}>{item.title}</Text>
+        <Text className="font-press text-2xl" style={globalStyles.title}>
+          {item.title}
+        </Text>
         <Text className="font-zcool text-lg text-white">{item.questInfo}</Text>
       </View>
       <View style={globalStyles.progress_bar}>
@@ -66,30 +76,31 @@ const Quest = () => {
   );
 
   const handleQuestPress = (quest) => {
-    console.log('Quest Pressed:', quest);
+    console.log("Quest Pressed:", quest);
   };
 
   const handleMoreOptionsPress = (quest) => {
-    console.log('More Options Pressed:', quest);
+    console.log("More Options Pressed:", quest);
   };
 
   if (loading) {
     return (
-      <View className="flex-1 align-items-center" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View
+        className="flex-1 align-items-center"
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      >
         <ActivityIndicator size="large" />
       </View>
     );
   }
 
   return (
-    <View className="flex-1 p-5">
-      <Text className="text-3xl mt-20 mb-10 mx-auto font-press text-navy">My Quests!</Text>
-      <FlatList
-        data={quests}
-        keyExtractor={(item) => item.$id}
-        renderItem={renderQuestItem}
-      />
-    </View>
+    <FlatList
+      data={quests}
+      keyExtractor={(item) => item.$id}
+      renderItem={renderQuestItem}
+      ListHeaderComponent={() => <Header header={"My Quests !"} />}
+    />
   );
 };
 

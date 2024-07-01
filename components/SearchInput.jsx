@@ -1,10 +1,9 @@
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
-import { useState } from "react";
+import { View, TextInput, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const SearchInput = ({ value, handleChangeText }) => {
   return (
-    <View className="h-10 bg-white rounded-2xl border-2 border-navy px-4 py-2 flex-row">
+    <View className="h-10 bg-white rounded-2xl border-2 border-navy px-4 items-center flex-row">
       <TouchableOpacity>
         <Icon name="search" size={20} color="#2E3A59" />
       </TouchableOpacity>

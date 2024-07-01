@@ -60,12 +60,11 @@ const Profile = () => {
       <Text style={styles.header}>My Profile!</Text>
       <Image source={getUserIcon(user.icon)} style={styles.avatar} />
 
-      <Text className="font-zcool text-lg text-justify">Nickname</Text>
+      <Text style={styles.label}>Nickname</Text>
       <TextInput
         style={styles.input}
         value={nickname}
         onChangeText={setNickname}
-        className="font-zcool"
       />
 
       <Text style={styles.label}>Username</Text>
