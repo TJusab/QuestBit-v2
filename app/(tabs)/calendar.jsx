@@ -6,6 +6,7 @@ import { getQuestColor } from "../../lib/icon";
 import moment from "moment";
 import QuestBit from "../../components/QuestBit";
 import { globalStyles } from "../global_css";
+import Header from "../../components/Header";
 
 const CustomCalendar = () => {
   const [questbits, setQuestBits] = useState([]);
@@ -77,7 +78,8 @@ const CustomCalendar = () => {
   const renderQuestBit = ({ item }) => <QuestBit item={item} />;
 
   return (
-    <View className="mt-20">
+    <View>
+      <Header header={"Calendar !"} />
       <View
         className="w-[90%] mx-auto rounded-xl bg-white"
         style={globalStyles.border}

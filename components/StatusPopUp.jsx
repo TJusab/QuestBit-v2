@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, ImageBackground } from 'react-native';
 import PixelButton from './PixelButton';
-import DropdownMenu from './StatusDropdown';
+import StatusDropdown from './StatusDropdown';
 import { updateQuestBitStatus } from '../lib/database';
 
 const StatusPopUp = ({ visible, onClose, value, questbitId, onUpdate }) => {
@@ -36,7 +36,7 @@ const StatusPopUp = ({ visible, onClose, value, questbitId, onUpdate }) => {
                 Select the new state of the QuestBit
               </Text>
               <View className="w-3/5 m-auto my-8 z-10">
-                <DropdownMenu initialValue={newStatus} onChangeValue={setNewStatus} />
+                <StatusDropdown initialValue={newStatus} onChangeValue={setNewStatus} />
               </View>
               <View className="flex-row items-center justify-center ml-10">
                 <PixelButton
