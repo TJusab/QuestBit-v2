@@ -1,5 +1,5 @@
-import { View, TextInput, TouchableOpacity } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
+import { View, TextInput, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const SearchInput = ({ value, handleChangeText }) => {
   return (

@@ -9,22 +9,23 @@ import {
 } from "react-native";
 import Header from "../../components/Header";
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { getQuestBits } from "../../lib/database";
+import { getQuestBitsForUser } from "../../lib/database";
 import QuestBit from "../../components/QuestBit";
-import DropdownMenu from "../../components/Dropdown";
 import SearchInput from "../../components/SearchInput";
-import { globalStyles } from '../global_css';
+import { globalStyles } from "../global_css";
 
 const Home = () => {
   const { user } = useGlobalContext();
-  const filters = ["Today", "Upcoming", "Due Soon", "Completed"];
   const [questbits, setQuestBits] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchText, setSearchText] = useState("");
+  const [filteredQuestBits, setFilteredQuestBits] = useState([]);
 
   const fetchQuestBits = async () => {
     try {
-      const response = await getQuestBits();
+      const response = await getQuestBitsForUser();
       setQuestBits(response);
+      setFilteredQuestBits(response); // Initialize filtered list
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {
@@ -35,6 +36,17 @@ const Home = () => {
   useEffect(() => {
     fetchQuestBits();
   }, []);
+
+  useEffect(() => {
+    if (searchText === "") {
+      setFilteredQuestBits(questbits);
+    } else {
+      const filtered = questbits.filter((qb) =>
+        qb.title.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setFilteredQuestBits(filtered);
+    }
+  }, [searchText, questbits]);
 
   const handleQuestBitUpdate = async () => {
     setLoading(true);
@@ -48,28 +60,27 @@ const Home = () => {
           <ActivityIndicator color="#6E7591" size="large" />
         </View>
       ) : (
-        <FlatList
-          data={questbits}
-          keyExtractor={(item) => item.$id}
-          renderItem={({ item }) => (
-            <QuestBit item={item} onUpdate={handleQuestBitUpdate} />
-          )}
-          ListHeaderComponent={() => (
-            <View>
-              <Header header={`Hello ${user.username}!`} />
-              <View className="flex-1 w-full h-full">
-                <View className="mx-5">
-                  <View className="mt-3 mb-5">
-                  <SearchInput value={"Search QuestBit..."}/>
-                  </View>
-                  <Text className="font-press text-lg text-black text-justify mt-5">
-                    My QuestBits
-                  </Text>
-                </View>
-              </View>
+        <View>
+          <View>
+            <Header header={`Hello ${user.username}!`} />
+            <View className="mx-5 mb-5 mt-2">
+              <SearchInput
+                value={searchText}
+                handleChangeText={setSearchText}
+              />
             </View>
-          )}
-        />
+            <Text className="font-press text-lg text-black text-justify mt-5 mx-5">
+              My QuestBits
+            </Text>
+          </View>
+          <FlatList
+            data={filteredQuestBits}
+            keyExtractor={(item) => item.$id}
+            renderItem={({ item }) => (
+              <QuestBit item={item} onUpdate={handleQuestBitUpdate} />
+            )}
+          />
+        </View>
       )}
     </SafeAreaView>
   );

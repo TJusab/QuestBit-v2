@@ -2,12 +2,14 @@ import { View, Text, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
 import StatusButton from "./StatusButton";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import CustomModal from "./StatusPopUp"; // Adjust the import path as needed
+import StatusModal from "./StatusPopUp";
+import DeleteModal from "./DeletePopUp";
 import { router } from "expo-router";
 import { getQuestIcon, getUserIcon } from "../lib/icon";
 
 const QuestBit = ({ item, onUpdate }) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [statusModalVisible, setStatusModalVisible] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const dateString = item.dueDates[0];
   const date = new Date(dateString);
 
@@ -48,7 +50,7 @@ const QuestBit = ({ item, onUpdate }) => {
         }
       >
         <View className="flex-col flex-1">
-          <View className="flex-row items-center mb-5 justify-between">
+          <View className="flex-row items-center mb-5 pt-1 justify-between">
             <View className="flex-row items-center">
               <Image
                 source={getQuestIcon(item.quests.icon)}
@@ -59,7 +61,7 @@ const QuestBit = ({ item, onUpdate }) => {
                 {item.title}
               </Text>
             </View>
-            <TouchableOpacity onPress={() => console.log("THREE DOTS CLICKED!!")}>
+            <TouchableOpacity onPress={() => setDeleteModalVisible(true)} className="px-3 py-1">
               <Icon name="ellipsis-v" size={24} color="#408C28" />
             </TouchableOpacity>
           </View>
@@ -72,7 +74,7 @@ const QuestBit = ({ item, onUpdate }) => {
                 color={getColorFromStatus(item.status)}
                 text={getTextFromStatus(item.status)}
                 textStyle="text-sm"
-                onPress={() => setModalVisible(true)}
+                onPress={() => setStatusModalVisible(true)}
               />
               <View className="flex-row mx-3">
                 {item.assignees.length > 0 &&
@@ -97,10 +99,16 @@ const QuestBit = ({ item, onUpdate }) => {
           </View>
         </View>
       </TouchableOpacity>
-      <CustomModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
+      <StatusModal
+        visible={statusModalVisible}
+        onClose={() => setStatusModalVisible(false)}
         value={`${item.status}`}
+        questbitId={item.$id}
+        onUpdate={onUpdate}
+      />
+      <DeleteModal
+        visible={deleteModalVisible}
+        onClose={() => setDeleteModalVisible(false)}
         questbitId={item.$id}
         onUpdate={onUpdate}
       />
