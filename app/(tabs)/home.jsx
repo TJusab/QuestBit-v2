@@ -6,6 +6,7 @@ import {
   Alert,
   FlatList,
   ActivityIndicator,
+  ImageBackground,
 } from "react-native";
 import Header from "../../components/Header";
 import { useGlobalContext } from "../../context/GlobalProvider";
@@ -54,32 +55,38 @@ const Home = () => {
   };
 
   return (
-    <SafeAreaView className="bg-blue-200 h-full">
+    <SafeAreaView className="h-full">
       {loading ? (
         <View className="flex-1 justify-center items-center">
           <ActivityIndicator color="#6E7591" size="large" />
         </View>
       ) : (
         <View>
-          <View>
-            <Header header={`Hello ${user.username}!`} />
-            <View className="mx-5 mb-5 mt-2">
-              <SearchInput
-                value={searchText}
-                handleChangeText={setSearchText}
-              />
+          <ImageBackground
+            source={require("../../assets/HD/blue_sky.png")}
+            className="w-full h-full"
+            resizeMode="stretch"
+          >
+            <View>
+              <Header header={`Hello ${user.username}!`} />
+              <View className="mx-5 mb-5 mt-2">
+                <SearchInput
+                  value={searchText}
+                  handleChangeText={setSearchText}
+                />
+              </View>
+              <Text className="font-press text-lg text-black text-justify mt-5 mx-5">
+                My QuestBits
+              </Text>
             </View>
-            <Text className="font-press text-lg text-black text-justify mt-5 mx-5">
-              My QuestBits
-            </Text>
-          </View>
-          <FlatList
-            data={filteredQuestBits}
-            keyExtractor={(item) => item.$id}
-            renderItem={({ item }) => (
-              <QuestBit item={item} onUpdate={handleQuestBitUpdate} />
-            )}
-          />
+            <FlatList
+              data={filteredQuestBits}
+              keyExtractor={(item) => item.$id}
+              renderItem={({ item }) => (
+                <QuestBit item={item} onUpdate={handleQuestBitUpdate} />
+              )}
+            />
+          </ImageBackground>
         </View>
       )}
     </SafeAreaView>
