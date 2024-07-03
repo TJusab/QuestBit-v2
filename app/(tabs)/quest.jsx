@@ -1,9 +1,20 @@
-import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, Image } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Adjust the icon based on the package you're using
-import { getQuests } from '../../lib/database';
-import { getQuestIcon } from '../../lib/icon';
-import { globalStyles } from '../global_css';
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  Alert,
+  TouchableOpacity,
+  Image,
+  StyleSheet
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import { getQuests } from "../../lib/database";
+import { getQuestIcon } from "../../lib/icon";
+import { globalStyles } from "../global_css";
+import Header from "../../components/Header";
+import { router } from "expo-router";
 
 const Quest = () => {
   const [quests, setQuests] = useState([]);
@@ -24,9 +35,8 @@ const Quest = () => {
           iconsToFetch[quest.$id] = questIcon;
         }
         setIcons(iconsToFetch);
-
       } catch (error) {
-        Alert.alert('Error', error.message);
+        Alert.alert("Error", error.message);
       } finally {
         setLoading(false);
       }
@@ -37,7 +47,7 @@ const Quest = () => {
 
   const renderQuestItem = ({ item }) => (
     <TouchableOpacity
-      className="mb-10 p-5 bg-blue-200 rounded-xl"
+      className="mb-5 p-5 bg-blue-200 rounded-xl mx-5"
       onPress={() => handleQuestPress(item)}
     >
       <View className="flex-row justify-between items-center">
@@ -48,11 +58,13 @@ const Quest = () => {
           onPress={() => handleMoreOptionsPress(item)}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <Icon name="ellipsis-v" size={20} color="white" />
+          <Icon name="ellipsis-v" size={24} color="white" />
         </TouchableOpacity>
       </View>
       <View className="py-4 flex-1">
-        <Text className="font-press text-2xl" style={globalStyles.title}>{item.title}</Text>
+        <Text className="font-press text-xl" style={globalStyles.questTitle}>
+          {item.title}
+        </Text>
         <Text className="font-zcool text-lg text-white">{item.questInfo}</Text>
       </View>
       <View style={globalStyles.progress_bar}>
@@ -66,31 +78,52 @@ const Quest = () => {
   );
 
   const handleQuestPress = (quest) => {
-    console.log('Quest Pressed:', quest);
+    console.log("Quest Pressed:", quest);
   };
 
   const handleMoreOptionsPress = (quest) => {
-    console.log('More Options Pressed:', quest);
+    console.log("More Options Pressed:", quest);
   };
 
   if (loading) {
     return (
-      <View className="flex-1 align-items-center" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View
+        className="flex-1 align-items-center"
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      >
         <ActivityIndicator size="large" />
       </View>
     );
   }
 
   return (
-    <View className="flex-1 p-5">
-      <Text className="text-3xl mt-20 mb-10 mx-auto font-press text-navy">My Quests!</Text>
+    <View className="bg-blue-50 h-full">
       <FlatList
         data={quests}
         keyExtractor={(item) => item.$id}
         renderItem={renderQuestItem}
+        ListHeaderComponent={() => <Header header={"My Quests !"} />}
       />
+      <TouchableOpacity style={styles.addButton} onPress={() => router.push("/pages/create-quest")}>
+        <Icon name="plus" size={24} color="white" />
+      </TouchableOpacity>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  addButton: {
+    position: "absolute",
+    bottom: 30,
+    right: 30,
+    width: 60,
+    height: 60,
+    backgroundColor: "#7F4D2E",
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000
+  }
+});
 
 export default Quest;

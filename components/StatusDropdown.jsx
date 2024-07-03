@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-const DropdownMenu = ({ initialValue, onChangeValue }) => {
+const StatusDropdown = ({ initialValue, onChangeValue }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
@@ -53,4 +53,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default DropdownMenu;
+export default StatusDropdown;
