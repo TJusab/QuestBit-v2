@@ -9,7 +9,7 @@ const TabIcon = ({ source, color, name, focused }) => {
                 style={{
                     width: 30,
                     height: 30,
-                    tintColor: color, // Apply the tint color to the image
+                    tintColor: color,
                 }}
             />
         </View>
@@ -22,10 +22,10 @@ const TabsLayout = () => {
             <Tabs
                 screenOptions={{
                     tabBarShowLabel: false,
-                    tabBarActiveTintColor: '#7F4D2E',
+                    tabBarActiveTintColor: '#6ABE30',
                     tabBarInactiveTintColor: '#FFFFFF',
                     tabBarStyle: {
-                        backgroundColor: '#408C28',
+                        backgroundColor: '#7F4D2E',
                     },
                 }}
             >
@@ -34,7 +34,7 @@ const TabsLayout = () => {
                     options={{
                         title: 'Home',
                         headerShown: false,
-                        tabBarIcon: ({ color, focused }) => (
+                        tabBarIcon: ({ color, focused }) =>  (
                             <TabIcon
                                 source={require('../../assets/HD/icons/home.png')}
                                 color={color}

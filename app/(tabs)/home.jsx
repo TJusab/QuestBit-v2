@@ -69,7 +69,7 @@ const Home = () => {
           >
             <View>
               <Header header={`Hello ${user.username}!`} />
-              <View className="mx-5 mb-5 mt-2">
+              <View className="mx-5 mb-5">
                 <SearchInput
                   value={searchText}
                   handleChangeText={setSearchText}

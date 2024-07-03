@@ -8,7 +8,7 @@ const Header = ({ header }) => {
 
   const { user } = useGlobalContext();
   return (
-    <View className="flex-row w-[95%] justify-between mt-5 items-center">
+    <View className="flex-row w-[95%] justify-between mt-5 items-center mb-5">
       <Text
         className="font-press text-2xl text-center ml-5"
         style={globalStyles.title}
