@@ -7,7 +7,7 @@ const PagesLayout = () => {
     <>
       <Stack>
         <Stack.Screen 
-          name="QuestBitDetails"
+          name="questbitdetails"
           options={{
             headerShown:false
           }}

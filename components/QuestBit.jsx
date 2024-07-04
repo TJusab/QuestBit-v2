@@ -44,7 +44,7 @@ const QuestBit = ({ item, onUpdate }) => {
         className="bg-white rounded-xl flex-row items-center p-2 my-2 mx-5"
         onPress={() =>
           router.push({
-            pathname: "/pages/QuestBitDetails",
+            pathname: "/pages/questbitdetails",
             params: { questbit: JSON.stringify(item) },
           })
         }
