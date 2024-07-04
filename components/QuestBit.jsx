@@ -75,6 +75,8 @@ const QuestBit = ({ item, onUpdate }) => {
                 text={getTextFromStatus(item.status)}
                 textStyle="text-sm"
                 onPress={() => setStatusModalVisible(true)}
+                questbitId={item.$id}
+                onUpdate={onUpdate}
               />
               <View className="flex-row mx-3">
                 {item.assignees.length > 0 &&
@@ -99,13 +101,6 @@ const QuestBit = ({ item, onUpdate }) => {
           </View>
         </View>
       </TouchableOpacity>
-      <StatusModal
-        visible={statusModalVisible}
-        onClose={() => setStatusModalVisible(false)}
-        value={`${item.status}`}
-        questbitId={item.$id}
-        onUpdate={onUpdate}
-      />
       <DeleteModal
         visible={deleteModalVisible}
         onClose={() => setDeleteModalVisible(false)}
