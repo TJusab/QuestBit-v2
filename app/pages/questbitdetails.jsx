@@ -122,11 +122,17 @@ const QuestBitDetails = () => {
     <View>
       <View style={{ flexDirection: "row", justifyContent: "space-between", paddingRight: 20 }}>
         <View>
-          <Text style={styles.label}>Title</Text>
+          <View style={styles.edit_row}>
+            <Text style={styles.edit_label}>Title</Text> 
+            <AntDesign name="form" size={20} color="black" />
+          </View>
           <Text style={styles.title}>{item.title}</Text>
         </View>
         <View>
-          <Text style={styles.label}>Due Date</Text>
+          <View style={styles.edit_row}>
+            <Text style={styles.edit_label}>Due Date</Text>
+            <AntDesign name="form" size={20} color="black" />
+          </View>
           <View>
             <MaterialIcons name="event" size={20} color="black" />
             <Text>{item.dueDates[0].substring(0, 10)}</Text>
@@ -134,12 +140,18 @@ const QuestBitDetails = () => {
         </View>
       </View>
       <View>
-        <Text style={styles.label}>Recurrence</Text>
+        <View style={styles.edit_row}>
+          <Text style={styles.edit_label}>Recurrence</Text>
+          <AntDesign name="form" size={20} color="black" />
+        </View>
         <Text style={styles.value}>Annually</Text>
       </View>
       <View>
-        <Text style={styles.label}> Status</Text>
-        <View pointerEvents="none" style={{ flexDirection: "row", alignItems: "flex-start" }}>
+      <View style={styles.edit_row}>
+          <Text style={styles.edit_label}> Status</Text>
+          <AntDesign name="form" size={25} color="black" />
+        </View>
+        <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
         <StatusButton
           style={{ alignSelf: "flex-start" }}
           color={getColorFromStatus(item.status)}
@@ -148,9 +160,11 @@ const QuestBitDetails = () => {
         />
         </View>
       </View>
-
       <View>
-        <Text style={styles.label}>Description</Text>
+        <View style={styles.edit_row}>
+          <Text style={styles.edit_label}>Description</Text>
+          <AntDesign name="form" size={25} color="black" />
+        </View>
         <Text style={styles.value}>{item.description}</Text>
       </View>
       <View style={styles.section}>
@@ -163,19 +177,13 @@ const QuestBitDetails = () => {
                 style={styles.character}
                 resizeMethod="stretch"
               />
+              <TouchableOpacity
+                style={styles.remove_assignee}>
+                  <AntDesign name="minuscircle" size={25} color="red" />
+              </TouchableOpacity>
               <Text style={styles.username}>{assignee.username}</Text>
             </View>
           ))}
-        </View>
-      </View>
-      <View>
-      <Text style={styles.label}>QuestBit Diary</Text>
-        <View style={styles.log}>
-          <Image
-            source={require("../../assets/HD/scroll_small.png")}
-            style={styles.scroll}
-            resizeMethod="stretch"
-          />
         </View>
       </View>
     </View>
@@ -207,6 +215,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 30,
+  },
+  edit_row: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  remove_assignee: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 28,
+    height: 28,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   scroll: {
     width: "120%",
@@ -250,6 +272,15 @@ const styles = StyleSheet.create({
     color: "gray",
     marginBottom: 3,
     marginTop: 9,
+  },
+  edit_label: {
+    fontSize: 23,
+    fontWeight: "bold",
+    fontFamily: "ZCOOL",
+    color: "gray",
+    marginBottom: 3,
+    marginTop: 9,
+    marginRight: 10
   },
   value: {
     fontSize: 18,
