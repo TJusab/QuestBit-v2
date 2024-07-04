@@ -6,13 +6,15 @@ import {
   Alert,
   TouchableOpacity,
   Image,
+  StyleSheet
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/FontAwesome5";
 import { getQuests } from "../../lib/database";
 import { getQuestIcon } from "../../lib/icon";
 import { globalStyles } from "../global_css";
 import Header from "../../components/Header";
+import { router } from "expo-router";
 
 const Quest = () => {
   const [quests, setQuests] = useState([]);
@@ -45,7 +47,7 @@ const Quest = () => {
 
   const renderQuestItem = ({ item }) => (
     <TouchableOpacity
-      className="mb-10 p-5 bg-blue-200 rounded-xl mx-5"
+      className="mb-5 p-5 bg-blue-200 rounded-xl mx-5"
       onPress={() => handleQuestPress(item)}
     >
       <View className="flex-row justify-between items-center">
@@ -56,11 +58,11 @@ const Quest = () => {
           onPress={() => handleMoreOptionsPress(item)}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <Icon name="ellipsis-v" size={20} color="white" />
+          <Icon name="ellipsis-v" size={24} color="white" />
         </TouchableOpacity>
       </View>
       <View className="py-4 flex-1">
-        <Text className="font-press text-2xl" style={globalStyles.title}>
+        <Text className="font-press text-xl" style={globalStyles.questTitle}>
           {item.title}
         </Text>
         <Text className="font-zcool text-lg text-white">{item.questInfo}</Text>
@@ -95,13 +97,33 @@ const Quest = () => {
   }
 
   return (
-    <FlatList
-      data={quests}
-      keyExtractor={(item) => item.$id}
-      renderItem={renderQuestItem}
-      ListHeaderComponent={() => <Header header={"My Quests !"} />}
-    />
+    <View className="bg-blue-50 h-full">
+      <FlatList
+        data={quests}
+        keyExtractor={(item) => item.$id}
+        renderItem={renderQuestItem}
+        ListHeaderComponent={() => <Header header={"My Quests !"} />}
+      />
+      <TouchableOpacity style={styles.addButton} onPress={() => router.push("/pages/create-quest")}>
+        <Icon name="plus" size={24} color="white" />
+      </TouchableOpacity>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  addButton: {
+    position: "absolute",
+    bottom: 30,
+    right: 30,
+    width: 60,
+    height: 60,
+    backgroundColor: "#7F4D2E",
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000
+  }
+});
 
 export default Quest;

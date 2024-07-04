@@ -5,6 +5,12 @@ export const globalStyles = {
     textShadowRadius: 1,
     color: "white",
   },
+  questTitle: {
+    textShadowColor: "#2E3A59",
+    textShadowOffset: { width: 3, height: 3 },
+    textShadowRadius: 0.1,
+    color: "white"
+  },
   progress_bar: {
     height: 5,
     width: "100%",
