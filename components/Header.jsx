@@ -8,7 +8,7 @@ const Header = ({ header }) => {
 
   const { user } = useGlobalContext();
   return (
-    <View className="flex-row w-[95%] justify-between mt-5 items-center mb-5">
+    <View className="flex-row w-[95%] justify-between mt-12 items-center mb-5">
       <Text
         className="font-press text-2xl text-center ml-5"
         style={globalStyles.title}
@@ -17,7 +17,7 @@ const Header = ({ header }) => {
       </Text>
       <Image
         source={getUserIcon(user.icon)}
-        className="w-[60] h-[60] mb-5 ml-5"
+        className="w-[70] h-[70] mb-5 ml-5"
       />
     </View>
   );
