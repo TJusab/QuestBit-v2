@@ -84,7 +84,7 @@ const QuestBit = ({ item, onUpdate }) => {
                     <View className="items-center mx-1" key={assignee.$id}>
                       <Image
                         source={getUserIcon(assignee.icon)}
-                        style={{ width: 30, height: 30 }}
+                        style={{ width: 40, height: 40 }}
                         resizeMode="stretch"
                       />
                     </View>
