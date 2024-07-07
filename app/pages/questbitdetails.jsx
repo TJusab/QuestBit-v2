@@ -168,7 +168,10 @@ const QuestBitDetails = () => {
         <Text style={styles.value}>{item.description}</Text>
       </View>
       <View style={styles.section}>
-        <Text style={styles.label}>Assignee(s)</Text>
+        <View style={styles.edit_row}>
+          <Text style={styles.edit_label}>Assignee(s)</Text>
+          <AntDesign name="pluscircle" size={25} color="green" />
+        </View>
         <View style={styles.row}>
           {item.assignees.map((assignee) => (
             <View key={assignee.$id} style={{ alignItems: "center", marginRight: 10 }}>
