@@ -10,13 +10,24 @@ import {
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import PixelButton from "../../components/PixelButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import AddPeopleModal from "../../components/AddPeoplePopUp";
+import { fetchAdventurers } from "../../lib/database";
+import { getUserIcon } from "../../lib/icon";
 
 const CreateQuest = () => {
+  const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState("Birthday Party Planning");
   const [synopsis, setSynopsis] = useState(
     "Plan a successful surprise birthday party for Bob."
   );
+  const [visible, setVisible] = useState("false");
+  const [selectedAdventurers, setSelectedAdventurers] = useState([]);
+
+  const handleAddAdventurers = (adventurers) => {
+    setSelectedAdventurers(adventurers);
+  };
+
   return (
     <View className="flex-1">
       <View className="h-[40%] bg-white rounded-b-3xl z-10">
@@ -30,8 +41,39 @@ const CreateQuest = () => {
               />
             </TouchableOpacity>
             <View className="flex-1 items-center">
-              <Text className="font-zcool text-3xl">Add Adventurers</Text>
+              <View className="flex-row items-center">
+                <Text className="font-zcool text-3xl mr-5">
+                  Add Adventurers
+                </Text>
+                <TouchableOpacity
+                  style={styles.addButton}
+                  onPress={() => setVisible(true)}
+                >
+                  <Image
+                    source={require("../../assets/HD/add_circle_button.png")}
+                    style={{ width: 48, height: 48 }}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
+          </View>
+          <View className="flex-row mx-3 justify-center items-center my-10">
+            {selectedAdventurers.length > 0 &&
+              selectedAdventurers.map((adventurer) => (
+                <View
+                  className="items-center justify-between mx-5"
+                  key={adventurer.$id}
+                >
+                  <Image
+                    source={getUserIcon(adventurer.icon)}
+                    style={{ width: 40, height: 40 }}
+                    resizeMode="stretch"
+                  />
+                  <Text className="font-zcool text-brown-200">
+                    {adventurer.username}
+                  </Text>
+                </View>
+              ))}
           </View>
         </View>
       </View>
@@ -77,6 +119,11 @@ const CreateQuest = () => {
         </View>
         <PixelButton text="LAUNCH!" color="blue" />
       </View>
+      <AddPeopleModal
+        visible={visible}
+        onClose={() => setVisible(false)}
+        onUpdate={handleAddAdventurers}
+      />
     </View>
   );
 };
