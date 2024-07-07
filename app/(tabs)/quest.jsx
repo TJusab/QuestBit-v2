@@ -104,7 +104,7 @@ const Quest = () => {
         renderItem={renderQuestItem}
         ListHeaderComponent={() => <Header header={"My Quests !"} />}
       />
-      <TouchableOpacity style={styles.addButton} onPress={() => router.push("/pages/create-quest")}>
+      <TouchableOpacity style={styles.addButton} onPress={() => router.push("/pages/create_quest")}>
         <Image source={require("../../assets/HD/add_circle_button.png")} style={{ width: 48, height: 48 }} />
       </TouchableOpacity>
     </View>

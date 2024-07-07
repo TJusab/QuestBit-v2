@@ -7,17 +7,25 @@ import {
   Image,
   Alert,
   TouchableOpacity,
-  StyleSheet
 } from "react-native";
 import PixelButton from "./PixelButton";
 import { fetchAdventurers } from "../lib/database";
 import { getUserIcon } from "../lib/icon";
-import { addAdventurersToQuest } from "../lib/database";
 
-const AddPeoplePopUp = ({ visible, onClose, value, questbitId, onUpdate }) => {
+const AddPeoplePopUp = ({
+  visible,
+  onClose,
+  onUpdate,
+  selectedAdventurers: parentSelectedAdventurers,
+  refreshKey,
+}) => {
   const [selectedAdventurers, setSelectedAdventurers] = useState([]);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setSelectedAdventurers(parentSelectedAdventurers);
+  }, [parentSelectedAdventurers, refreshKey]);
 
   const getAdventurers = async () => {
     try {
@@ -43,16 +51,16 @@ const AddPeoplePopUp = ({ visible, onClose, value, questbitId, onUpdate }) => {
       updatedSelection.splice(index, 1);
       setSelectedAdventurers(updatedSelection);
     }
-  }
+  };
 
   const isSelected = (adventurerId) => {
     return selectedAdventurers.includes(adventurerId);
-  }
+  };
 
   const addAdventurers = () => {
     onUpdate(selectedAdventurers);
     onClose();
-  }
+  };
 
   return (
     <Modal
@@ -72,18 +80,24 @@ const AddPeoplePopUp = ({ visible, onClose, value, questbitId, onUpdate }) => {
               <Text className="font-zcool text-xl text-brown-200 text-center px-10 pt-5">
                 Recruit adventurers for this Quest
               </Text>
-              <View className="flex-row mx-3 justify-center items-center my-10">
+              <View className="flex-row mx-3 justify-center items-center mt-5 mb-10">
                 {items.length > 0 &&
                   items.map((adventurer) => (
                     <View
-                      className="items-center justify-between mx-5"
+                      className="items-center justify-between mx-3"
                       key={adventurer.$id}
                     >
-                      <TouchableOpacity onPress={() => handleAdventurerPress(adventurer)}
-                        className={`${isSelected(adventurer) ? "border-navy border-2" : "border-2 border-transparent"}`}>
+                      <TouchableOpacity
+                        onPress={() => handleAdventurerPress(adventurer)}
+                        className={`${
+                          isSelected(adventurer)
+                            ? "border-navy border-2 items-center"
+                            : "border-2 border-transparent items-center"
+                        }`}
+                      >
                         <Image
                           source={getUserIcon(adventurer.icon)}
-                          style={{ width: 40, height: 40 }}
+                          style={{ width: 60, height: 60 }}
                           resizeMode="stretch"
                         />
                         <Text className="font-zcool text-brown-200">
@@ -100,7 +114,11 @@ const AddPeoplePopUp = ({ visible, onClose, value, questbitId, onUpdate }) => {
                   color="red"
                   onPress={onClose}
                 />
-                <PixelButton text="Add" textStyle="text-sm" onPress={addAdventurers} />
+                <PixelButton
+                  text="Add"
+                  textStyle="text-sm"
+                  onPress={addAdventurers}
+                />
               </View>
             </View>
           </ImageBackground>
@@ -109,12 +127,5 @@ const AddPeoplePopUp = ({ visible, onClose, value, questbitId, onUpdate }) => {
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  selectedItem: {
-    borderWidth: 1,
-    borderColor: 'green', // Green border when selected
-  },
-})
 
 export default AddPeoplePopUp;

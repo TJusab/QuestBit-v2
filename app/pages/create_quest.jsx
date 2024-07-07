@@ -23,9 +23,18 @@ const CreateQuest = () => {
   );
   const [visible, setVisible] = useState("false");
   const [selectedAdventurers, setSelectedAdventurers] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleAddAdventurers = (adventurers) => {
     setSelectedAdventurers(adventurers);
+  };
+
+  const handleDeleteAdventurer = (adventurerId) => {
+    setSelectedAdventurers((prevAdventurers) =>
+      prevAdventurers.filter((adventurer) => adventurer.$id !== adventurerId)
+    );
+
+    setRefreshKey((prevKey) => prevKey + 1)
   };
 
   return (
@@ -51,27 +60,27 @@ const CreateQuest = () => {
                 >
                   <Image
                     source={require("../../assets/HD/add_circle_button.png")}
-                    style={{ width: 48, height: 48 }}
+                    style={{ width: 40, height: 40 }}
                   />
                 </TouchableOpacity>
               </View>
             </View>
           </View>
-          <View className="flex-row mx-3 justify-center items-center my-10">
+          <View className="flex-row mx-3 items-center mb-10 mt-8">
             {selectedAdventurers.length > 0 &&
               selectedAdventurers.map((adventurer) => (
-                <View
-                  className="items-center justify-between mx-5"
-                  key={adventurer.$id}
-                >
+                <View className="items-center mx-5" key={adventurer.$id}>
                   <Image
                     source={getUserIcon(adventurer.icon)}
-                    style={{ width: 40, height: 40 }}
+                    style={{ width: 80, height: 80 }}
                     resizeMode="stretch"
                   />
-                  <Text className="font-zcool text-brown-200">
+                  <Text className="font-zcool text-lg">
                     {adventurer.username}
                   </Text>
+                  <TouchableOpacity className="absolute bottom-[15%] right-0" onPress={() => handleDeleteAdventurer(adventurer.$id)}>
+                    <MaterialIcons name="remove-circle" size={24} color="red" />
+                  </TouchableOpacity>
                 </View>
               ))}
           </View>
@@ -123,6 +132,8 @@ const CreateQuest = () => {
         visible={visible}
         onClose={() => setVisible(false)}
         onUpdate={handleAddAdventurers}
+        selectedAdventurers={selectedAdventurers}
+        refreshKey={refreshKey}
       />
     </View>
   );
