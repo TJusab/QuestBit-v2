@@ -2,7 +2,6 @@ import { View, Text, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
 import StatusButton from "./StatusButton";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import StatusModal from "./StatusPopUp";
 import DeleteModal from "./DeletePopUp";
 import { router } from "expo-router";
 import { getQuestIcon, getUserIcon } from "../lib/icon";
@@ -84,7 +83,7 @@ const QuestBit = ({ item, onUpdate }) => {
                     <View className="items-center mx-1" key={assignee.$id}>
                       <Image
                         source={getUserIcon(assignee.icon)}
-                        style={{ width: 30, height: 30 }}
+                        style={{ width: 40, height: 40 }}
                         resizeMode="stretch"
                       />
                     </View>

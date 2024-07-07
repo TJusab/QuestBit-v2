@@ -19,14 +19,14 @@ const Home = () => {
   const { user } = useGlobalContext();
   const [questbits, setQuestBits] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState("Search QuestBit");
   const [filteredQuestBits, setFilteredQuestBits] = useState([]);
 
   const fetchQuestBits = async () => {
     try {
       const response = await getQuestBitsForUser();
       setQuestBits(response);
-      setFilteredQuestBits(response); // Initialize filtered list
+      setFilteredQuestBits(response);
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {
@@ -39,7 +39,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (searchText === "") {
+    if (searchText === "Search QuestBit") {
       setFilteredQuestBits(questbits);
     } else {
       const filtered = questbits.filter((qb) =>

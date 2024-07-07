@@ -104,8 +104,8 @@ const Quest = () => {
         renderItem={renderQuestItem}
         ListHeaderComponent={() => <Header header={"My Quests !"} />}
       />
-      <TouchableOpacity style={styles.addButton} onPress={() => router.push("/pages/create-quest")}>
-        <Icon name="plus" size={24} color="white" />
+      <TouchableOpacity style={styles.addButton} onPress={() => router.push("/pages/create_quest")}>
+        <Image source={require("../../assets/HD/add_circle_button.png")} style={{ width: 48, height: 48 }} />
       </TouchableOpacity>
     </View>
   );
@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
     right: 30,
     width: 60,
     height: 60,
-    backgroundColor: "#7F4D2E",
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",

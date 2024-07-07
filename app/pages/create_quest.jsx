@@ -10,13 +10,33 @@ import {
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import PixelButton from "../../components/PixelButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import AddPeopleModal from "../../components/AddPeoplePopUp";
+import { fetchAdventurers } from "../../lib/database";
+import { getUserIcon } from "../../lib/icon";
 
 const CreateQuest = () => {
+  const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState("Birthday Party Planning");
   const [synopsis, setSynopsis] = useState(
     "Plan a successful surprise birthday party for Bob."
   );
+  const [visible, setVisible] = useState("false");
+  const [selectedAdventurers, setSelectedAdventurers] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleAddAdventurers = (adventurers) => {
+    setSelectedAdventurers(adventurers);
+  };
+
+  const handleDeleteAdventurer = (adventurerId) => {
+    setSelectedAdventurers((prevAdventurers) =>
+      prevAdventurers.filter((adventurer) => adventurer.$id !== adventurerId)
+    );
+
+    setRefreshKey((prevKey) => prevKey + 1)
+  };
+
   return (
     <View className="flex-1">
       <View className="h-[40%] bg-white rounded-b-3xl z-10">
@@ -30,8 +50,39 @@ const CreateQuest = () => {
               />
             </TouchableOpacity>
             <View className="flex-1 items-center">
-              <Text className="font-zcool text-3xl">Add Adventurers</Text>
+              <View className="flex-row items-center">
+                <Text className="font-zcool text-3xl mr-5">
+                  Add Adventurers
+                </Text>
+                <TouchableOpacity
+                  style={styles.addButton}
+                  onPress={() => setVisible(true)}
+                >
+                  <Image
+                    source={require("../../assets/HD/add_circle_button.png")}
+                    style={{ width: 40, height: 40 }}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
+          </View>
+          <View className="flex-row mx-3 items-center mb-10 mt-8">
+            {selectedAdventurers.length > 0 &&
+              selectedAdventurers.map((adventurer) => (
+                <View className="items-center mx-5" key={adventurer.$id}>
+                  <Image
+                    source={getUserIcon(adventurer.icon)}
+                    style={{ width: 80, height: 80 }}
+                    resizeMode="stretch"
+                  />
+                  <Text className="font-zcool text-lg">
+                    {adventurer.username}
+                  </Text>
+                  <TouchableOpacity className="absolute bottom-[15%] right-0" onPress={() => handleDeleteAdventurer(adventurer.$id)}>
+                    <MaterialIcons name="remove-circle" size={24} color="red" />
+                  </TouchableOpacity>
+                </View>
+              ))}
           </View>
         </View>
       </View>
@@ -77,6 +128,13 @@ const CreateQuest = () => {
         </View>
         <PixelButton text="LAUNCH!" color="blue" />
       </View>
+      <AddPeopleModal
+        visible={visible}
+        onClose={() => setVisible(false)}
+        onUpdate={handleAddAdventurers}
+        selectedAdventurers={selectedAdventurers}
+        refreshKey={refreshKey}
+      />
     </View>
   );
 };

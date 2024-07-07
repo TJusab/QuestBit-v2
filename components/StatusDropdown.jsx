@@ -8,7 +8,7 @@ const StatusDropdown = ({ initialValue, onChangeValue }) => {
   const [items, setItems] = useState([
     { label: 'Unassigned', value: 'Unassigned' },
     { label: 'Assigned', value: 'Assigned' },
-    { label: 'OnGoing', value: 'OnGoing' },
+    { label: 'On Going', value: 'OnGoing' },
     { label: 'Completed', value: 'Completed' },
   ]);
   useEffect(() => {
