@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { View, ActivityIndicator, TouchableOpacity, Text, Image } from "react-native";
 import StatusPopUp from './StatusPopUp'; // Adjust the import path as needed
 
-const StatusButton = ({ text, questbitId, isLoading = false, imageStyle = {}, textStyle = {}, color}) => {
+const StatusButton = ({ text, questbitId, isLoading = false, imageStyle = {}, textStyle = {}, color, onUpdate}) => {
+
   const [modalVisible, setModalVisible] = useState(false);
   const getButtonImage = (color) => {
     switch (color) {
@@ -42,6 +43,7 @@ const StatusButton = ({ text, questbitId, isLoading = false, imageStyle = {}, te
         onClose={() => setModalVisible(false)}
         value={text}
         questbitId={questbitId}
+        onUpdate={onUpdate}
       />
     </View>
   );

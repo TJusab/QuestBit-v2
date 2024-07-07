@@ -5,6 +5,7 @@ import StatusDropdown from './StatusDropdown';
 import { updateQuestBitStatus } from '../lib/database';
 
 const StatusPopUp = ({ visible, onClose, value, questbitId, onUpdate }) => {
+
   const [newStatus, setNewStatus] = useState(value);
 
   const handleUpdate = async () => {

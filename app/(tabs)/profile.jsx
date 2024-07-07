@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import PixelButton from "../../components/PixelButton";
-import { logout } from "../../lib/account";
+import { logout, saveProfileSettings } from "../../lib/account";
 import { router } from "expo-router";
 import { getUserIcon } from "../../lib/icon.js";
 import { useGlobalContext } from "../../context/GlobalProvider.js";
@@ -21,11 +21,9 @@ const Profile = () => {
   const [username, setUsername] = useState(user.username);
   const [email, setEmail] = useState(user.email);
   const [password, setPassword] = useState("");
-  const [notifications, setNotifications] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [loading, setLoading] = useState(true);
 
-  const submit = async () => {
+  const submitLogout = async () => {
     setIsSubmitting(true);
     try {
       await logout();
@@ -36,6 +34,18 @@ const Profile = () => {
       setIsSubmitting(false);
     }
   };
+
+  const save = async () => {
+    setIsSubmitting(true);
+    try {
+      await saveProfileSettings();
+      Alert.alert("Success", "New settings saved successfully!");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -74,13 +84,13 @@ const Profile = () => {
       <View style={styles.buttonContainer}>
         <PixelButton
           text="SAVE!"
-          onPress={submit}
+          onPress={save}
           isLoading={isSubmitting}
           color="green"
         />
         <PixelButton
           text="LOGOUT!"
-          onPress={submit}
+          onPress={submitLogout}
           isLoading={isSubmitting}
           color="red"
         />
