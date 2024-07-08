@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   StyleSheet
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useLocalSearchParams } from "expo-router";
@@ -19,7 +18,6 @@ const QuestBitDetails = () => {
   const item = questbit ? JSON.parse(questbit) : null;
   const [isEditing, setIsEditing] = useState(false);
 
-  
   const getColorFromStatus = (status) => {
     switch (status) {
       case "Unassigned":
