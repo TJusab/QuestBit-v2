@@ -1,9 +1,22 @@
-import React, { useState } from 'react';
-import { View, ActivityIndicator, TouchableOpacity, Text, Image } from "react-native";
-import StatusPopUp from './StatusPopUp'; // Adjust the import path as needed
+import React, { useState } from "react";
+import {
+  View,
+  ActivityIndicator,
+  TouchableOpacity,
+  Text,
+  Image,
+} from "react-native";
+import StatusPopUp from "./StatusPopUp"; // Adjust the import path as needed
 
-const StatusButton = ({ text, questbitId, isLoading = false, imageStyle = {}, textStyle = {}, color, onUpdate}) => {
-
+const StatusButton = ({
+  text,
+  questbitId,
+  isLoading = false,
+  imageStyle = {},
+  textStyle = {},
+  color,
+  onUpdate,
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const getButtonImage = (color) => {
     switch (color) {
@@ -23,12 +36,19 @@ const StatusButton = ({ text, questbitId, isLoading = false, imageStyle = {}, te
 
   return (
     <View>
-      <TouchableOpacity className="items-center justify-center" onPress={() => setModalVisible(true)}>
+      <TouchableOpacity
+        className="items-center justify-center"
+        onPress={() => setModalVisible(true)}
+      >
         <Image
           source={getButtonImage(color)}
           className={`w-[25vw] h-10 ${imageStyle}`}
         />
-        <Text className={`text-white font-zcool absolute text-xl pb-1 ${textStyle}`}>{text}</Text>
+        <Text
+          className={`text-white font-zcool absolute text-xl pb-1 ${textStyle}`}
+        >
+          {text}
+        </Text>
         {isLoading && (
           <ActivityIndicator
             animating={isLoading}

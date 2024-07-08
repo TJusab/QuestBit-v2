@@ -2,13 +2,12 @@ import { View, Text, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
 import StatusButton from "./StatusButton";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import StatusModal from "./StatusPopUp";
-import DeleteModal from "./DeletePopUp";
+import DeletePopUp from "./DeletePopUp";
 import { router } from "expo-router";
 import { getQuestIcon, getUserIcon } from "../lib/icon";
+import { deleteQuestBit } from '../lib/database';
 
 const QuestBit = ({ item, onUpdate }) => {
-  const [statusModalVisible, setStatusModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const dateString = item.dueDates[0];
   const date = new Date(dateString);
@@ -35,6 +34,16 @@ const QuestBit = ({ item, onUpdate }) => {
         return "On Going";
       default:
         return status;
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteQuestBit(item.$id);
+      onUpdate();
+      setDeleteModalVisible(false);
+    } catch (error) {
+      console.error('Error deleting questbit:', error);
     }
   };
 
@@ -101,11 +110,11 @@ const QuestBit = ({ item, onUpdate }) => {
           </View>
         </View>
       </TouchableOpacity>
-      <DeleteModal
+      <DeletePopUp
         visible={deleteModalVisible}
         onClose={() => setDeleteModalVisible(false)}
-        questbitId={item.$id}
-        onUpdate={onUpdate}
+        handleDelete={handleDelete}
+        text="Are you sure you want to delete this Quest Bit?"
       />
     </View>
   );
