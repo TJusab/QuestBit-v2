@@ -3,6 +3,8 @@ import { Image, View, Text, TextInput, TouchableOpacity, StyleSheet } from "reac
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import StatusButton from "./StatusButton";
+import PixelButton from './PixelButton';
+
 
 const QuestBitEdit = ({ item, toggleEditing, getTextFromStatus, getColorFromStatus, saveChanges }) => {
   const [title, setTitle] = useState(item.title);
@@ -65,7 +67,7 @@ const QuestBitEdit = ({ item, toggleEditing, getTextFromStatus, getColorFromStat
           <Text style={styles.edit_label}>Assignee(s)</Text>
           <AntDesign name="pluscircle" size={25} color="green" />
         </View>
-        <View style={styles.row}>
+        <View style={styles.edit_row}>
           {item.assignees.map((assignee) => (
             <View key={assignee.$id} style={{ alignItems: "center", marginRight: 10 }}>
               <Image
@@ -82,12 +84,20 @@ const QuestBitEdit = ({ item, toggleEditing, getTextFromStatus, getColorFromStat
           ))}
         </View>
       </View>
-      <TouchableOpacity onPress={saveChanges} style={styles.button}>
-        <Text style={styles.buttonText}>Save Changes</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={toggleEditing} style={styles.button}>
-        <Text style={styles.buttonText}>Cancel</Text>
-      </TouchableOpacity>
+      <View style={styles.row}>
+      <PixelButton
+        text="Save"
+        textStyle="text-sm"
+        color="green"
+        onPress={saveChanges}
+      />
+      <PixelButton
+        text="Cancel"
+        textStyle="text-sm"
+        color="red"
+        onPress={toggleEditing}
+      />
+      </View>
     </View>
   );
 }
@@ -95,7 +105,7 @@ const styles = StyleSheet.create({
     edit_row: {
       flexDirection: "row",
       alignItems: "center",
-      marginBottom: 10, // Added marginBottom to separate rows
+      marginBottom: 10, 
     },
     remove_assignee: {
       position: 'absolute',
@@ -131,8 +141,8 @@ const styles = StyleSheet.create({
       fontWeight: "bold",
       marginBottom: 3,
       marginTop: 9,
-      fontFamily: "ZCOOL", // Added fontFamily for consistency
-      color: "gray", // Added color for consistency
+      fontFamily: "ZCOOL", 
+      color: "gray",
     },
     edit_label: {
       fontSize: 23,
@@ -150,6 +160,7 @@ const styles = StyleSheet.create({
     row: {
       flexDirection: "row",
       alignItems: "center",
+      justifyContent:"center"
     },
     status: {
       width: 100,
@@ -171,11 +182,10 @@ const styles = StyleSheet.create({
       borderRadius: 5,
       padding: 8,
       fontSize: 18,
-      marginBottom: 10, // Added marginBottom for spacing
-      fontFamily: "ZCOOL", // Added fontFamily for consistency
+      marginBottom: 10, 
+      fontFamily: "ZCOOL", 
     },
     button: {
-      backgroundColor: "blue", // Example background color for buttons
       padding: 10,
       marginTop: 10,
       alignItems: "center",
@@ -192,8 +202,8 @@ const styles = StyleSheet.create({
       borderRadius: 5,
       padding: 8,
       fontSize: 18,
-      marginBottom: 10, // Added marginBottom for spacing
-      fontFamily: "ZCOOL", // Added fontFamily for consistency
+      marginBottom: 10, 
+      fontFamily: "ZCOOL", 
     },
   });
   
