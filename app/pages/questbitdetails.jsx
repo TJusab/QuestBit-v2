@@ -51,6 +51,7 @@ const QuestBitDetails = () => {
 
   return (
     <View style={{ flex: 1, padding: 30 }}>
+      {!isEditing && (
       <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 35 }}>
         <TouchableOpacity onPress={back}>
           <MaterialIcons name="keyboard-backspace" size={30} color="black" />
@@ -59,11 +60,7 @@ const QuestBitDetails = () => {
           <AntDesign name="form" size={25} color="black" />
         </TouchableOpacity>
       </View>
-      <Text style={styles.header}>QuestBit Details</Text>
-      <View>
-        <Text style={styles.label}>Quest</Text>
-        <Text style={styles.title}>{item.title}</Text>
-      </View>
+      )} 
       {isEditing ? (
         <QuestBitEdit
           item={item}

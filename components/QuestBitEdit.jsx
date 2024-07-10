@@ -11,6 +11,11 @@ const QuestBitEdit = ({ item, toggleEditing, getTextFromStatus, getColorFromStat
 
   return (
     <View>
+      <Text style={styles.header}>QuestBit Details</Text>
+      <View>
+        <Text style={styles.label}>Quest</Text>
+        <Text style={styles.title}>{item.title}</Text>
+      </View>
       <View style={{ flexDirection: "row", justifyContent: "space-between", paddingRight: 20 }}>
         <View>
           <View style={styles.edit_row}>
@@ -123,7 +128,7 @@ const styles = StyleSheet.create({
       marginBottom: 10,
     },
     header: {
-      marginTop: 20,
+      marginTop: 65,
       fontSize: 18,
       fontFamily: "PressStart2P",
       color: "black",
