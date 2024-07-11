@@ -1,13 +1,17 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { router } from "expo-router";
+
 
 const QuestDetail = ({ item }) => {
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
-        <MaterialIcons name="keyboard-backspace" size={30} color="black" />
+        <TouchableOpacity onPress={() => router.back()}>
+            <MaterialIcons name="keyboard-backspace" size={30} color="black" />
+        </TouchableOpacity>
         <AntDesign name="form" size={25} color="black" />
       </View>
       <Text style={styles.header}>Quest Details</Text>
@@ -17,13 +21,13 @@ const QuestDetail = ({ item }) => {
       </View>
       <View style={styles.section}>
         <Text style={styles.label}>Icon</Text>
-        <Image source={require("../../assets/HD/chest.png")} style={styles.character} resizeMode='stretch' />
+        <Image source={require("../assets/HD/chest.png")} style={styles.character} resizeMode='stretch' />
       </View>
       <View style={styles.section}>
         <Text style={styles.label}>Target Date</Text>
         <View style={styles.row}>
           <MaterialIcons name="event" size={20} color="black" />
-          <Text style={styles.value}>{item.dueDates[0].substring(0, 10)}</Text>
+
         </View>
       </View>
       <View style={styles.section}>
@@ -34,7 +38,7 @@ const QuestDetail = ({ item }) => {
         <Text style={styles.label}>Owner(s)</Text>
         <View style={styles.row}>
           <View style={styles.assignee}>
-            <Image source={require("../../assets/HD/character_48X48.png")} style={styles.character} resizeMode='stretch' />
+            <Image source={require("../assets/HD/character_48X48.png")} style={styles.character} resizeMode='stretch' />
             <Text style={styles.username}>{item.owner.username}</Text>
           </View>
         </View>
@@ -44,7 +48,7 @@ const QuestDetail = ({ item }) => {
         <View style={styles.row}>
           {item.adventurers.map(assignee => (
             <View key={assignee.id} style={styles.assignee}>
-              <Image source={require("../../assets/HD/character_48X48.png")} style={styles.character} resizeMode='stretch' />
+              <Image source={require("../assets/HD/character_48X48.png")} style={styles.character} resizeMode='stretch' />
               <Text style={styles.username}>{assignee.username}</Text>
             </View>
           ))}
@@ -54,7 +58,7 @@ const QuestDetail = ({ item }) => {
         <Text style={styles.label}>QuestBit Diary</Text>
       </View>
       <View style={styles.log}>
-        <Image source={require("../../assets/HD/scroll.png")} style={styles.scroll} resizeMode='stretch' />
+        <Image source={require("../assets/HD/scroll.png")} style={styles.scroll} resizeMode='stretch' />
       </View>
     </View>
   );

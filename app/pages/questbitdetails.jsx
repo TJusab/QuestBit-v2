@@ -10,6 +10,8 @@ import { router } from "expo-router";
 const QuestBitDetails = () => {
   const { questbit } = useLocalSearchParams();
   const item = questbit ? JSON.parse(questbit) : null;
+
+
   const [isEditing, setIsEditing] = useState(false);
 
   const getTextFromStatus = (status) => {
@@ -41,8 +43,7 @@ const QuestBitDetails = () => {
   };
 
   const saveChanges = () => {
-    // Implement your save changes functionality
-    setIsEditing(false); // For example, set editing mode to false after saving
+    setIsEditing(false); 
   };
 
   const back = () => {
