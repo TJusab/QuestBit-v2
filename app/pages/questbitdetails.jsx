@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   StyleSheet
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useLocalSearchParams } from "expo-router";
@@ -19,7 +18,6 @@ const QuestBitDetails = () => {
   const item = questbit ? JSON.parse(questbit) : null;
   const [isEditing, setIsEditing] = useState(false);
 
-  
   const getColorFromStatus = (status) => {
     switch (status) {
       case "Unassigned":
@@ -55,7 +53,7 @@ const QuestBitDetails = () => {
     console.log("Recurrence changed:", value);
   };
 
-  const renderQuestBitDetails = () => (
+  const renderShow = () => (
     <View>
       <View style={{ flexDirection: "row", justifyContent: "space-between", paddingRight: 20 }}>
         <View>
@@ -118,64 +116,73 @@ const QuestBitDetails = () => {
     </View>
   );
 
-  const EditableQuestItem = () => (
+  const RenderEdit = () => (
     <View>
       <View style={{ flexDirection: "row", justifyContent: "space-between", paddingRight: 20 }}>
         <View>
-          <Text>Title</Text>
-          <TextInput
-            value={item.title}
-            onChangeText={(text) => {}}
-          />
+          <View style={styles.edit_row}>
+            <Text style={styles.edit_label}>Title</Text> 
+            <AntDesign name="form" size={20} color="black" />
+          </View>
+          <Text style={styles.title}>{item.title}</Text>
         </View>
         <View>
-          <Text>Status</Text>
-          <TextInput
-            value={item.status}
-            onChangeText={(text) => {}}
-          />
-        </View>
-      </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", paddingRight: 20 }}>
-        <View>
-          <Text>Due Date</Text>
+          <View style={styles.edit_row}>
+            <Text style={styles.edit_label}>Due Date</Text>
+            <AntDesign name="form" size={20} color="black" />
+          </View>
           <View>
             <MaterialIcons name="event" size={20} color="black" />
             <Text>{item.dueDates[0].substring(0, 10)}</Text>
           </View>
         </View>
-        <View>
-          <Text>Recurrence</Text>
-          <Picker
-            selectedValue={item.recurrence}
-            onValueChange={handleRecurrenceChange}
-          >
-            <Picker.Item label="None" value="none" />
-            <Picker.Item label="Annually" value="annually" />
-            <Picker.Item label="Monthly" value="monthly" />
-          </Picker>
+      </View>
+      <View>
+        <View style={styles.edit_row}>
+          <Text style={styles.edit_label}>Recurrence</Text>
+          <AntDesign name="form" size={20} color="black" />
+        </View>
+        <Text style={styles.value}>Annually</Text>
+      </View>
+      <View>
+      <View style={styles.edit_row}>
+          <Text style={styles.edit_label}> Status</Text>
+          <AntDesign name="form" size={25} color="black" />
+        </View>
+        <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
+        <StatusButton
+          style={{ alignSelf: "flex-start" }}
+          color={getColorFromStatus(item.status)}
+          text={getTextFromStatus(item.status)}
+          textStyle="text-sm"
+        />
         </View>
       </View>
       <View>
-        <Text>Description</Text>
-        <TextInput
-          multiline
-          value={item.description}
-          onChangeText={(text) => {}}
-          style={styles.description}
-        />
+        <View style={styles.edit_row}>
+          <Text style={styles.edit_label}>Description</Text>
+          <AntDesign name="form" size={25} color="black" />
+        </View>
+        <Text style={styles.value}>{item.description}</Text>
       </View>
-      <View>
-        <Text style={styles.label}>Assignee(s)</Text>
-        <View style={{ flexDirection: "row" }}>
+      <View style={styles.section}>
+        <View style={styles.edit_row}>
+          <Text style={styles.edit_label}>Assignee(s)</Text>
+          <AntDesign name="pluscircle" size={25} color="green" />
+        </View>
+        <View style={styles.row}>
           {item.assignees.map((assignee) => (
             <View key={assignee.$id} style={{ alignItems: "center", marginRight: 10 }}>
               <Image
                 source={require("../../assets/HD/character_48X48.png")}
-                style={{ width: 90, height: 90, marginBottom: 10 }}
-                resizeMode="stretch"
+                style={styles.character}
+                resizeMethod="stretch"
               />
-              <Text style={styles.label}>{assignee.username}</Text>
+              <TouchableOpacity
+                style={styles.remove_assignee}>
+                  <AntDesign name="minuscircle" size={25} color="red" />
+              </TouchableOpacity>
+              <Text style={styles.username}>{assignee.username}</Text>
             </View>
           ))}
         </View>
@@ -198,7 +205,7 @@ const QuestBitDetails = () => {
         <Text style={styles.label}>Quest</Text>
         <Text style={styles.title}>to do later</Text>
       </View>
-      {isEditing ? <EditableQuestItem /> : renderQuestBitDetails()}
+      {isEditing ? <RenderEdit /> : renderShow()}
     </View>
   );
 };
@@ -209,6 +216,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 30,
+  },
+  edit_row: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  remove_assignee: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 28,
+    height: 28,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   scroll: {
     width: "120%",
@@ -252,6 +273,15 @@ const styles = StyleSheet.create({
     color: "gray",
     marginBottom: 3,
     marginTop: 9,
+  },
+  edit_label: {
+    fontSize: 23,
+    fontWeight: "bold",
+    fontFamily: "ZCOOL",
+    color: "gray",
+    marginBottom: 3,
+    marginTop: 9,
+    marginRight: 10
   },
   value: {
     fontSize: 18,

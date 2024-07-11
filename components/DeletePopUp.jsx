@@ -1,19 +1,7 @@
 import { View, Text, Modal, ImageBackground } from 'react-native';
 import PixelButton from './PixelButton';
-import { deleteQuestBit } from '../lib/database';
 
-const DeletePopUp = ({ visible, onClose, questbitId, onUpdate }) => {
-
-  const handleDelete = async () => {
-    try {
-      await deleteQuestBit(questbitId);
-      onUpdate();
-      onClose();
-    } catch (error) {
-      console.error('Error deleting questbit:', error);
-    }
-  };
-
+const DeletePopUp = ({ visible, onClose, handleDelete, text }) => {
   return (
     <Modal
       animationType="slide"
@@ -30,7 +18,7 @@ const DeletePopUp = ({ visible, onClose, questbitId, onUpdate }) => {
           >
             <View className="mt-10">
               <Text className="font-zcool text-xl text-brown-200 text-center px-10">
-                Are you sure you want to delete this QuestBit?
+                {text}
               </Text>
               <View className="flex-row items-center justify-center ml-10 mt-10">
                 <PixelButton

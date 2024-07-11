@@ -2,15 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-const StatusDropdown = ({ initialValue, onChangeValue }) => {
+const Dropdown = ({ initialValue, onChangeValue, items }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    { label: 'Unassigned', value: 'Unassigned' },
-    { label: 'Assigned', value: 'Assigned' },
-    { label: 'On Going', value: 'OnGoing' },
-    { label: 'Completed', value: 'Completed' },
-  ]);
+
   useEffect(() => {
     if (initialValue) {
       setValue(initialValue);
@@ -30,7 +25,6 @@ const StatusDropdown = ({ initialValue, onChangeValue }) => {
         items={items}
         setOpen={setOpen}
         setValue={handleChangeValue}
-        setItems={setItems}
         placeholder="Select an item"
         style={styles.dropdown}
         dropDownContainerStyle={styles.dropdown}
@@ -53,4 +47,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default StatusDropdown;
+export default Dropdown;
