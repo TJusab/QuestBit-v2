@@ -24,11 +24,8 @@ const Quest = () => {
   useEffect(() => {
     const fetchQuestsAndIcons = async () => {
       try {
-        // Fetch quests
         const response = await getQuests();
-        setQuests(response); // Set the quests state with the response
-
-        // Fetch icons
+        setQuests(response);
         const iconsToFetch = {};
         for (const quest of response) {
           const questIcon = getQuestIcon(quest.icon);
@@ -55,7 +52,12 @@ const Quest = () => {
           <Image source={icons[item.$id]} style={{ width: 48, height: 48 }} />
         )}
         <TouchableOpacity
-          onPress={() => handleMoreOptionsPress(item)}
+          onPress={() =>
+            router.push({
+              pathname: "/pages/questdetails",
+              params: { quest: JSON.stringify(item) },
+            })
+          }
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           <Icon name="ellipsis-v" size={24} color="white" />
@@ -113,16 +115,10 @@ const Quest = () => {
 
 const styles = StyleSheet.create({
   addButton: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 30,
     right: 30,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1000
-  }
+  },
 });
 
 export default Quest;
