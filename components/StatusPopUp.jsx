@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, ImageBackground } from 'react-native';
 import PixelButton from './PixelButton';
-import StatusDropdown from './StatusDropdown';
+import Dropdown from './Dropdown';
 import { updateQuestBitStatus } from '../lib/database';
 
 const StatusPopUp = ({ visible, onClose, value, questbitId, onUpdate }) => {
@@ -17,6 +17,13 @@ const StatusPopUp = ({ visible, onClose, value, questbitId, onUpdate }) => {
       console.error('Error updating questbit status:', error);
     }
   };
+
+  const [items, setItems] = useState([
+    { label: 'Unassigned', value: 'Unassigned' },
+    { label: 'Assigned', value: 'Assigned' },
+    { label: 'On Going', value: 'OnGoing' },
+    { label: 'Completed', value: 'Completed' },
+  ]);
 
   return (
     <Modal
@@ -37,7 +44,7 @@ const StatusPopUp = ({ visible, onClose, value, questbitId, onUpdate }) => {
                 Select the new state of the QuestBit
               </Text>
               <View className="w-3/5 m-auto my-8 z-10">
-                <StatusDropdown initialValue={newStatus} onChangeValue={setNewStatus} />
+                <Dropdown initialValue={newStatus} onChangeValue={setNewStatus} items={items} />
               </View>
               <View className="flex-row items-center justify-center ml-10">
                 <PixelButton
