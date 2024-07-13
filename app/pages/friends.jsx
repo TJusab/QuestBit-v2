@@ -11,6 +11,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import PixelButton from "../../components/PixelButton";
 import { useEffect, useState } from "react";
+import { ScrollView } from "react-native";
 import AddPeopleModal from "../../components/AddPeoplePopUp";
 import { fetchAdventurers } from "../../lib/database";
 import { getUserIcon } from "../../lib/icon";
@@ -38,9 +39,9 @@ const Friends = () => {
   };
 
   return (
-    <View className="flex-1">
-      <View className="h-[40%] bg-white rounded-b-3xl z-10">
-        <View className="w-full">
+    <ScrollView className="flex-1">
+      <View className="bg-white rounded-b-3xl z-10">
+        <View className="w-full min-h-80">
           <View className="flex-row items-center justify-between px-4 mt-10">
             <TouchableOpacity onPress={() => router.back()}>
               <MaterialIcons
@@ -86,7 +87,7 @@ const Friends = () => {
           </View>
         </View>
       </View>
-      <View className="flex-1 bg-blue-200 -mt-5">
+      <View className="flex-1 min-h-80 bg-blue-200 -mt-5">
         <Text className="text-3xl font-zcool text-white mt-10 text-center">
           Create a Quest
         </Text>
@@ -135,7 +136,7 @@ const Friends = () => {
         selectedAdventurers={selectedAdventurers}
         refreshKey={refreshKey}
       />
-    </View>
+    </ScrollView>
   );
 };
 
