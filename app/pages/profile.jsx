@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { router } from "expo-router";
 import {
   View,
   Text,
@@ -29,7 +30,7 @@ const Profile = () => {
     setIsSubmitting(true);
     try {
       await logout();
-      navigation.replace("LogIn"); // Adjusted navigation
+      router.push('/log-in')
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {

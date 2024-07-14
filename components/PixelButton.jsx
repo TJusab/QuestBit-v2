@@ -20,7 +20,7 @@ const PixelButton = ({ text, onPress = null, isLoading = false, imageStyle = {},
 
   return (
     <View>
-      <TouchableOpacity className="items-center justify-center mr-5" onPress={onPress}>
+      <TouchableOpacity className="items-center justify-center" onPress={onPress}>
         <Image
           source={getButtonImage(color)}
           className={`w-[25vw] h-10 ${imageStyle}`}
