@@ -1,13 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Image, View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import StatusButton from "./StatusButton";
 import PixelButton from './PixelButton';
+import Dropdown from './Dropdown';
+import AddPeopleModal from "./AddPeoplePopUp";
 
 
 const QuestBitEdit = ({ item, toggleEditing, getTextFromStatus, getColorFromStatus, saveChanges }) => {
   const [title, setTitle] = useState(item.title);
+
+  const [items, setItems] = useState([
+    { label: 'Never', value: 'Never' },
+    { label: 'Weekly', value: 'Weekly' },
+    { label: 'Every 2 Weeks', value: '2Weeks' },
+    { label: 'Monthly', value: 'Monthly' },
+    { label: 'Yearly', value: 'Yearly' },
+  ]);
+  
+  const [status, setStatus] = useState('');
+  const [visible, setVisible] = useState("false");
+
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [selectedAdventurers, setSelectedAdventurers] = useState([]);
+
+  const handleAddAdventurers = (adventurers) => {
+    setSelectedAdventurers(adventurers);
+  };
+
+  useEffect(() => {
+    if (item.dueDates === 1) {
+      setStatus('Never');
+    } else {
+      setStatus('Yearly');
+    }
+  }, [item.dueDates]);
 
   return (
     <View>
@@ -44,7 +72,7 @@ const QuestBitEdit = ({ item, toggleEditing, getTextFromStatus, getColorFromStat
           <Text style={styles.edit_label}>Recurrence</Text>
           <AntDesign name="form" size={20} color="black" />
         </View>
-        <Text style={styles.value}>Annually</Text>
+        <Dropdown initialValue={status} items={items} />
       </View>
       <View>
         <View style={styles.edit_row}>
@@ -70,7 +98,17 @@ const QuestBitEdit = ({ item, toggleEditing, getTextFromStatus, getColorFromStat
       <View style={styles.section}>
         <View style={styles.edit_row}>
           <Text style={styles.edit_label}>Assignee(s)</Text>
+          <TouchableOpacity onPress={() => setVisible(true)}>
           <AntDesign name="pluscircle" size={25} color="green" />
+          </TouchableOpacity>
+          <AddPeopleModal
+            visible={visible}
+            onClose={() => setVisible(false)}
+            onUpdate={handleAddAdventurers}
+            selectedAdventurers={selectedAdventurers}
+            refreshKey={refreshKey}
+            text='Assign adventurers to this QuestBit'
+          />
         </View>
         <View style={styles.edit_row}>
           {item.assignees.map((assignee) => (
@@ -121,6 +159,10 @@ const styles = StyleSheet.create({
       borderRadius: 12,
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    title: {
+      fontFamily: 'ZCOOL', 
+      fontSize: 32,
     },
     character: {
       width: 90,
