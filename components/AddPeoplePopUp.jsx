@@ -11,6 +11,8 @@ import {
 import PixelButton from "./PixelButton";
 import { fetchAdventurers } from "../lib/database";
 import { getUserIcon } from "../lib/icon";
+import { User } from "../constants/types";
+import { Models } from "react-native-appwrite";
 
 const AddPeoplePopUp = ({
   visible,
