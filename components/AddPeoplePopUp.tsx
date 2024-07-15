@@ -20,6 +20,7 @@ interface AddPeoplePopUpProps {
     onUpdate: (selectedAdventurers: User[]) => void;
     selectedAdventurers: User[];
     refreshKey: number;
+    text: string;
 }
 
 const AddPeoplePopUp: React.FC<AddPeoplePopUpProps> = ({
@@ -28,6 +29,7 @@ const AddPeoplePopUp: React.FC<AddPeoplePopUpProps> = ({
   onUpdate,
   selectedAdventurers: parentSelectedAdventurers,
   refreshKey,
+  text,
 }) => {
   const [selectedAdventurers, setSelectedAdventurers] = useState<User[]>([]);
   const [items, setItems] = useState<User[]>([]);
@@ -88,7 +90,7 @@ const AddPeoplePopUp: React.FC<AddPeoplePopUpProps> = ({
           >
             <View>
               <Text className="font-zcool text-xl text-brown-200 text-center px-10 pt-5">
-                Recruit adventurers for this Quest
+                {text}
               </Text>
               <View className="flex-row mx-3 justify-center items-center mt-5 mb-10">
                 {items.length > 0 &&

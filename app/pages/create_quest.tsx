@@ -199,6 +199,7 @@ const CreateQuest = () => {
         onUpdate={handleAddAdventurers}
         selectedAdventurers={selectedAdventurers}
         refreshKey={refreshKey}
+        text="Recruit adventurers to your quest!"
       />
       <IconPickerModal
         visible={iconModalVisible}

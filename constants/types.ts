@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { UserIcon, QuestIcon, Status } from './enums';
+import { UserIcon, QuestIcon, Status, FriendshipStatus } from './enums';
 
 export interface GlobalContextType {
   isLogged: boolean;
@@ -37,4 +37,13 @@ export interface QuestBit {
   assignees?: User[];
   dueDates?: Date[];
   quests: Quest;
+}
+
+export interface Friendship {
+  $id: string
+  user1: string;
+  user2: string;
+  startOfFriendship: Date;
+  status: FriendshipStatus;
+  user: User;
 }

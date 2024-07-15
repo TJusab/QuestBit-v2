@@ -75,7 +75,7 @@ const CustomCalendar: React.FC = () => {
     textDayHeaderFontSize: 14,
   };
 
-  const renderCustomHeader = (date?: XDate) => {
+  const renderCustomHeader = (date?: Date) => {
     if (!date) return null;
 
     const momentDate = moment(date.toISOString());

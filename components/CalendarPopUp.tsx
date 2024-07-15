@@ -35,7 +35,7 @@ const CalendarPopUp: React.FC<CalendarPopUpProps> = ({
     onClose();
   };
 
-  const renderCustomHeader = (date?: XDate) => {
+  const renderCustomHeader = (date?: Date) => {
     if (!date) return null;
 
     const momentDate = moment(date.toISOString());
@@ -45,6 +45,14 @@ const CalendarPopUp: React.FC<CalendarPopUpProps> = ({
         <Text className="font-zcool text-xl py-5 text-navy">{monthName}</Text>
       </View>
     );
+  };
+
+  const handlePressArrowLeft = (subtractMonth: () => void) => {
+    subtractMonth();
+  };
+
+  const handlePressArrowRight = (addMonth: () => void) => {
+    addMonth();
   };
 
   return (
@@ -65,8 +73,8 @@ const CalendarPopUp: React.FC<CalendarPopUpProps> = ({
           firstDay={1}
           hideDayNames={false}
           showWeekNumbers={false}
-          onPressArrowLeft={(subtractMonth) => subtractMonth()}
-          onPressArrowRight={(addMonth) => addMonth()}
+          onPressArrowLeft={handlePressArrowLeft}
+          onPressArrowRight={handlePressArrowRight}
           disableAllTouchEventsForDisabledDays={true}
           enableSwipeMonths={true}
           onDayPress={handleDayPress}

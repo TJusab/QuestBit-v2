@@ -15,3 +15,15 @@ export enum Status {
     OnGoing = "On Going",
     Completed = "Completed"
 }
+
+export enum RecurrenceValue {
+    Daily = "Daily",
+    Weekly = "Weekly",
+    BiWeekly = "Bi-Weekly",
+    Annually = "Annually",
+}
+
+export enum FriendshipStatus {
+    InvitationSent = "Invitation Sent",
+    Friends = "Friends"
+}

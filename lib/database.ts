@@ -1,9 +1,9 @@
 import { Databases, Query, ID } from "react-native-appwrite";
 import client, { config } from "./client";
 import { getCurrentUser } from "./account";
-import { User } from "../constants/types";
+import { Friendship, User } from "../constants/types";
 import { QuestIcon } from "../constants/enums";
-import { documentToQuest, documentToQuestBit, documentToUser } from "@/utils/mapping";
+import { documentToFriendship, documentToQuest, documentToQuestBit, documentToUser } from "@/utils/mapping";
 import { QuestBit } from "../constants/types";
 import { Models } from "react-native-appwrite";
 
@@ -140,9 +140,7 @@ export async function getQuestBits(): Promise<QuestBit[]> {
     []
   );
 
-  const questBits: QuestBit[] = response.documents.map((doc: Models.Document) =>
-    documentToQuestBit(doc)
-  );
+  const questBits = response.documents.map(documentToQuestBit);
 
   return questBits;
 }
@@ -236,6 +234,220 @@ export async function fetchAdventurers() {
     return adventurers;
   } catch (error) {
     console.error("Error fetching adventurers:", error);
+    throw new Error((error as Error).message);
+  }
+}
+
+export async function getAccountFromId(id: string): Promise<User> {
+  try {
+    const account = await databases.listDocuments(
+      config.databaseId,
+      config.userCollectionId,
+      [Query.equal('$id', id)]
+    );
+
+    return documentToUser(account.documents[0]);
+
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    throw new Error((error as Error).message);
+  }
+}
+
+/**
+ * Fetch all the users which who the current user
+ * have a friendship with
+ */
+export async function fetchFriends(): Promise<User[]> {
+  try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("No current user found");
+    const currentUserId = currentUser.$id;
+
+    const response = await databases.listDocuments(
+      config.databaseId,
+      config.friendshipId,
+      [
+        Query.or(
+          [
+            Query.equal("userID-1", currentUserId),
+            Query.equal("userID-2", currentUserId)
+          ]
+        ),
+        Query.equal('status', 'Friends')
+      ]
+    );
+
+    const friendships = response.documents.map(documentToFriendship);
+
+    // Map through friendships and fetch user details for each friend
+    const friends = await Promise.all(friendships.map(async (friendship) => {
+      if (friendship.user1 === currentUserId) {
+        return await getAccountFromId(friendship.user2);
+      } else {
+        return await getAccountFromId(friendship.user1);
+      }
+    }));
+
+    return friends;
+
+  } catch (error) {
+    console.error("Error fetching friends:", error);
+    throw new Error((error as Error).message);
+  }
+}
+
+/**
+ * Fetch all the users that are not friends already with the user
+ */
+export async function fetchFriendshipSuggestions(): Promise<User[]> {
+  try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("No current user found");
+    const currentUserId = currentUser.$id;
+
+    const users = await databases.listDocuments(
+      config.databaseId,
+      config.userCollectionId,
+      [Query.notEqual('$id', currentUserId)]
+    );
+
+    // Get all possible friendships which includes the current 
+    // friendships and the friendship requests
+    const possibleFriendships = await databases.listDocuments(
+      config.databaseId,
+      config.friendshipId,
+      [
+        Query.or(
+          [
+            Query.equal("userID-1", currentUserId),
+            Query.equal("userID-2", currentUserId)
+          ]
+        )
+      ]
+    );
+
+    // Map through friendships and fetch user details for each friend
+    const alreadyFriendsIds = new Set();
+    possibleFriendships.documents.forEach(friendship => {
+      if (friendship['userID-1'] === currentUserId) {
+        alreadyFriendsIds.add(friendship['userID-2']);
+      } else {
+        alreadyFriendsIds.add(friendship['userID-1']);
+      }
+    });
+
+    // Filter out users who are already friends
+    const suggestedUsers = users.documents.filter(user => {
+      return !alreadyFriendsIds.has(user.$id);
+    });
+
+    return suggestedUsers.map(documentToUser);
+  } catch (error) {
+    console.error("Error fetching friendship suggestion:", error);
+    throw new Error((error as Error).message);
+  }
+}
+
+/**
+ * Fetch all the friendships that a user has received
+ */
+export async function fetchReceivedFriendshipInvitations(): Promise<Friendship[]> {
+  try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("No current user found");
+    const currentUserId = currentUser.$id;
+
+    const response = await databases.listDocuments(
+      config.databaseId,
+      config.friendshipId,
+      [
+        Query.equal('userID-2', currentUserId),
+        Query.equal("status", ["InvitationSent"])
+      ]
+    );
+
+    const friendships = response.documents.map(documentToFriendship);
+
+    const friendshipRequests = await Promise.all(friendships.map(async (friendship) => {
+      const user = await getAccountFromId(friendship.user1);
+      return {
+        ...friendship, // Include existing data from friendships if needed
+        user: user // Attach user data fetched from getAccountFromId
+      };
+    }));
+
+    return friendshipRequests;
+    
+  } catch (error) {
+    console.error("Error fetching friendships:", error);
+    throw new Error((error as Error).message);
+  }
+}
+
+/**
+ * Create an friendship with the status InvitationSent from userID_invites to userID_invited
+ */
+export async function sendFriendshipInvite(userID_invited: string) {
+  try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("No current user found");
+    const currentUserId = currentUser.$id;
+
+    const result = await databases.createDocument(
+      config.databaseId,
+      config.friendshipId,
+      ID.unique(),
+      {
+        'userID-1': currentUserId,
+        'userID-2': userID_invited,
+        'status': "InvitationSent",
+        "startOfFriendship": (new Date()).toISOString()
+      }
+    );
+
+    return result;
+  } catch (error) {
+    console.error('Error sending an invitation:', error);
+    throw new Error((error as Error).message);
+  }
+}
+
+/**
+ * Create an friendship with the status InvitationSent from userID_invites to userID_invited
+ */
+export async function acceptFriendshipInvite(friendshipID: string) {
+  try {
+    const result = await databases.updateDocument(
+      config.databaseId,
+      config.friendshipId,
+      friendshipID,
+      {
+        'status': "Friends"
+      }
+    );
+
+    return result;
+  } catch (error) {
+    console.error('Error accepting an invitation:', error);
+    throw new Error((error as Error).message);
+  }
+}
+
+/**
+ * Create an friendship with the status InvitationSent from userID_invites to userID_invited
+ */
+export async function deleteFriendship(friendshipID: string) {
+  try {
+    const result = await databases.deleteDocument(
+      config.databaseId,
+      config.friendshipId,
+      friendshipID
+    );
+
+    return result;
+  } catch (error) {
+    console.error('Error deleting a friendship:', error);
     throw new Error((error as Error).message);
   }
 }

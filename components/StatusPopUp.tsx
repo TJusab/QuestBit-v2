@@ -3,7 +3,7 @@ import { View, Text, Modal, ImageBackground } from "react-native";
 import PixelButton from "./PixelButton";
 import Dropdown from "./Dropdown";
 import { updateQuestBitStatus } from "../lib/database";
-import { Status } from "../constants/enums";
+import { RecurrenceValue, Status } from "../constants/enums";
 
 interface StatusPopUpProps {
   visible: boolean;
@@ -20,7 +20,7 @@ const StatusPopUp: React.FC<StatusPopUpProps> = ({
   questbitId,
   onUpdate,
 }) => {
-  const [newStatus, setNewStatus] = useState<Status>(value);
+  const [newStatus, setNewStatus] = useState<Status | RecurrenceValue>(value);
 
   const handleUpdate = async () => {
     try {
@@ -60,7 +60,7 @@ const StatusPopUp: React.FC<StatusPopUpProps> = ({
               <View className="w-3/5 m-auto my-8 z-10">
                 <Dropdown
                   initialValue={newStatus}
-                  onChangeValue={(value: Status) => setNewStatus(value as Status)}
+                  onChangeValue={(value) => setNewStatus(value)}
                   items={items}
                 />
               </View>
