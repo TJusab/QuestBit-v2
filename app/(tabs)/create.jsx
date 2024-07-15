@@ -11,17 +11,36 @@ import {
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import PixelButton from "../../components/PixelButton";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import CheckBox from "expo-checkbox";
+import DropDownPicker from "react-native-dropdown-picker";
+import { Divider } from "@rneui/themed";
 
 const Create = () => {
   const [title, setTitle] = useState("");
   const [dueDate, setDueDate] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isRecurring, setIsRecurring] = useState(false);
-  const [recurrenceOption, setRecurrenceOption] = useState("Annually");
+  const [recurrenceOption, setRecurrenceOption] = useState("Daily");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState(false);
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+
+  const recurrenceOptions = [
+    { label: "Daily", value: "Daily" },
+    { label: "Weekly", value: "Weekly" },
+    { label: "Biweekly", value: "Biweekly" },
+    { label: "Monthly", value: "Monthly" },
+    { label: "Anually", value: "Anually" },
+  ];
+
+  const handleChangeValue = (newValue) => {
+    setValue(newValue);
+    setRecurrenceOption(newValue);
+  };
 
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || dueDate;
@@ -40,11 +59,17 @@ const Create = () => {
       status,
     });
   };
+
+  const setToggleCheckBox = (newValue) => {
+    // toggle recurring checkbox
+    //setIsRecurring(newValue);
+  };
+
   return (
     <View className="flex-1">
-      <View className="z-0 h-[40%] bg-blue-200 z-10">
-        <View className="w-full">
-          <View className="flex-row items-center justify-between px-4 mt-10">
+      <View className="z-0 bg-blue-200 z-10 mb-3">
+        <View className="w-full mt-5 mb-5">
+          <View className="flex-row items-center justify-between mt-10 mx-7">
             <TouchableOpacity onPress={() => router.back()}>
               <MaterialIcons
                 name="keyboard-backspace"
@@ -58,7 +83,7 @@ const Create = () => {
               </Text>
             </View>
           </View>
-          <View className="mx-5 mb-10">
+          <View className="mx-7 mt-5 mb-10">
             <Text className="text-white font-zcool text-lg">
               Title<Text className="text-red font-zcool text-lg">*</Text>
             </Text>
@@ -86,12 +111,36 @@ const Create = () => {
           </View>
         </View>
       </View>
-      <View className="z-10 flex-1 bg-white rounded-t-3xl -mt-5">
-        <View className="mx-5 mb-10">
-          <Text className="text-black font-zcool text-lg">
-            Recurring QuestBit?
-          </Text>
-          <Text className="text-black font-zcool text-lg">
+      <View className="z-10 flex-1 bg-white rounded-t-3xl -mt-10">
+        <View className="mx-7 mb-10 mt-7">
+          <View className="flex-row justify-between items-center mb-5">
+            <View className="flex flex-col space-y-2">
+              <Text className="text-black font-zcool text-lg">
+                Recurring QuestBit?
+              </Text>
+              <CheckBox
+                disabled={false}
+                value={isRecurring}
+                onValueChange={(newValue) => setIsRecurring(newValue)}
+                style={styles.checkBox}
+              />
+            </View>
+            <View className="flex flex-col space-y-2">
+              <DropDownPicker
+                open={open}
+                value={value}
+                items={recurrenceOptions}
+                setOpen={setOpen}
+                setValue={handleChangeValue}
+                placeholder="Select recurrence option"
+                style={styles.dropdown}
+                dropDownContainerStyle={styles.dropdown}
+                textStyle={styles.labelStyle}
+              />
+            </View>
+          </View>
+          <Divider />
+          <Text className="text-black font-zcool text-lg mt-3">
             Description
             <Text className="text-red font-zcool text-lg">*</Text>
           </Text>
@@ -106,16 +155,12 @@ const Create = () => {
             placeholderTextColor="black"
             className="text-xl mb-5"
           />
-          <Text className="text-black font-zcool text-lg">
-            Icon<Text className="text-red font-zcool text-lg">*</Text>
-          </Text>
+          <Text className="text-black font-zcool text-lg">Status</Text>
           <Image
             source={require("../../assets/HD/chest.png")}
             style={{ width: 48, height: 48 }}
           />
-          <Text className="text-black font-zcool text-lg mt-5">
-            Target Date
-          </Text>
+          <Text className="text-black font-zcool text-lg mt-5">Assignees</Text>
           <View className="flex-row items-center mt-2">
             <Icon name="clock" size={20} color="#FFF" />
             <Text className="font-zcool text-black text-xl px-2">
@@ -147,6 +192,20 @@ const styles = StyleSheet.create({
     width: "100%",
     fontFamily: "ZCOOL",
     padding: 5,
+  },
+  dropdown: {
+    backgroundColor: "#e3d2c2",
+    borderColor: "#b58d74",
+    borderWidth: 2,
+    width: 200,
+  },
+  labelStyle: {
+    color: "#7F4D2E",
+    fontFamily: "ZCOOL",
+    fontSize: 16,
+  },
+  checkBox: {
+    color: "#A3C254",
   },
 });
 
