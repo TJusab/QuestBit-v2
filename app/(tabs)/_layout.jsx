@@ -90,9 +90,9 @@ const TabsLayout = () => {
                 />
 
                 <Tabs.Screen
-                    name="profile"
+                    name="profile_nav"
                     options={{
-                        title: 'Profile',
+                        title: 'ProfileNavigator',
                         headerShown: false,
                         tabBarIcon: ({ color, focused }) => (
                             <TabIcon

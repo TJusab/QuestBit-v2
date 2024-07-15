@@ -134,6 +134,7 @@ const CreateQuest = () => {
         onUpdate={handleAddAdventurers}
         selectedAdventurers={selectedAdventurers}
         refreshKey={refreshKey}
+        text='Recruit adventurers for this Quest'
       />
     </View>
   );
