@@ -111,7 +111,7 @@ const Create = () => {
           </View>
         </View>
       </View>
-      <View className="z-10 flex-1 bg-white rounded-t-3xl -mt-10">
+      <View className="z-10 shadow-xl flex-1 bg-white rounded-t-2xl -mt-10">
         <View className="mx-7 mb-10 mt-7">
           <View className="flex-row justify-between items-center mb-5">
             <View className="flex flex-col space-y-2">
@@ -122,7 +122,7 @@ const Create = () => {
                 disabled={false}
                 value={isRecurring}
                 onValueChange={(newValue) => setIsRecurring(newValue)}
-                style={styles.checkBox}
+                style={[styles.checkbox, isRecurring && styles.checkboxChecked]}
               />
             </View>
             <View className="flex flex-col space-y-2">
@@ -139,7 +139,7 @@ const Create = () => {
               />
             </View>
           </View>
-          <Divider />
+          <Divider color="black" />
           <Text className="text-black font-zcool text-lg mt-3">
             Description
             <Text className="text-red font-zcool text-lg">*</Text>
@@ -148,7 +148,7 @@ const Create = () => {
             editable
             multiline
             numberOfLines={4}
-            maxLength={40}
+            maxLength={100}
             style={styles.textInput2}
             value={description}
             onChangeText={setDescription}
@@ -157,18 +157,34 @@ const Create = () => {
           />
           <Text className="text-black font-zcool text-lg">Status</Text>
           <Image
-            source={require("../../assets/HD/chest.png")}
+            source={require("../../assets/images/small-pixel-btn.png")}
             style={{ width: 48, height: 48 }}
           />
-          <Text className="text-black font-zcool text-lg mt-5">Assignees</Text>
-          <View className="flex-row items-center mt-2">
-            <Icon name="clock" size={20} color="#FFF" />
-            <Text className="font-zcool text-black text-xl px-2">
-              January 4, 2024
+          <View flex-row>
+            <Text className="text-black font-zcool text-lg mt-5">
+              Assignees
             </Text>
           </View>
+          <Image
+            source={require("../../assets/images/small-pixel-btn.png")}
+            style={{ width: 48, height: 48 }}
+          />
         </View>
-        <PixelButton text="LAUNCH!" color="blue" />
+
+        <View>
+          <TouchableOpacity
+            className="items-center justify-center"
+            onPress={null}
+          >
+            <Image
+              source={require("../../assets/images/pixelButton.png")}
+              className={`w-[86vw] h-14`}
+            />
+            <Text className={`text-white font-zcool absolute text-xl pb-1`}>
+              CREATE QUESTBIT
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -186,7 +202,7 @@ const styles = StyleSheet.create({
   },
   textInput2: {
     height: 40,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.5,
     borderBottomColor: "black",
     color: "black",
     width: "100%",
@@ -204,8 +220,11 @@ const styles = StyleSheet.create({
     fontFamily: "ZCOOL",
     fontSize: 16,
   },
-  checkBox: {
-    color: "#A3C254",
+  checkbox: {
+    borderRadius: 5,
+  },
+  checkboxChecked: {
+    backgroundColor: "coral",
   },
 });
 
