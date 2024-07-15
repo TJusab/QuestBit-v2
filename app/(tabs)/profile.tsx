@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Image, StyleSheet, Alert } from "react-native";
-import PixelButton from "../../components/PixelButton.js";
-import { logout } from "../../lib/account.js";
+import PixelButton from "@/components/PixelButton";
+import { logout } from "../../lib/account";
 import { router } from "expo-router";
-import { getUserIcon } from "../../lib/icon.js";
-import { useGlobalContext } from "../../context/GlobalProvider.js";
+import { getUserIcon } from "../../lib/icon";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const Profile = () => {
   const { user } = useGlobalContext();

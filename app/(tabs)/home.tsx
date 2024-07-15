@@ -8,11 +8,11 @@ import {
   ActivityIndicator,
   ImageBackground,
 } from "react-native";
-import Header from "../../components/Header";
+import Header from "../../components/Header"
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { getQuestBitsForUser } from "../../lib/database";
-import QuestBitCard from "../../components/QuestBitComponent";
-import SearchInput from "../../components/SearchInput";
+import QuestBitCard from "@/components/QuestBitCard";
+import SearchInput from "@/components/SearchInput";
 import { useFocusEffect } from "expo-router";
 import { QuestBit } from "../../constants/types";
 
@@ -20,7 +20,7 @@ const Home: React.FC = () => {
   const { user } = useGlobalContext();
   const [questbits, setQuestBits] = useState<QuestBit[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchText, setSearchText] = useState("Search QuestBit");
+  const [searchText, setSearchText] = useState("");
   const [filteredQuestBits, setFilteredQuestBits] = useState<QuestBit[]>([]);
 
   const fetchQuestBits = async () => {
@@ -42,7 +42,7 @@ const Home: React.FC = () => {
   );
 
   useEffect(() => {
-    if (searchText === "Search QuestBit") {
+    if (searchText === "") {
       setFilteredQuestBits(questbits);
     } else {
       const filtered = questbits.filter((qb) =>
@@ -74,6 +74,7 @@ const Home: React.FC = () => {
               <Header header={`Hello ${user.username}!`} />
               <View className="mx-5 mb-5">
                 <SearchInput
+                  placeholder="Search QuestBit..."
                   value={searchText}
                   handleChangeText={setSearchText}
                 />

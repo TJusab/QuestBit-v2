@@ -11,6 +11,7 @@ import {
 import { Redirect, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useGlobalContext } from "../context/GlobalProvider";
+import { globalStyles } from "./global_styles";
 
 export default function App() {
   const { loading, isLogged } = useGlobalContext();
@@ -60,7 +61,7 @@ export default function App() {
             className="flex-1 items-center justify-center"
             resizeMode="stretch"
           >
-            <Text className="font-press text-3xl mb-20 title">QUESTBIT</Text>
+            <Text className="font-press text-3xl mb-20" style={globalStyles.title}>QUESTBIT</Text>
             <View className="flex-row justify-center items-center mb-40">
               {heartsVisible.map(
                 (visible, index) =>

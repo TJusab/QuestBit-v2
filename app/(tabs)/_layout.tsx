@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { View, Image, ImageSourcePropType } from "react-native";
 import { Tabs } from "expo-router";
 
@@ -83,7 +83,7 @@ const TabsLayout = () => {
               />
             ),
           }}
-        />
+        /> */}
 
         <Tabs.Screen
           name="create"
@@ -115,7 +115,7 @@ const TabsLayout = () => {
               />
             ),
           }}
-        /> */}
+        />
       </Tabs>
     </>
   );

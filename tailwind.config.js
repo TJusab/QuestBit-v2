@@ -8,7 +8,7 @@ module.exports = {
           50: "#F7FDFF",
           100: "#8AD1F0",
           200: "#61C6ED",
-          300: "#2BBCEE"
+          300: "#2BBCEE",
         },
         green: {
           100: "#6ABE30",
@@ -21,21 +21,20 @@ module.exports = {
         red: "#C1161C",
         lightbrown: {
           100: "#e3d2c2",
-          200: "#b58d74"
+          200: "#b58d74",
         },
         brown: {
           100: "#945835",
-          200: "#7F4D2E"
+          200: "#7F4D2E",
         },
         white: "#FFFFFF",
-        sky: "#35a4f8"
-      }
+        sky: "#35a4f8",
+      },
     },
     fontFamily: {
-      press: ['PressStart2P', 'sans-serif'],
-      zcool: ['ZCOOL', 'sans-serif'],
+      press: ["PressStart2P", "sans-serif"],
+      zcool: ["ZCOOL", "sans-serif"],
     },
   },
   plugins: [],
-}
-
+};

@@ -1,44 +1,50 @@
-# QuestBit
+# Welcome to your Expo app 👋
 
-Welcome to **QuestBit** – a powerful and user-friendly group task management app with a charming 8-bit pixel art design. The concept behind QuestBit is simple yet effective: every person contributes "a bit of the quest" to help complete the entire Quest. For instance, "Get party poppers" could be a QuestBit assigned to Natalie as part of the overall Quest of "Birthday party planning."
+This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-## Features
+## Get started
 
-- **Pixel Art UI:** A nostalgic, retro look that provides a visually appealing and engaging user experience.
-- **Group Task Management:** Efficiently create and assign QuestBits to group members with ease.
-- **Task Tracking:** Monitor the progress of individual QuestBits and ensure the timely completion of the overall Quest.
-- **Real-time Notifications:** Stay updated with instant notifications for task assignments and deadlines.
-- **Intuitive Interface:** Simple, user-friendly design that caters to users of all technical backgrounds.
-- **Customizable Avatars:** Personalize your profile with a range of pixel art avatars.
+1. Install dependencies
 
-## Screenshots
-
-
-## Installation
-
-To run QuestBit on your device, follow these steps:
-
-1. **Clone the Repository:**
-   ```sh
-   git clone https://github.com/yourusername/QuestBit.git
-
-2. **Navigate to the Project Directory**
-   ```sh
-   cd QuestBit
-
-3. **Install Dependencies**
-   ```sh
+   ```bash
    npm install
+   ```
 
-4. **Run the Application**
-   ```sh
-   npx expo start
+2. Start the app
 
-## Technologies Used
+   ```bash
+    npx expo start
+   ```
 
-- **ReactNative:** Utilized for building cross-platform native mobile applications with JavaScript and React.
-- **NativeWind:** Integrated for styling components with utility-first CSS, similar to Tailwind CSS for web.
-- **AppWrite:** Used for backend services, offering a self-hosted solution for managing databases, authentication, and more.
-- **Expo:** Used to streamline the development process and provide a platform for universal React apps.
-  
+In the output, you'll find options to open the app in a
 
+- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+
+You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+
+## Get a fresh project
+
+When you're ready, run:
+
+```bash
+npm run reset-project
+```
+
+This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+
+## Learn more
+
+To learn more about developing your project with Expo, look at the following resources:
+
+- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
+- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+
+## Join the community
+
+Join our community of developers creating universal apps.
+
+- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
+- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.

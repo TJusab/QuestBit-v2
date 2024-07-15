@@ -3,11 +3,13 @@ import { View, TextInput, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 interface SearchInputProps {
+  placeholder: string;
   value: string;
   handleChangeText: (text: string) => void;
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({
+  placeholder,
   value,
   handleChangeText,
 }) => {
@@ -18,6 +20,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       </TouchableOpacity>
       <TextInput
         className="flex-1 text-gray font-zcool text-lg h-full mx-2 items-center mt-1"
+        placeholder={placeholder}
         value={value}
         onChangeText={handleChangeText}
       />

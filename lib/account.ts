@@ -1,6 +1,6 @@
 import { Account, Avatars, Databases, ID, Query } from "react-native-appwrite";
 import client, { config } from './client';
-import { documentToUser } from "../utils/mapping";
+import { documentToUser } from "@/utils/mapping";
 
 const account = new Account(client);
 const databases = new Databases(client);

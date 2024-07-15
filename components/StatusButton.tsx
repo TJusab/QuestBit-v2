@@ -12,12 +12,12 @@ import { Status } from "../constants/enums";
 
 interface StatusButtonProps {
   text: Status;
-  questbitId: string;
+  questbitId?: string;
   isLoading?: boolean;
   imageStyle?: string;
   textStyle?: string;
   color?: "red" | "blue" | "pink" | "yellow" | "green";
-  onUpdate: () => void;
+  onUpdate?: () => void;
 }
 
 const StatusButton: React.FC<StatusButtonProps> = ({

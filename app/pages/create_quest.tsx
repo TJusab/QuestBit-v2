@@ -10,24 +10,33 @@
 // } from "react-native";
 // import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 // import Icon from "react-native-vector-icons/FontAwesome5";
-// import PixelButton from "../../components/PixelButton";
+// import PixelButton from "@/components/PixelButton";
 // import { useState } from "react";
-// import AddPeopleModal from "../../components/AddPeoplePopUp";
+// import AddPeopleModal from "@/components/AddPeoplePopUp";
 // import { getUserIcon } from "../../lib/icon";
-// import IconPickerModal from "../../components/IconPickerPopUp";
-// import { getQuestIcon } from "../../lib/icon";
-// import CalendarModal from "../../components/CalendarPopUp";
+// import IconPickerModal from "@/components/IconPickerPopUp";
+// import { getQuestIcon } from "@/lib/icon";
+// import CalendarModal from "@/components/CalendarPopUp";
 // import { addQuest } from "../../lib/database";
+// import { User } from "@/constants/types";
+// import { QuestIcon } from "@/constants/enums";
+
+// interface CreateQuestAttributes {
+//     title: string;
+//     icon: QuestIcon;
+//     questInfo?: string;
+//     adventurers?: User[];
+//     deadline?: Date | null; 
+// }
 
 // const CreateQuest = () => {
-//   const [loading, setLoading] = useState(true);
 //   const [title, setTitle] = useState("");
 //   const [synopsis, setSynopsis] = useState("");
 //   const [visible, setVisible] = useState(false);
 //   const [iconModalVisible, setIconModalVisible] = useState(false);
-//   const [selectedAdventurers, setSelectedAdventurers] = useState([]);
+//   const [selectedAdventurers, setSelectedAdventurers] = useState<User[]>([]);
 //   const [refreshKey, setRefreshKey] = useState(0);
-//   const [selectedIcon, setSelectedIcon] = useState(null);
+//   const [selectedIcon, setSelectedIcon] = useState<QuestIcon | null>(null);
 //   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
 //   const [selectedDate, setSelectedDate] = useState("");
 //   const [formattedDate, setFormattedDate] = useState("");
@@ -37,11 +46,11 @@
 //     ? getQuestIcon(selectedIcon)
 //     : defaultImage;
 
-//   const handleAddAdventurers = (adventurers) => {
+//   const handleAddAdventurers = (adventurers: User[]) => {
 //     setSelectedAdventurers(adventurers);
 //   };
 
-//   const handleDeleteAdventurer = (adventurerId) => {
+//   const handleDeleteAdventurer = (adventurerId: string) => {
 //     setSelectedAdventurers((prevAdventurers) =>
 //       prevAdventurers.filter((adventurer) => adventurer.$id !== adventurerId)
 //     );
@@ -49,17 +58,18 @@
 //     setRefreshKey((prevKey) => prevKey + 1);
 //   };
 
-//   const handleIconUpdate = (icon) => {
+//   const handleIconUpdate = (icon: QuestIcon) => {
 //     setSelectedIcon(icon);
 //   };
 
-//   const handleDateUpdate = (dateString) => {
+//   const handleDateUpdate = (dateString: string) => {
 //     setSelectedDate(dateString);
 //     const date = new Date(dateString);
-//     const options = { year: "numeric", month: "long", day: "numeric" };
-//     const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
-//       date
-//     );
+//     const formattedDate = new Intl.DateTimeFormat("en-US", {
+//       year: "numeric",
+//       month: "long",
+//       day: "numeric",
+//     }).format(date);
 //     setFormattedDate(formattedDate);
 //   };
 
@@ -69,14 +79,11 @@
 //       return;
 //     }
 //     try {
-//       const attributes = {
+//       const attributes: CreateQuestAttributes = {
 //         title: title,
 //         icon: selectedIcon,
-//         questInfo: synopsis || "",
-//         adventurers:
-//           selectedAdventurers.length > 0
-//             ? selectedAdventurers.map((a) => a.$id)
-//             : [],
+//         questInfo: synopsis.length > 0 ? synopsis : "",
+//         adventurers: selectedAdventurers.length > 0 ? selectedAdventurers : [],
 //         deadline: selectedDate ? new Date(selectedDate) : null,
 //       };
 
@@ -84,7 +91,7 @@
 //       Alert.alert("Quest added successfully!");
 //       router.replace("/quest", { refresh: true });
 //     } catch (error) {
-//       Alert.alert("Error adding quest:", error.message);
+//       Alert.alert("Error adding quest:", (error as Error).message);
 //     }
 //   };
 
@@ -131,7 +138,6 @@
 //           </View>
 //         </View>
 //         <TouchableOpacity
-//           style={styles.addButton}
 //           onPress={() => setVisible(true)}
 //           className="absolute bottom-0 right-0 mx-5 my-5"
 //         >

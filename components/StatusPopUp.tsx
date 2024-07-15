@@ -9,8 +9,8 @@ interface StatusPopUpProps {
   visible: boolean;
   onClose: () => void;
   value: Status;
-  questbitId: string;
-  onUpdate: () => void;
+  questbitId?: string;
+  onUpdate?: () => void;
 }
 
 const StatusPopUp: React.FC<StatusPopUpProps> = ({
@@ -24,8 +24,8 @@ const StatusPopUp: React.FC<StatusPopUpProps> = ({
 
   const handleUpdate = async () => {
     try {
-      await updateQuestBitStatus(questbitId, newStatus);
-      onUpdate();
+      if (questbitId) await updateQuestBitStatus(questbitId, newStatus);
+      if (onUpdate) onUpdate();
       onClose();
     } catch (error) {
       console.error("Error updating questbit status:", error);

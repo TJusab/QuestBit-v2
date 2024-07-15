@@ -11,7 +11,7 @@ export function documentToUser(document: Models.Document): User {
 
 export function documentToQuest(document: Models.Document): Quest {
     return {
-        $id: document.$id as unknown as number,
+        $id: document.$id as unknown as string,
         owner: documentToUser(document.owner),
         title: document.title,
         progress: document.progress,
@@ -24,14 +24,16 @@ export function documentToQuest(document: Models.Document): Quest {
 }
 
 export function documentToQuestBit(document: Models.Document): QuestBit {
-    return {
-        $id: document.$id as unknown as number,
+    const questBit: QuestBit = {
+        $id: document.$id as unknown as string,
         title: document.title,
         tags: document.tags ? document.tags : null,
         status: document.status,
         description: document.description,
         assignees: document.assignees ? document.assignees.map((assignee: Models.Document) => documentToUser(assignee)) : [],
-        dueDates: document.dueDates ? document.dueDates : null,
+        dueDates: document.dueDates ? document.dueDates.map((dueDate: string) => new Date(dueDate)) : [],
         quests: document.quests
     };
+
+    return questBit;
 }

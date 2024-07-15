@@ -7,37 +7,45 @@
 //   TouchableOpacity,
 //   Image,
 //   StyleSheet,
+//   ImageSourcePropType,
 // } from "react-native";
-// import React, { useCallback, useEffect, useState } from "react";
-// import Icon from "react-native-vector-icons/FontAwesome5";
+// import React, { useCallback, useState } from "react";
 // import { getQuests, deleteQuest } from "../../lib/database";
 // import { getQuestIcon } from "../../lib/icon";
 // import Header from "../../components/Header";
 // import { useFocusEffect, router } from "expo-router";
 // import DeletePopUp from "../../components/DeletePopUp";
+// import { Quest } from "@/constants/types";
+// import QuestCard from "@/components/QuestCard";
+
+// interface QuestItem {
+//   item: Quest;
+// }
 
 // const Quest = () => {
-//   const [quests, setQuests] = useState([]);
+//   const [quests, setQuests] = useState<Quest[]>([]);
 //   const [loading, setLoading] = useState(true);
-//   const [icons, setIcons] = useState({});
+//   const [icons, setIcons] = useState<{ [key: string]: ImageSourcePropType }>(
+//     {}
+//   );
 //   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-//   const [questToDelete, setQuestToDelete] = useState(null);
+//   const [questToDelete, setQuestToDelete] = useState<Quest | null>(null);
 
 //   const fetchQuestsAndIcons = async () => {
 //     try {
 //       // Fetch quests
-//       const response = await getQuests();
+//       const response: Quest[] = await getQuests();
 //       setQuests(response); // Set the quests state with the response
 
 //       // Fetch icons
-//       const iconsToFetch = {};
+//       const iconsToFetch: { [key: string]: ImageSourcePropType } = {};
 //       for (const quest of response) {
 //         const questIcon = getQuestIcon(quest.icon);
 //         iconsToFetch[quest.$id] = questIcon;
 //       }
 //       setIcons(iconsToFetch);
 //     } catch (error) {
-//       Alert.alert("Error", error.message);
+//       Alert.alert("Error", (error as Error).message);
 //     } finally {
 //       setLoading(false);
 //     }
@@ -49,56 +57,21 @@
 //     }, [])
 //   );
 
-//   const handleQuestPress = (quest) => {
-//     console.log("Quest Pressed:", quest);
-//   };
-
-//   const handleMoreOptionsPress = (quest) => {
-//     setQuestToDelete(quest);
-//     setDeleteModalVisible(true);
+//   const handleQuestUpdate = async () => {
+//     await getQuests();
 //   };
 
 //   const handleDelete = async () => {
 //     try {
-//       await deleteQuest(questToDelete.$id);
+//       if (questToDelete) {
+//         await deleteQuest(questToDelete.$id);
+//       }
 //       fetchQuestsAndIcons();
 //       setDeleteModalVisible(false);
 //     } catch (error) {
 //       console.error("Error deleting quest:", error);
 //     }
 //   };
-
-//   const renderQuestItem = ({ item }) => (
-//     <TouchableOpacity
-//       className="mb-5 p-5 bg-blue-200 rounded-xl mx-5"
-//       onPress={() => handleQuestPress(item)}
-//     >
-//       <View className="flex-row justify-between items-center">
-//         {icons[item.$id] && (
-//           <Image source={icons[item.$id]} style={{ width: 48, height: 48 }} />
-//         )}
-//         <TouchableOpacity
-//           onPress={() => handleMoreOptionsPress(item)}
-//           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-//         >
-//           <Icon name="ellipsis-v" size={24} color="white" />
-//         </TouchableOpacity>
-//       </View>
-//       <View className="py-4 flex-1">
-//         <Text className="font-press text-xl" style={globalStyles.questTitle}>
-//           {item.title}
-//         </Text>
-//         <Text className="font-zcool text-lg text-white">{item.questInfo}</Text>
-//       </View>
-//       <View style={globalStyles.progress_bar}>
-//         <View style={[globalStyles.progress, { width: `${item.progress}%` }]} />
-//       </View>
-//       <View className="flex-row justify-between items-center">
-//         <Text className="font-zcool text-lg text-white">Progress</Text>
-//         <Text className="font-zcool text-lg text-white">{item.progress}%</Text>
-//       </View>
-//     </TouchableOpacity>
-//   );
 
 //   if (loading) {
 //     return (
@@ -116,7 +89,9 @@
 //       <FlatList
 //         data={quests}
 //         keyExtractor={(item) => item.$id}
-//         renderItem={renderQuestItem}
+//         renderItem={({ item }) => (
+//           <QuestCard item={item} onUpdate={handleQuestUpdate} />
+//         )}
 //         ListHeaderComponent={() => <Header header={"My Quests !"} />}
 //       />
 //       <TouchableOpacity

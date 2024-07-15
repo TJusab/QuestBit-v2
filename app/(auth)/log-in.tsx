@@ -1,10 +1,11 @@
 import { View, Text, ScrollView, ImageBackground, Alert } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Form from "../../components/Form";
+import Form from "@/components/Form";
 import { getCurrentUser, login } from "../../lib/account";
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { router } from "expo-router";
+import { router } from 'expo-router'
+import { globalStyles } from "../global_styles";
 
 const LogIn = () => {
   const { setUser, setIsLogged } = useGlobalContext();
@@ -51,7 +52,7 @@ const LogIn = () => {
             className="flex-1 items-center justify-center"
             resizeMode="cover"
           >
-            <Text className="font-press text-3xl title">LOG IN</Text>
+            <Text className="font-press text-3xl" style={globalStyles.title}>LOG IN</Text>
             <Form
               form={form}
               setForm={setForm}

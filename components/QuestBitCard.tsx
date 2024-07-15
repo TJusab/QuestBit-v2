@@ -14,7 +14,7 @@ interface QuestBitProps {
   onUpdate?: () => void;
 }
 
-const QuestBit: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
+const QuestBitCard: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const dateString = item.dueDates?.[0];
   const date = dateString ? new Date(dateString) : new Date();
@@ -28,7 +28,7 @@ const QuestBit: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
   const handleDelete = async () => {
     try {
       await deleteQuestBit(item.$id);
-      onUpdate();
+      if (onUpdate) onUpdate();
       setDeleteModalVisible(false);
     } catch (error) {
       console.error("Error deleting questbit:", error);
@@ -110,4 +110,4 @@ const QuestBit: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
   );
 };
 
-export default QuestBit;
+export default QuestBitCard;

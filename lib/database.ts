@@ -3,7 +3,7 @@ import client, { config } from "./client";
 import { getCurrentUser } from "./account";
 import { User } from "../constants/types";
 import { QuestIcon } from "../constants/enums";
-import { documentToQuest, documentToUser } from "../utils/mapping";
+import { documentToQuest } from "@/utils/mapping";
 import { QuestBit } from "../constants/types";
 
 const databases = new Databases(client);

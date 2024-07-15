@@ -6,7 +6,7 @@ import {
   Text,
   Image,
 } from "react-native";
-import { getButtonImage } from "../utils/utils";
+import { getButtonImage } from "@/utils/utils";
 
 interface PixelButtonProps {
   text: string;
