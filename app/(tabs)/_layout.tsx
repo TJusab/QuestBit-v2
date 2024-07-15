@@ -53,8 +53,8 @@ const TabsLayout = () => {
           }}
         />
 
-        {/* <Tabs.Screen
-          name="quest"
+        <Tabs.Screen
+          name="quest-page"
           options={{
             title: "Quest",
             headerShown: false,
@@ -83,7 +83,7 @@ const TabsLayout = () => {
               />
             ),
           }}
-        /> */}
+        />
 
         <Tabs.Screen
           name="create"

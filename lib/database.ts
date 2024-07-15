@@ -3,8 +3,9 @@ import client, { config } from "./client";
 import { getCurrentUser } from "./account";
 import { User } from "../constants/types";
 import { QuestIcon } from "../constants/enums";
-import { documentToQuest } from "@/utils/mapping";
+import { documentToQuest, documentToQuestBit, documentToUser } from "@/utils/mapping";
 import { QuestBit } from "../constants/types";
+import { Models } from "react-native-appwrite";
 
 const databases = new Databases(client);
 
@@ -20,7 +21,7 @@ export async function addQuest(attributes: {
   icon: QuestIcon;
   questInfo: string;
   adventurers: User[];
-  deadline: Date;
+  deadline: Date | null;
 }) {
   try {
     const currentUser = await getCurrentUser();
@@ -138,7 +139,12 @@ export async function getQuestBits(): Promise<QuestBit[]> {
     config.questbitCollectionId,
     []
   );
-  return response.documents as unknown as QuestBit[];
+
+  const questBits: QuestBit[] = response.documents.map((doc: Models.Document) =>
+    documentToQuestBit(doc)
+  );
+
+  return questBits;
 }
 
 /**
@@ -155,6 +161,7 @@ export async function getQuestBitsForUser(): Promise<QuestBit[]> {
       const include = questIds.includes(questbit.quests.$id);
       return include;
     });
+
     return userQuestBits;
   } catch (error) {
     console.error("Error fetching user questbits:", error);
@@ -225,7 +232,8 @@ export async function fetchAdventurers() {
       [Query.notEqual("$id", currentUserId)]
     );
 
-    return users.documents;  // TODO print this to check (I want to use the User object)
+    const adventurers = users.documents.map(documentToUser);
+    return adventurers;
   } catch (error) {
     console.error("Error fetching adventurers:", error);
     throw new Error((error as Error).message);
