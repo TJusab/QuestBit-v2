@@ -25,7 +25,7 @@ interface CreateQuestAttributes {
     title: string;
     icon: QuestIcon;
     questInfo: string;
-    adventurers: User[];
+    adventurerIds: string[];
     deadline: Date | null; 
 }
 
@@ -69,6 +69,7 @@ const CreateQuest = () => {
       year: "numeric",
       month: "long",
       day: "numeric",
+      timeZone: "UTC"
     }).format(date);
     setFormattedDate(formattedDate);
   };
@@ -83,7 +84,7 @@ const CreateQuest = () => {
         title: title,
         icon: selectedIcon,
         questInfo: synopsis.length > 0 ? synopsis : "",
-        adventurers: selectedAdventurers.length > 0 ? selectedAdventurers : [],
+        adventurerIds: selectedAdventurers.length > 0 ? selectedAdventurers.map(adventurer => adventurer.$id) : [],
         deadline: selectedDate ? new Date(selectedDate) : null,
       };
 

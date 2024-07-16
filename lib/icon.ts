@@ -26,10 +26,12 @@ export function getUserIcon(icon: UserIcon): ImageSourcePropType {
  */
 export function getQuestIcon(icon: QuestIcon): ImageSourcePropType {
   switch (icon) {
+    case QuestIcon.Broom:
+      return require("../assets/HD/broom.png");
     case QuestIcon.Chest:
       return require("../assets/HD/chest.png");
     default:
-      return require("../assets/HD/chest.png");
+      return require("../assets/HD/broom.png");
   }
 }
 

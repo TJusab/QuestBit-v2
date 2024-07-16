@@ -35,13 +35,6 @@ const QuestPage = () => {
     }
   };
 
-  useEffect(() => {
-    if (refresh === 'true') {
-      // Logic to refresh the page or data
-      console.log('Page refresh triggered');
-    }
-  }, [refresh]);
-
   useFocusEffect(
     useCallback(() => {
       fetchQuests();
@@ -49,6 +42,7 @@ const QuestPage = () => {
   );
 
   const handleQuestUpdate = async () => {
+    setLoading(true);
     await fetchQuests();
   };
 

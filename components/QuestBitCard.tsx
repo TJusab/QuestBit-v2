@@ -112,7 +112,7 @@ const QuestBitCard: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
         visible={deleteModalVisible}
         onClose={() => setDeleteModalVisible(false)}
         handleDelete={handleDelete}
-        text="Are you sure you want to delete this Quest Bit?"
+        text="Are you sure you want to delete this QuestBit?"
       />
     </View>
   );

@@ -20,7 +20,7 @@ export async function addQuest(attributes: {
   title: string;
   icon: QuestIcon;
   questInfo: string;
-  adventurers: User[];
+  adventurerIds: string[];
   deadline: Date | null;
 }) {
   try {
@@ -38,7 +38,7 @@ export async function addQuest(attributes: {
         icon: attributes.icon,
         questInfo: attributes.questInfo,
         deadline: attributes.deadline,
-        adventurers: attributes.adventurers,
+        adventurers: attributes.adventurerIds,  // only send adventurer ids
         questbits: [],
       }
     );
@@ -380,7 +380,7 @@ export async function fetchReceivedFriendshipInvitations(): Promise<Friendship[]
     }));
 
     return friendshipRequests;
-    
+
   } catch (error) {
     console.error("Error fetching friendships:", error);
     throw new Error((error as Error).message);

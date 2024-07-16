@@ -6,6 +6,7 @@ import { getQuestIcon } from "@/lib/icon";
 import { globalStyles } from "@/app/global_styles";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { router } from "expo-router";
+import { deleteQuest } from "@/lib/database";
 
 interface QuestCardProps {
   item: Quest;
@@ -22,8 +23,14 @@ const QuestCard: React.FC<QuestCardProps> = ({ item, onUpdate }) => {
     });
   };
 
-  const handleDelete = () => {
-    setDeleteModalVisible(true);
+  const handleDelete = async () => {
+    try {
+      await deleteQuest(item.$id);
+      if (onUpdate) onUpdate();
+      setDeleteModalVisible(false);
+    } catch (error) {
+      console.error("Error deleting questbit:", error);
+    }
   };
 
   return (

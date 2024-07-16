@@ -1,13 +1,12 @@
 export enum UserIcon {
     Assassin = "Assassin",
     Witch = "Witch",
-    Fairy = "Fairy",
-    Default = "Default"
+    Fairy = "Fairy"
 }
 
 export enum QuestIcon {
-    Chest = "Chest",
-    Default = "Default"
+    Broom = "Broom",
+    Chest = "Chest"
 }
 
 export enum Status {
