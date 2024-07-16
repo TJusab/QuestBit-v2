@@ -102,22 +102,6 @@ const TabsLayout = () => {
         />
 
         <Tabs.Screen
-          name="profile"
-          options={{
-            title: "Profile",
-            headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                name="profile"
-                source={require("../../assets/HD/icons/profile.png")}
-                color={color}
-                focused={focused}
-              />
-            ),
-          }}
-        />
-
-        <Tabs.Screen
           name="profile_nav"
           options={{
             title: "ProfileNavigator",
