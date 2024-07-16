@@ -8,9 +8,11 @@ import { ImageSourcePropType } from "react-native";
  */
 export function getUserIcon(icon: UserIcon): ImageSourcePropType {
   switch (icon) {
-    case UserIcon.Woman:
+    case UserIcon.Assassin:
+      return require("../assets/HD/characters/assassin_headshot.png");
+    case UserIcon.Witch:
       return require("../assets/HD/characters/witch_headshot.png");
-    case UserIcon.Man:
+    case UserIcon.Fairy:
       return require("../assets/HD/characters/fairy_headshot.png");
     default:
       return require("../assets/HD/characters/witch_headshot.png");

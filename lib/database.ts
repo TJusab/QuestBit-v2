@@ -2,10 +2,10 @@ import { Databases, Query, ID } from "react-native-appwrite";
 import client, { config } from "./client";
 import { getCurrentUser } from "./account";
 import { Friendship, User } from "../constants/types";
-import { QuestIcon } from "../constants/enums";
+import { QuestIcon, RecurrenceValue, Status } from "../constants/enums";
 import { documentToFriendship, documentToQuest, documentToQuestBit, documentToUser } from "@/utils/mapping";
 import { QuestBit } from "../constants/types";
-import { Models } from "react-native-appwrite";
+import { getEnumFromStatus } from "@/utils/utils";
 
 const databases = new Databases(client);
 
@@ -173,12 +173,14 @@ export async function getQuestBitsForUser(): Promise<QuestBit[]> {
  * @param newStatus the value of the new status
  */
 export async function updateQuestBitStatus(id: string, newStatus: string) {
+  console.log("What is status here?");
+  const status = getEnumFromStatus(newStatus);
   try {
     await databases.updateDocument(
       config.databaseId,
       config.questbitCollectionId,
       id,
-      { status: newStatus }
+      { status: status }
     );
   } catch (error) {
     console.error("Error updating questbit status:", error);

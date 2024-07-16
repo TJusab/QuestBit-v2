@@ -7,8 +7,11 @@ import { router } from "expo-router";
 import { getQuestIcon, getUserIcon } from "../lib/icon";
 import { deleteQuestBit } from "../lib/database";
 import { QuestBit } from "../constants/types";
-import { getColorFromStatus } from "../utils/utils";
-
+import {
+  getColorFromStatus,
+  getEnumFromStatus,
+  getStringFromStatus,
+} from "../utils/utils";
 interface QuestBitProps {
   item: QuestBit;
   onUpdate?: () => void;
@@ -17,13 +20,15 @@ interface QuestBitProps {
 const QuestBitCard: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const dateString = item.dueDates?.[0];
-  const date = dateString ? new Date(dateString) : new Date();
-
-  const formattedDate = new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
+  const date = dateString ? new Date(dateString) : null;
+  const status = getEnumFromStatus(item.status);
+  const formattedDate = date
+    ? new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }).format(date)
+    : "";
 
   const handleDelete = async () => {
     try {
@@ -71,14 +76,15 @@ const QuestBitCard: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
           <View className="flex-row items-center">
             <View className="flex-row items-center">
               <StatusButton
-                color={getColorFromStatus(item.status)}
-                text={item.status}
+                color={getColorFromStatus(status)}
+                text={getStringFromStatus(status)}
                 textStyle="text-sm"
                 questbitId={item.$id}
                 onUpdate={onUpdate}
               />
               <View className="flex-row mx-3">
-                {item.assignees && item.assignees.length > 0 &&
+                {item.assignees &&
+                  item.assignees.length > 0 &&
                   item.assignees.map((assignee) => (
                     <View className="items-center mx-1" key={assignee.$id}>
                       <Image
@@ -91,12 +97,14 @@ const QuestBitCard: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
               </View>
             </View>
             <View className="flex-1" />
-            <View className="flex-row items-center">
-              <Icon name="clock" size={20} color="#6E7591" />
-              <Text className="font-zcool text-gray text-md px-2">
-                {formattedDate}
-              </Text>
-            </View>
+            {date && (
+              <View className="flex-row items-center">
+                <Icon name="clock" size={20} color="#6E7591" />
+                <Text className="font-zcool text-gray text-md px-2">
+                  {formattedDate}
+                </Text>
+              </View>
+            )}
           </View>
         </View>
       </TouchableOpacity>

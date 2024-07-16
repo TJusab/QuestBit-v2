@@ -1,4 +1,4 @@
-import { Status } from "../constants/enums";
+import { RecurrenceValue, Status } from "../constants/enums";
 
 export const getButtonImage = (color: "red" | "blue" | "pink" | "yellow" | "green") => {
   switch (color) {
@@ -28,3 +28,27 @@ export const getColorFromStatus = (status: Status) => {
       return "green";
   }
 };
+
+export const getStringFromStatus = (status: Status): string => {
+  switch (status) {
+    case Status.OnGoing:
+      return "On Going";
+    default:
+      return status as string;
+  }
+}
+
+export const getEnumFromStatus = (status: string): Status => {
+  switch (status) {
+    case "OnGoing" || "On Going":
+      return Status.OnGoing;
+    case "Unassigned":
+      return Status.Unassigned;
+    case "Assigned":
+      return Status.Assigned;
+    case "Completed":
+      return Status.Completed;
+    default:
+      throw new Error(`Invalid status value: ${status}`);
+  }
+}

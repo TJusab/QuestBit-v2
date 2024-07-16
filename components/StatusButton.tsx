@@ -11,7 +11,7 @@ import { getButtonImage } from "../utils/utils";
 import { Status } from "../constants/enums";
 
 interface StatusButtonProps {
-  text: Status;
+  text: string;
   questbitId?: string;
   isLoading?: boolean;
   imageStyle?: string;

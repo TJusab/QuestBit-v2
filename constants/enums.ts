@@ -1,6 +1,7 @@
 export enum UserIcon {
-    Woman = "Woman",
-    Man = "Man",
+    Assassin = "Assassin",
+    Witch = "Witch",
+    Fairy = "Fairy",
     Default = "Default"
 }
 
@@ -13,7 +14,7 @@ export enum Status {
     Unassigned = "Unassigned",
     Assigned = "Assigned",
     OnGoing = "On Going",
-    Completed = "Completed"
+    Completed = "Completed",
 }
 
 export enum RecurrenceValue {

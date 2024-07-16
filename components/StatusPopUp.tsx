@@ -8,7 +8,7 @@ import { RecurrenceValue, Status } from "../constants/enums";
 interface StatusPopUpProps {
   visible: boolean;
   onClose: () => void;
-  value: Status;
+  value: string;
   questbitId?: string;
   onUpdate?: () => void;
 }
@@ -20,7 +20,7 @@ const StatusPopUp: React.FC<StatusPopUpProps> = ({
   questbitId,
   onUpdate,
 }) => {
-  const [newStatus, setNewStatus] = useState<Status | RecurrenceValue>(value);
+  const [newStatus, setNewStatus] = useState(value);
 
   const handleUpdate = async () => {
     try {

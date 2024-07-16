@@ -4,7 +4,7 @@ import DropDownPicker, { ItemType } from "react-native-dropdown-picker";
 import { RecurrenceValue, Status } from "../constants/enums";
 
 interface DropdownProps {
-  initialValue: Status | RecurrenceValue;
+  initialValue: string;
   items: ItemType<string>[];
   onChangeValue: (value: Status | RecurrenceValue) => void;
 }
@@ -15,7 +15,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   onChangeValue,
 }) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState<Status | RecurrenceValue>(initialValue);
+  const [value, setValue] = useState(initialValue);
 
   return (
     <View>
