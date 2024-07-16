@@ -5,6 +5,7 @@ import Form from "@/components/Form";
 import { register } from "../../lib/account";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { router } from "expo-router";
+import { globalStyles } from "../global_styles";
 
 const SignUp = () => {
   const { setUser, setIsLogged } = useGlobalContext();
@@ -47,11 +48,11 @@ const SignUp = () => {
       <ScrollView contentContainerStyle={{ height: "100%" }}>
         <View className="flex-1 w-full h-full">
           <ImageBackground
-            source={require("../../assets/images/sign-up.png")}
+            source={require("../../assets/HD/background_no_scroll.png")}
             className="flex-1 items-center justify-center"
             resizeMode="cover"
           >
-            <Text className="font-press text-3xl title">SIGN UP</Text>
+            <Text className="font-press text-3xl" style={globalStyles.title}>SIGN UP</Text>
             <Form
               form={form}
               setForm={setForm}

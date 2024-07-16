@@ -62,7 +62,7 @@ const Form: React.FC<FormProps> = ({
             keyboardType={field.keyboardType}
           />
         ))}
-        <View className="flex-row justify-between items-center">
+        <View className="flex-row items-center">
           <Link
             href={link}
             className="text-justify px-2 text-base text-brown-100 font-zcool underline"
