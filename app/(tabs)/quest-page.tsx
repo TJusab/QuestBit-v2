@@ -72,7 +72,7 @@ const QuestPage = () => {
         onPress={() => router.push("/pages/create_quest")}
       >
         <Image
-          source={require("../../assets/HD/add_circle_button.png")}
+          source={require("../../assets/HD/add_button.png")}
           style={{ width: 48, height: 48 }}
         />
       </TouchableOpacity>

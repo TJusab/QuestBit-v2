@@ -15,6 +15,8 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { Divider } from "@rneui/themed";
 import { RecurrenceValue } from "@/constants/enums";
 import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import CalendarModal from "../../components/CalendarPopUp";
 
 const Create = () => {
   const [title, setTitle] = useState("");
@@ -24,6 +26,9 @@ const Create = () => {
   const [recurrenceOption, setRecurrenceOption] = useState("Daily");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState(false);
+  const [isCalendarVisible, setIsCalendarVisible] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [formattedDate, setFormattedDate] = useState("");
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<RecurrenceValue | null>(null);
@@ -41,10 +46,25 @@ const Create = () => {
     setRecurrenceOption(newValue);
   };
 
-  const handleDateChange = (event: DateTimePickerEvent, selectedDate: Date | undefined) => {
+  const handleDateChange = (
+    event: DateTimePickerEvent,
+    selectedDate: Date | undefined
+  ) => {
     const currentDate = selectedDate ? selectedDate : null;
     setShowDatePicker(false);
     setDueDate(currentDate);
+  };
+
+  const handleDateUpdate = (dateString: string) => {
+    setSelectedDate(dateString);
+    const date = new Date(dateString);
+    const formattedDate = new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "UTC",
+    }).format(date);
+    setFormattedDate(formattedDate);
   };
 
   const handleSubmit = () => {
@@ -68,7 +88,7 @@ const Create = () => {
     <View className="flex-1">
       <View className="z-0 bg-blue-200 z-10 mb-3">
         <View className="w-full mt-5 mb-5">
-          <View className="flex-row items-center justify-between mt-10 mx-7">
+          <View className="flex-row items-center justify-between px-4 mt-10">
             <TouchableOpacity onPress={() => router.back()}>
               <MaterialIcons
                 name="keyboard-backspace"
@@ -77,9 +97,11 @@ const Create = () => {
               />
             </TouchableOpacity>
             <View className="flex-1 items-center">
-              <Text className="font-zcool text-white text-3xl">
-                Create a QuestBit
-              </Text>
+              <View className="flex-row items-center">
+                <Text className="font-zcool text-3xl mr-5 text-white">
+                  Create a QuestBit
+                </Text>
+              </View>
             </View>
           </View>
           <View className="mx-7 mt-5 mb-10">
@@ -93,20 +115,31 @@ const Create = () => {
               placeholderTextColor="white"
               className="text-xl mb-5"
             />
-            <Text className="text-white font-zcool text-lg">Due Date</Text>
-            <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-              <Text style={styles.textInput}>
-                {dueDate ? dueDate.toDateString() : ""}
-              </Text>
-            </TouchableOpacity>
-            {showDatePicker && (
-              <DateTimePicker
-                value={dueDate || new Date()}
-                mode="date"
-                display="default"
-                onChange={handleDateChange}
-              />
-            )}
+            <Text className="text-white font-zcool text-lg mt-5">Due Date</Text>
+            <View>
+              <TouchableOpacity
+                onPress={() => setIsCalendarVisible(true)}
+                className="flex-row items-center mt-2"
+              >
+                <Icon name="clock" size={20} color="#FFF" />
+                <Text className="font-zcool text-white text-xl px-2">
+                  {formattedDate}
+                </Text>
+              </TouchableOpacity>
+              {/* <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                <Text style={styles.textInput}>
+                  {dueDate ? dueDate.toDateString() : ""}
+                </Text>
+              </TouchableOpacity>
+              {showDatePicker && (
+                <DateTimePicker
+                  value={dueDate || new Date()}
+                  mode="date"
+                  display="default"
+                  onChange={handleDateChange}
+                />
+              )} */}
+            </View>
           </View>
         </View>
       </View>
@@ -114,7 +147,7 @@ const Create = () => {
         <View className="mx-7 mb-10 mt-7">
           <View className="flex-row justify-between items-center mb-5">
             <View className="flex flex-col space-y-2">
-              <Text className="text-black font-zcool text-lg">
+              <Text className="text-black font-zcool text-lg text-gray">
                 Recurring QuestBit?
               </Text>
               <CheckBox
@@ -139,7 +172,7 @@ const Create = () => {
             </View>
           </View>
           <Divider color="black" />
-          <Text className="text-black font-zcool text-lg mt-3">
+          <Text className="text-gray font-zcool text-lg mt-3">
             Description
             <Text className="text-red font-zcool text-lg">*</Text>
           </Text>
@@ -154,13 +187,13 @@ const Create = () => {
             placeholderTextColor="black"
             className="text-xl mb-5"
           />
-          <Text className="text-black font-zcool text-lg">Status</Text>
+          <Text className="text-gray font-zcool text-lg">Status</Text>
           <Image
             source={require("../../assets/images/small-pixel-btn.png")}
             style={{ width: 48, height: 48 }}
           />
           <View flex-row>
-            <Text className="text-black font-zcool text-lg mt-5">
+            <Text className="text-gray font-zcool text-lg mt-5">
               Assignees
             </Text>
           </View>
@@ -185,6 +218,11 @@ const Create = () => {
           </TouchableOpacity>
         </View>
       </View>
+      <CalendarModal
+        visible={isCalendarVisible}
+        onClose={() => setIsCalendarVisible(false)}
+        onUpdate={handleDateUpdate}
+      />
     </View>
   );
 };
@@ -202,7 +240,7 @@ const styles = StyleSheet.create({
   textInput2: {
     height: 40,
     borderBottomWidth: 0.5,
-    borderBottomColor: "black",
+    borderBottomColor: "",
     color: "black",
     width: "100%",
     fontFamily: "ZCOOL",

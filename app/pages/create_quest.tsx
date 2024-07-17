@@ -41,7 +41,7 @@ const CreateQuest = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [formattedDate, setFormattedDate] = useState("");
 
-  const defaultImage = require("../../assets/HD/add_circle_button.png");
+  const defaultImage = require("../../assets/HD/add_button.png");
   const selectedImage = selectedIcon
     ? getQuestIcon(selectedIcon)
     : defaultImage;
@@ -143,7 +143,7 @@ const CreateQuest = () => {
           className="absolute bottom-0 right-0 mx-5 my-5"
         >
           <Image
-            source={require("../../assets/HD/add_circle_button.png")}
+            source={require("../../assets/HD/add_button.png")}
             style={{ width: 40, height: 40 }}
           />
         </TouchableOpacity>
