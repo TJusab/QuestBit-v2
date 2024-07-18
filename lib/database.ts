@@ -3,7 +3,12 @@ import client, { config } from "./client";
 import { getCurrentUser } from "./account";
 import { Friendship, User } from "../constants/types";
 import { QuestIcon, RecurrenceValue, Status } from "../constants/enums";
-import { documentToFriendship, documentToQuest, documentToQuestBit, documentToUser } from "@/utils/mapping";
+import {
+  documentToFriendship,
+  documentToQuest,
+  documentToQuestBit,
+  documentToUser,
+} from "@/utils/mapping";
 import { QuestBit } from "../constants/types";
 import { getEnumFromStatus } from "@/utils/utils";
 
@@ -38,7 +43,7 @@ export async function addQuest(attributes: {
         icon: attributes.icon,
         questInfo: attributes.questInfo,
         deadline: attributes.deadline,
-        adventurers: attributes.adventurerIds,  // only send adventurer ids
+        adventurers: attributes.adventurerIds, // only send adventurer ids
         questbits: [],
       }
     );
@@ -74,7 +79,9 @@ export async function getQuests() {
 
     // Filter quests where the current user is an adventurer
     const adventurersQuests = quests.filter((quest) =>
-      (quest.adventurers ?? []).some((adventurer) => adventurer.$id === currentUser.$id)
+      (quest.adventurers ?? []).some(
+        (adventurer) => adventurer.$id === currentUser.$id
+      )
     );
 
     // Combine and remove duplicates
@@ -125,6 +132,47 @@ export async function deleteQuest(id: string) {
 }
 
 /** ------------------ CRUD QUESTBITS FUNCTIONS ------------------ */
+
+/**
+ * Adds a questbit to the database
+ * @param attributes the questbit attributes
+ * @returns the response of adding the document
+ */
+export async function addQuestBit(attributes: {
+  title: string;
+  deadline: Date | null;
+  isRecurring: boolean;
+  recurrenceOption: string;
+  description: string;
+  status: string;
+  adventurerIds: string[];
+}) {
+  try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("No current user found");
+
+    const response = await databases.createDocument(
+      config.databaseId,
+      config.questbitCollectionId,
+      ID.unique(),
+      {
+        owner: currentUser.$id,
+        title: attributes.title,
+        deadline: attributes.deadline,
+        isRecurring: attributes.isRecurring,
+        recurrenceOption: attributes.recurrenceOption,
+        description: attributes.description,
+        status: attributes.status,
+        adventurers: attributes.adventurerIds, // only send adventurer ids
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error adding questbit:", error);
+    throw new Error((error as Error).message);
+  }
+}
 
 /**
  * Fetches all questbits
@@ -245,11 +293,10 @@ export async function getAccountFromId(id: string): Promise<User> {
     const account = await databases.listDocuments(
       config.databaseId,
       config.userCollectionId,
-      [Query.equal('$id', id)]
+      [Query.equal("$id", id)]
     );
 
     return documentToUser(account.documents[0]);
-
   } catch (error) {
     console.error("Error fetching user:", error);
     throw new Error((error as Error).message);
@@ -270,29 +317,28 @@ export async function fetchFriends(): Promise<User[]> {
       config.databaseId,
       config.friendshipId,
       [
-        Query.or(
-          [
-            Query.equal("userID-1", currentUserId),
-            Query.equal("userID-2", currentUserId)
-          ]
-        ),
-        Query.equal('status', 'Friends')
+        Query.or([
+          Query.equal("userID-1", currentUserId),
+          Query.equal("userID-2", currentUserId),
+        ]),
+        Query.equal("status", "Friends"),
       ]
     );
 
     const friendships = response.documents.map(documentToFriendship);
 
     // Map through friendships and fetch user details for each friend
-    const friends = await Promise.all(friendships.map(async (friendship) => {
-      if (friendship.user1 === currentUserId) {
-        return await getAccountFromId(friendship.user2);
-      } else {
-        return await getAccountFromId(friendship.user1);
-      }
-    }));
+    const friends = await Promise.all(
+      friendships.map(async (friendship) => {
+        if (friendship.user1 === currentUserId) {
+          return await getAccountFromId(friendship.user2);
+        } else {
+          return await getAccountFromId(friendship.user1);
+        }
+      })
+    );
 
     return friends;
-
   } catch (error) {
     console.error("Error fetching friends:", error);
     throw new Error((error as Error).message);
@@ -311,36 +357,34 @@ export async function fetchFriendshipSuggestions(): Promise<User[]> {
     const users = await databases.listDocuments(
       config.databaseId,
       config.userCollectionId,
-      [Query.notEqual('$id', currentUserId)]
+      [Query.notEqual("$id", currentUserId)]
     );
 
-    // Get all possible friendships which includes the current 
+    // Get all possible friendships which includes the current
     // friendships and the friendship requests
     const possibleFriendships = await databases.listDocuments(
       config.databaseId,
       config.friendshipId,
       [
-        Query.or(
-          [
-            Query.equal("userID-1", currentUserId),
-            Query.equal("userID-2", currentUserId)
-          ]
-        )
+        Query.or([
+          Query.equal("userID-1", currentUserId),
+          Query.equal("userID-2", currentUserId),
+        ]),
       ]
     );
 
     // Map through friendships and fetch user details for each friend
     const alreadyFriendsIds = new Set();
-    possibleFriendships.documents.forEach(friendship => {
-      if (friendship['userID-1'] === currentUserId) {
-        alreadyFriendsIds.add(friendship['userID-2']);
+    possibleFriendships.documents.forEach((friendship) => {
+      if (friendship["userID-1"] === currentUserId) {
+        alreadyFriendsIds.add(friendship["userID-2"]);
       } else {
-        alreadyFriendsIds.add(friendship['userID-1']);
+        alreadyFriendsIds.add(friendship["userID-1"]);
       }
     });
 
     // Filter out users who are already friends
-    const suggestedUsers = users.documents.filter(user => {
+    const suggestedUsers = users.documents.filter((user) => {
       return !alreadyFriendsIds.has(user.$id);
     });
 
@@ -354,7 +398,9 @@ export async function fetchFriendshipSuggestions(): Promise<User[]> {
 /**
  * Fetch all the friendships that a user has received
  */
-export async function fetchReceivedFriendshipInvitations(): Promise<Friendship[]> {
+export async function fetchReceivedFriendshipInvitations(): Promise<
+  Friendship[]
+> {
   try {
     const currentUser = await getCurrentUser();
     if (!currentUser) throw new Error("No current user found");
@@ -364,23 +410,24 @@ export async function fetchReceivedFriendshipInvitations(): Promise<Friendship[]
       config.databaseId,
       config.friendshipId,
       [
-        Query.equal('userID-2', currentUserId),
-        Query.equal("status", ["InvitationSent"])
+        Query.equal("userID-2", currentUserId),
+        Query.equal("status", ["InvitationSent"]),
       ]
     );
 
     const friendships = response.documents.map(documentToFriendship);
 
-    const friendshipRequests = await Promise.all(friendships.map(async (friendship) => {
-      const user = await getAccountFromId(friendship.user1);
-      return {
-        ...friendship, // Include existing data from friendships if needed
-        user: user // Attach user data fetched from getAccountFromId
-      };
-    }));
+    const friendshipRequests = await Promise.all(
+      friendships.map(async (friendship) => {
+        const user = await getAccountFromId(friendship.user1);
+        return {
+          ...friendship, // Include existing data from friendships if needed
+          user: user, // Attach user data fetched from getAccountFromId
+        };
+      })
+    );
 
     return friendshipRequests;
-
   } catch (error) {
     console.error("Error fetching friendships:", error);
     throw new Error((error as Error).message);
@@ -401,16 +448,16 @@ export async function sendFriendshipInvite(userID_invited: string) {
       config.friendshipId,
       ID.unique(),
       {
-        'userID-1': currentUserId,
-        'userID-2': userID_invited,
-        'status': "InvitationSent",
-        "startOfFriendship": (new Date()).toISOString()
+        "userID-1": currentUserId,
+        "userID-2": userID_invited,
+        status: "InvitationSent",
+        startOfFriendship: new Date().toISOString(),
       }
     );
 
     return result;
   } catch (error) {
-    console.error('Error sending an invitation:', error);
+    console.error("Error sending an invitation:", error);
     throw new Error((error as Error).message);
   }
 }
@@ -425,13 +472,13 @@ export async function acceptFriendshipInvite(friendshipID: string) {
       config.friendshipId,
       friendshipID,
       {
-        'status': "Friends"
+        status: "Friends",
       }
     );
 
     return result;
   } catch (error) {
-    console.error('Error accepting an invitation:', error);
+    console.error("Error accepting an invitation:", error);
     throw new Error((error as Error).message);
   }
 }
@@ -449,7 +496,7 @@ export async function deleteFriendship(friendshipID: string) {
 
     return result;
   } catch (error) {
-    console.error('Error deleting a friendship:', error);
+    console.error("Error deleting a friendship:", error);
     throw new Error((error as Error).message);
   }
 }

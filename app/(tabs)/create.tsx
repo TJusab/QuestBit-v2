@@ -6,6 +6,7 @@ import {
   TextInput,
   StyleSheet,
   Image,
+  Alert,
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useState } from "react";
@@ -17,6 +18,19 @@ import { RecurrenceValue } from "@/constants/enums";
 import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import CalendarModal from "../../components/CalendarPopUp";
+import { addQuest } from "../../lib/database";
+
+import { User } from "@/constants/types";
+
+interface CreateQuestBitAttributes {
+  title: string;
+  dueDate: Date | null;
+  isRecurring: boolean;
+  recurrenceOption: string;
+  description: string;
+  status: string;
+  assignees: string[];
+}
 
 const Create = () => {
   const [title, setTitle] = useState("");
@@ -25,10 +39,11 @@ const Create = () => {
   const [isRecurring, setIsRecurring] = useState(false);
   const [recurrenceOption, setRecurrenceOption] = useState("Daily");
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState(false);
+  const [status, setStatus] = useState("");
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [formattedDate, setFormattedDate] = useState("");
+  const [selectedAdventurers, setSelectedAdventurers] = useState<User[]>([]);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<RecurrenceValue | null>(null);
@@ -77,6 +92,33 @@ const Create = () => {
       description,
       status,
     });
+  };
+
+  const handleAddQuestBit = async () => {
+    if (!title || !description) {
+      Alert.alert("Please fill in all the required fields.");
+      return;
+    }
+    try {
+      const attributes: CreateQuestBitAttributes = {
+        title: title,
+        dueDate: dueDate ? new Date(dueDate) : null,
+        isRecurring: isRecurring,
+        recurrenceOption: isRecurring ? recurrenceOption : "",
+        description: description,
+        status: status,
+        assignees:
+          selectedAdventurers.length > 0
+            ? selectedAdventurers.map((adventurer) => adventurer.$id)
+            : [],
+      };
+
+      await addQuest(attributes);
+      Alert.alert("Quest added successfully!");
+      router.replace("/quest-page?refresh=true");
+    } catch (error) {
+      Alert.alert("Error adding questbit:", (error as Error).message);
+    }
   };
 
   // const setToggleCheckBox = (newValue) => {
@@ -193,9 +235,7 @@ const Create = () => {
             style={{ width: 48, height: 48 }}
           />
           <View flex-row>
-            <Text className="text-gray font-zcool text-lg mt-5">
-              Assignees
-            </Text>
+            <Text className="text-gray font-zcool text-lg mt-5">Assignees</Text>
           </View>
           <Image
             source={require("../../assets/images/small-pixel-btn.png")}
@@ -206,7 +246,7 @@ const Create = () => {
         <View>
           <TouchableOpacity
             className="items-center justify-center"
-            onPress={() => console.log("Create questbit!")}
+            onPress={handleAddQuestBit}
           >
             <Image
               source={require("../../assets/images/pixelButton.png")}
