@@ -20,6 +20,7 @@ interface QuestBitEditProps {
 
 const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveChanges }) => {
   const [title, setTitle] = useState(item.title);
+  const [description, setDescription] = useState(item.description);
 
   const [items, setItems] = useState([
     { label: 'Never', value: 'Never' },
@@ -89,9 +90,10 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
         </View>
         <View>
           <View style={styles.edit_row}>
+          <TouchableOpacity onPress={showDatePicker}>
             <Text style={styles.edit_label}>Due Date</Text>
             <AntDesign name="form" size={20} color="black" />
-            <Button title="Change Due Date" onPress={showDatePicker} />
+            </TouchableOpacity>
             <DateTimePickerModal textColor="black"
               isVisible={isDatePickerVisible}
               mode="date"
@@ -131,7 +133,11 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
           <Text style={styles.edit_label}>Description</Text>
           <AntDesign name="form" size={25} color="black" />
         </View>
-        <Text style={styles.value}>{item.description}</Text>
+        <TextInput
+            style={styles.edit_input}
+            value={description}
+            onChangeText={(text) => setDescription(text)}
+          />
       </View>
       <View style={styles.section}>
         <View style={styles.edit_row}>
