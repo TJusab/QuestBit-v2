@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Image, View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { Image, View, Text, TextInput, TouchableOpacity, StyleSheet, Button } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import StatusButton from "./StatusButton";
@@ -10,6 +10,7 @@ import { QuestBit } from "@/constants/types";
 import { User } from "@/constants/types";
 import { getColorFromStatus } from "@/utils/utils";
 import { RecurrenceValue } from "@/constants/enums";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 interface QuestBitEditProps {
   item: QuestBit;
@@ -50,6 +51,23 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
   //   }
   // }, [item.dueDates]);
 
+
+  const [date, setDate] = useState(item.dueDates ? new Date(item.dueDates[0]) : new Date());
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (selectedDate: Date) => {
+    setDate(selectedDate);
+    hideDatePicker();
+  };
+
   return (
     <View>
       <Text style={styles.header}>QuestBit Details</Text>
@@ -73,6 +91,14 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
           <View style={styles.edit_row}>
             <Text style={styles.edit_label}>Due Date</Text>
             <AntDesign name="form" size={20} color="black" />
+            <Button title="Change Due Date" onPress={showDatePicker} />
+            <DateTimePickerModal textColor="black"
+              isVisible={isDatePickerVisible}
+              mode="date"
+              onConfirm={handleConfirm}
+              onCancel={hideDatePicker}
+              date={date}
+            />
           </View>
           <View>
             <MaterialIcons name="event" size={20} color="black" />
