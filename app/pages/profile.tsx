@@ -57,10 +57,6 @@ const Profile = () => {
         onChangeText={setPassword}
       />
 
-      <View style={styles.notificationContainer}>
-        <Text style={styles.label}>Notifications</Text>
-      </View>
-
       <View style={styles.buttonContainer}>
         <PixelButton
           text="SAVE!"

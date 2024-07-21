@@ -16,6 +16,17 @@ export const getButtonImage = (color: "red" | "blue" | "pink" | "yellow" | "gree
   }
 };
 
+export const getIconButtonImage = (icon: "accept" | "reject") => {
+  switch (icon) {
+    case "accept":
+      return require("../assets/HD/accept.png");
+    case "reject":
+      return require("../assets/HD/reject.png");
+    default:
+      return require("../assets/HD/accept.png");
+  }
+}
+
 export const getColorFromStatus = (status: Status) => {
   switch (status) {
     case Status.Unassigned:
