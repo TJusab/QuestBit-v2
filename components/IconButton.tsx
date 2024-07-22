@@ -3,27 +3,20 @@ import {
   View,
   ActivityIndicator,
   TouchableOpacity,
-  Text,
   Image,
 } from "react-native";
-import { getButtonImage } from "@/utils/utils";
+import { getIconButtonImage } from "@/utils/utils";
 
-interface PixelButtonProps {
-  text: string;
+interface IconButtonProps {
   onPress: () => void;
   isLoading?: boolean;
-  imageStyle?: string;
-  textStyle?: string;
-  color?: "red" | "blue" | "pink" | "yellow" | "green";
+  icon?: "accept" | "reject";
 }
 
-const PixelButton: React.FC<PixelButtonProps> = ({
-  text,
+const IconButton: React.FC<IconButtonProps> = ({
   onPress,
   isLoading = false,
-  imageStyle = {},
-  textStyle = {},
-  color = "green",
+  icon = "accept",
 }) => {
 
   return (
@@ -33,14 +26,9 @@ const PixelButton: React.FC<PixelButtonProps> = ({
         onPress={onPress}
       >
         <Image
-          source={getButtonImage(color)}
-          className={`w-[25vw] h-10 ${imageStyle}`}
+          source={getIconButtonImage(icon)}
+          className={`w-12 h-12`}
         />
-        <Text
-          className={`text-white font-zcool absolute text-xl pb-1 ${textStyle}`}
-        >
-          {text}
-        </Text>
         {isLoading && (
           <ActivityIndicator
             animating={isLoading}
@@ -54,4 +42,4 @@ const PixelButton: React.FC<PixelButtonProps> = ({
   );
 };
 
-export default PixelButton;
+export default IconButton;

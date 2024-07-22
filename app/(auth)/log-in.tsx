@@ -48,7 +48,7 @@ const LogIn = () => {
       <ScrollView contentContainerStyle={{ height: "100%" }}>
         <View className="flex-1 w-full h-full">
           <ImageBackground
-            source={require("../../assets/HD/background_no_scroll.png")}
+            source={require("../../assets/HD/background1.png")}
             className="flex-1 items-center justify-center"
             resizeMode="cover"
           >

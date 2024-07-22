@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Image, View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { Image, View, Text, TextInput, TouchableOpacity, StyleSheet, Button } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import StatusButton from "./StatusButton";
@@ -10,6 +10,7 @@ import { QuestBit } from "@/constants/types";
 import { User } from "@/constants/types";
 import { getColorFromStatus } from "@/utils/utils";
 import { RecurrenceValue } from "@/constants/enums";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 interface QuestBitEditProps {
   item: QuestBit;
@@ -19,6 +20,7 @@ interface QuestBitEditProps {
 
 const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveChanges }) => {
   const [title, setTitle] = useState(item.title);
+  const [description, setDescription] = useState(item.description);
 
   const [items, setItems] = useState([
     { label: 'Never', value: 'Never' },
@@ -50,6 +52,23 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
   //   }
   // }, [item.dueDates]);
 
+
+  const [date, setDate] = useState(item.dueDates ? new Date(item.dueDates[0]) : new Date());
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (selectedDate: Date) => {
+    setDate(selectedDate);
+    hideDatePicker();
+  };
+
   return (
     <View>
       <Text style={styles.header}>QuestBit Details</Text>
@@ -71,8 +90,17 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
         </View>
         <View>
           <View style={styles.edit_row}>
+          <TouchableOpacity onPress={showDatePicker}>
             <Text style={styles.edit_label}>Due Date</Text>
             <AntDesign name="form" size={20} color="black" />
+            </TouchableOpacity>
+            <DateTimePickerModal textColor="black"
+              isVisible={isDatePickerVisible}
+              mode="date"
+              onConfirm={handleConfirm}
+              onCancel={hideDatePicker}
+              date={date}
+            />
           </View>
           <View>
             <MaterialIcons name="event" size={20} color="black" />
@@ -105,7 +133,11 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
           <Text style={styles.edit_label}>Description</Text>
           <AntDesign name="form" size={25} color="black" />
         </View>
-        <Text style={styles.value}>{item.description}</Text>
+        <TextInput
+            style={styles.edit_input}
+            value={description}
+            onChangeText={(text) => setDescription(text)}
+          />
       </View>
       <View style={styles.section}>
         <View style={styles.edit_row}>

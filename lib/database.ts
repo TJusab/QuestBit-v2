@@ -260,12 +260,14 @@ export async function getAccountFromId(id: string): Promise<User> {
  * Fetch all the users which who the current user
  * have a friendship with
  */
-export async function fetchFriends(): Promise<User[]> {
+export async function fetchFriendships(): Promise<Friendship[]> {
   try {
+    // Get current user details
     const currentUser = await getCurrentUser();
     if (!currentUser) throw new Error("No current user found");
     const currentUserId = currentUser.$id;
 
+    // Fetch all friendship documents involving the current user with 'Friends' status
     const response = await databases.listDocuments(
       config.databaseId,
       config.friendshipId,
@@ -280,18 +282,24 @@ export async function fetchFriends(): Promise<User[]> {
       ]
     );
 
+    // Convert response documents to Friendship type
     const friendships = response.documents.map(documentToFriendship);
 
-    // Map through friendships and fetch user details for each friend
-    const friends = await Promise.all(friendships.map(async (friendship) => {
+    // Fetch user details for each friendship
+    const friendshipWithUser = await Promise.all(friendships.map(async (friendship) => {
+      let user: User;
       if (friendship.user1 === currentUserId) {
-        return await getAccountFromId(friendship.user2);
+        user = await getAccountFromId(friendship.user2);
       } else {
-        return await getAccountFromId(friendship.user1);
+        user = await getAccountFromId(friendship.user1);
       }
+      return {
+        ...friendship, // Include existing friendship data
+        user: user // Attach user data fetched from getAccountFromId
+      };
     }));
 
-    return friends;
+    return friendshipWithUser;
 
   } catch (error) {
     console.error("Error fetching friends:", error);
@@ -416,14 +424,14 @@ export async function sendFriendshipInvite(userID_invited: string) {
 }
 
 /**
- * Create an friendship with the status InvitationSent from userID_invites to userID_invited
+ * Accept a friendship by changing the friendship status to Friends
  */
 export async function acceptFriendshipInvite(friendshipID: string) {
   try {
     const result = await databases.updateDocument(
       config.databaseId,
       config.friendshipId,
-      friendshipID,
+      String(friendshipID),
       {
         'status': "Friends"
       }
@@ -437,7 +445,7 @@ export async function acceptFriendshipInvite(friendshipID: string) {
 }
 
 /**
- * Create an friendship with the status InvitationSent from userID_invites to userID_invited
+ * Delete a friendship
  */
 export async function deleteFriendship(friendshipID: string) {
   try {
