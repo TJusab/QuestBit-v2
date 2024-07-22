@@ -5,6 +5,8 @@ import { logout } from "../../lib/account";
 import { router } from "expo-router";
 import { getUserIcon } from "../../lib/icon";
 import { useGlobalContext } from "../../context/GlobalProvider";
+import { globalStyles } from "../global_styles";
+import FormField from "@/components/FormField";
 
 const Profile = () => {
   const { user } = useGlobalContext();
@@ -28,40 +30,20 @@ const Profile = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>My Profile!</Text>
-      <Image source={getUserIcon(user.icon)} style={styles.avatar} />
-
-      <Text style={styles.label}>Nickname</Text>
-      <TextInput
-        style={styles.input}
-        value={nickname}
-        onChangeText={setNickname}
+    <View className="justify-center items-center mt-10">
+      <Text className="font-press text-2xl">{user.username}</Text>
+      <Image
+        source={getUserIcon(user.icon)}
+        style={{ width: 100, height: 100 }}
       />
-
-      <Text style={styles.label}>Username</Text>
-      <TextInput
-        style={styles.input}
-        value={username}
-        onChangeText={setUsername}
-      />
-
-      <Text style={styles.label}>Email</Text>
-      <TextInput style={styles.input} value={email} onChangeText={setEmail} />
-
-      <Text style={styles.label}>Password</Text>
-      <TextInput
-        style={styles.input}
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-
-      <View style={styles.notificationContainer}>
-        <Text style={styles.label}>Notifications</Text>
+      <View className="font-zcool">
+        <FormField title="Nickname" value={nickname} handleChangeText={setNickname} />
+        <FormField title="Username" value={username} handleChangeText={setUsername} />
+        <FormField title="Email" value={email} handleChangeText={setEmail} />
+        <FormField title="Password" value={password} handleChangeText={setPassword} />
       </View>
 
-      <View style={styles.buttonContainer}>
+      <View className="flex-row mt-10">
         <PixelButton
           text="SAVE!"
           onPress={() => console.log("Save button pressed")}
@@ -78,71 +60,5 @@ const Profile = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    padding: 50,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    fontFamily: "PressStart2P",
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
-  },
-  label: {
-    alignSelf: "flex-start",
-    fontSize: 20,
-    fontWeight: "bold",
-    marginVertical: 5,
-    fontFamily: "ZCOOL",
-  },
-  input: {
-    width: "100%",
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderRadius: 7,
-    marginBottom: 10,
-    backgroundColor: "lightgray",
-  },
-  notificationContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    padding: 30,
-  },
-  saveButton: {
-    backgroundColor: "#ffcc00", // Example color
-    padding: 10,
-    borderRadius: 5,
-    flex: 1,
-    marginRight: 10,
-    alignItems: "center",
-  },
-  logoutButton: {
-    backgroundColor: "#ff6600", // Example color
-    padding: 10,
-    borderRadius: 5,
-    flex: 1,
-    alignItems: "center",
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#fff",
-  },
-});
 
 export default Profile;

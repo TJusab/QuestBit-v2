@@ -6,19 +6,12 @@ interface FormFieldProps {
   title: string;
   value: string;
   handleChangeText: (value: string) => void;
-  keyboardType?:
-    | "default"
-    | "email-address"
-    | "numeric"
-    | "phone-pad"
-    | "number-pad";
 }
 
 const FormField: React.FC<FormFieldProps> = ({
   title,
   value,
   handleChangeText,
-  keyboardType = "default",
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   return (
