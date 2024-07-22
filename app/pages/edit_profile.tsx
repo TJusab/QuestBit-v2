@@ -37,10 +37,10 @@ const Profile = () => {
         style={{ width: 100, height: 100 }}
       />
       <View className="font-zcool">
-        <FormField title="Nickname" value={nickname} handleChangeText={setNickname} />
-        <FormField title="Username" value={username} handleChangeText={setUsername} />
-        <FormField title="Email" value={email} handleChangeText={setEmail} />
-        <FormField title="Password" value={password} handleChangeText={setPassword} />
+        <FormField title="Nickname" value={nickname} handleChangeText={setNickname} inputStyle="bg-lightgray border-gray" textStyle="text-navy" color="#2E3A59" />
+        <FormField title="Username" value={username} handleChangeText={setUsername} inputStyle="bg-lightgray border-gray" textStyle="text-navy" color="#2E3A59"/>
+        <FormField title="Email" value={email} handleChangeText={setEmail} inputStyle="bg-lightgray border-gray" textStyle="text-navy" color="#2E3A59"/>
+        <FormField title="Password" value={password} handleChangeText={setPassword} inputStyle="bg-lightgray border-gray" textStyle="text-navy" color="#2E3A59" iconColor="#2E3A59"/>
       </View>
 
       <View className="flex-row mt-10">
