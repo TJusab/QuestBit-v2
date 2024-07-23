@@ -14,6 +14,9 @@ export interface User {
   username: string;
   email: string;
   icon: UserIcon;
+  level: number;
+  experiencePoints: number;
+  bio: string;
 }
 
 export interface Quest {

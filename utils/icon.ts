@@ -2,7 +2,7 @@ import { UserIcon, QuestIcon } from "../constants/enums";
 import { ImageSourcePropType } from "react-native";
 
 /**
- * Gets the specific image source of a user icon
+ * Gets the specific image source of a user icon (head shot)
  * @param icon the user icon
  * @returns the image source of the icon
  */
@@ -12,6 +12,24 @@ export function getUserIcon(icon: UserIcon): ImageSourcePropType {
       return require("../assets/HD/characters/assassin_headshot.png");
     case UserIcon.Witch:
       return require("../assets/HD/characters/witch_headshot.png");
+    case UserIcon.Fairy:
+      return require("../assets/HD/characters/fairy_headshot.png");
+    default:
+      return require("../assets/HD/characters/witch_headshot.png");
+  }
+}
+
+/**
+ * Gets the specific image source of a user icon (body shot)
+ * @param icon the user icon
+ * @returns the image source of the icon
+ */
+export function getUserBodyIcon(icon: UserIcon): ImageSourcePropType {
+  switch (icon) {
+    case UserIcon.Assassin:
+      return require("../assets/HD/characters/assassin_headshot.png");
+    case UserIcon.Witch:
+      return require("../assets/HD/witch.png");
     case UserIcon.Fairy:
       return require("../assets/HD/characters/fairy_headshot.png");
     default:

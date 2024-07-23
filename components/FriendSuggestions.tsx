@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, FlatList } from 'react-native';
 import PixelButton from './PixelButton';
 import { sendFriendshipInvite, fetchFriendshipSuggestions } from '../lib/database';
-import { getUserIcon } from '../lib/icon'
+import { getUserIcon } from '../utils/icon'
 import { User } from '@/constants/types';
 
 const Suggestions = () => {

@@ -3,9 +3,8 @@ import { View, Text, TextInput, Image, StyleSheet, Alert } from "react-native";
 import PixelButton from "@/components/PixelButton";
 import { logout } from "../../lib/account";
 import { router } from "expo-router";
-import { getUserIcon } from "../../lib/icon";
+import { getUserIcon } from "../../utils/icon";
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { globalStyles } from "../global_styles";
 import FormField from "@/components/FormField";
 
 const Profile = () => {

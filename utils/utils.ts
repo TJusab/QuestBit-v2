@@ -1,4 +1,4 @@
-import { RecurrenceValue, Status } from "../constants/enums";
+import { RecurrenceValue, Status, UserIcon } from "../constants/enums";
 
 export const getButtonImage = (color: "red" | "blue" | "pink" | "yellow" | "green") => {
   switch (color) {

@@ -6,13 +6,15 @@ import AddFriends from "../pages/add_friends";
 import FriendList from "../pages/friend_list";
 import Settings from "../pages/settings";
 import MyProfile from "../pages/my_profile";
+import CustomDrawer from "@/components/CustomDrawer";
 
 const Drawer = createDrawerNavigator();
 
 const ProfileWithDrawer = () => {
   return (
     <Drawer.Navigator
-      initialRouteName="Profile"
+    drawerContent={props => <CustomDrawer {...props}/>}
+      initialRouteName="My Profile"
       screenOptions={{
         drawerLabelStyle: {
           color: "black",
@@ -20,7 +22,7 @@ const ProfileWithDrawer = () => {
           fontSize: 20,
         },
         drawerStyle: {
-          width: 200,
+          width: 240,
         },
       }}
     >
@@ -31,6 +33,13 @@ const ProfileWithDrawer = () => {
           headerTitle: "My Profile",
           headerTitleStyle: {
             fontFamily: "PressStart2P",
+            textShadowColor: "#2E3A59",
+            textShadowOffset: { width: 3, height: 3 },
+            textShadowRadius: 0.1,
+            color: "white",
+          },
+          headerStyle: {
+            backgroundColor: "#8AD1F0",
           },
         }}
       ></Drawer.Screen>

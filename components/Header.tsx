@@ -1,6 +1,6 @@
 import { Text, View, Image } from "react-native";
 import { useGlobalContext } from "../context/GlobalProvider";
-import { getUserIcon } from "../lib/icon";
+import { getUserIcon } from "../utils/icon";
 import React from "react";
 import { globalStyles } from '../app/global_styles';
 

@@ -18,7 +18,7 @@ export async function register(email: string, password: string, username: string
       ID.unique(),
       email,
       password,
-      username
+      username,
     );
 
     if (!newAccount) throw new Error("Account creation failed");
@@ -32,6 +32,8 @@ export async function register(email: string, password: string, username: string
       {
         email: email,
         username: username,
+        level: 1,
+        experiencePoints: 0,
       }
     );
 
