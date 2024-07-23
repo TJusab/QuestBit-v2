@@ -14,7 +14,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   handleChangeText,
 }) => {
   return (
-    <View className="h-10 bg-white rounded-2xl border border-navy px-4 items-center flex-row">
+    <View className="h-10 bg-white rounded-2xl shadow-xl shadow-black px-4 items-center flex-row">
       <TouchableOpacity>
         <Icon name="search" size={20} color="#2E3A59" />
       </TouchableOpacity>

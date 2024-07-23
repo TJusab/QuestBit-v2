@@ -98,7 +98,7 @@ const CustomCalendar: React.FC = () => {
   return (
     <View>
       <Header header={"Calendar !"} />
-      <View className="w-[90%] mx-auto rounded-xl bg-white border">
+      <View className="w-[90%] mx-auto p-5 rounded-xl bg-white border">
         <Calendar
           theme={customTheme}
           renderHeader={renderCustomHeader}
