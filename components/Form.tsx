@@ -59,7 +59,6 @@ const Form: React.FC<FormProps> = ({
             handleChangeText={(value: string) =>
               handleChangeText(field.name, value)
             }
-            keyboardType={field.keyboardType}
           />
         ))}
         <View className="flex-row items-center">

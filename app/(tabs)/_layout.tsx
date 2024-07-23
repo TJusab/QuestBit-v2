@@ -31,9 +31,9 @@ const TabsLayout = () => {
         screenOptions={{
           tabBarShowLabel: false,
           tabBarActiveTintColor: "#FFFFFF",
-          tabBarInactiveTintColor: "#6ABE30",
+          tabBarInactiveTintColor: "#377D2C",
           tabBarStyle: {
-            backgroundColor: "#195e1f",
+            backgroundColor: "#A3C254",
           },
         }}
       >
@@ -94,6 +94,22 @@ const TabsLayout = () => {
               <TabIcon
                 name="create"
                 source={require("../../assets/HD/icons/quest.png")}
+                color={color}
+                focused={focused}
+              />
+            ),
+          }}
+        />
+
+        <Tabs.Screen
+          name="leaderboard"
+          options={{
+            title: "Leaderboard",
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                name="leaderboard"
+                source={require("../../assets/HD/icons/trophee.png")}
                 color={color}
                 focused={focused}
               />

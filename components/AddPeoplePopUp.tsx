@@ -7,6 +7,7 @@ import {
   Image,
   Alert,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import PixelButton from "./PixelButton";
 import { fetchAdventurers } from "../lib/database";
@@ -15,12 +16,12 @@ import { User } from "../constants/types";
 import { Models } from "react-native-appwrite";
 
 interface AddPeoplePopUpProps {
-    visible: boolean;
-    onClose: () => void;
-    onUpdate: (selectedAdventurers: User[]) => void;
-    selectedAdventurers: User[];
-    refreshKey: number;
-    text: string;
+  visible: boolean;
+  onClose: () => void;
+  onUpdate: (selectedAdventurers: User[]) => void;
+  selectedAdventurers: User[];
+  refreshKey: number;
+  text: string;
 }
 
 const AddPeoplePopUp: React.FC<AddPeoplePopUpProps> = ({
@@ -88,38 +89,44 @@ const AddPeoplePopUp: React.FC<AddPeoplePopUpProps> = ({
             className="w-full h-full items-center justify-center"
             resizeMode="contain"
           >
-            <View>
-              <Text className="font-zcool text-xl text-brown-200 text-center px-10 pt-5">
+            <View className="absolute">
+              <Text className="font-zcool text-xl text-brown-200 text-center px-10">
                 {text}
               </Text>
-              <View className="flex-row mx-3 justify-center items-center mt-5 mb-10">
-                {items.length > 0 &&
-                  items.map((adventurer) => (
-                    <View
-                      className="items-center justify-between mx-3"
-                      key={adventurer.$id}
-                    >
-                      <TouchableOpacity
-                        onPress={() => handleAdventurerPress(adventurer)}
-                        className={`${
-                          isSelected(adventurer)
-                            ? "border-navy border-2 items-center"
-                            : "border-2 border-transparent items-center"
-                        }`}
+              <ScrollView
+                contentContainerStyle={{ alignItems: "center" }}
+                showsVerticalScrollIndicator={true}
+                style={{ maxHeight: 100}}
+              >
+                <View className="flex-wrap flex-row justify-center">
+                  {items.length > 0 &&
+                    items.map((adventurer) => (
+                      <View
+                        className="justify-between m-2"
+                        key={adventurer.$id}
                       >
-                        <Image
-                          source={getUserIcon(adventurer.icon)}
-                          style={{ width: 60, height: 60 }}
-                          resizeMode="stretch"
-                        />
-                        <Text className="font-zcool text-brown-200">
-                          {adventurer.username}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  ))}
-              </View>
-              <View className="flex-row items-center justify-center ml-10">
+                        <TouchableOpacity
+                          onPress={() => handleAdventurerPress(adventurer)}
+                          className={`${
+                            isSelected(adventurer)
+                              ? "border-navy border-2 items-center"
+                              : "border-2 border-transparent items-center"
+                          }`}
+                        >
+                          <Image
+                            source={getUserIcon(adventurer.icon)}
+                            style={{ width: 60, height: 60 }}
+                            resizeMode="stretch"
+                          />
+                          <Text className="font-zcool text-brown-200">
+                            {adventurer.username}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    ))}
+                </View>
+              </ScrollView>
+              <View className="flex-row items-center justify-center ml-10 mt-5">
                 <PixelButton
                   text="Cancel"
                   textStyle="text-sm"

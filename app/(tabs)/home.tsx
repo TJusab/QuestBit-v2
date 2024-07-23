@@ -72,7 +72,7 @@ const Home: React.FC = () => {
           >
             <View>
               <Header header={`Hello ${user.username}!`} />
-              <View className="mx-5 mb-5">
+              <View className="mx-5 mb-5 shadow-xl shadow-black">
                 <SearchInput
                   placeholder="Search QuestBit..."
                   value={searchText}

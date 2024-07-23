@@ -27,8 +27,7 @@ module.exports = {
           100: "#945835",
           200: "#7F4D2E",
         },
-        white: "#FFFFFF",
-        sky: "#35a4f8",
+        white: "#FFFFFF"
       },
     },
     fontFamily: {
