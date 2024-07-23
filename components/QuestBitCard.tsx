@@ -43,7 +43,7 @@ const QuestBitCard: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
   return (
     <View>
       <TouchableOpacity
-        className="bg-white rounded-xl flex-row items-center p-2 my-2 mx-5"
+        className="bg-white shadow-xl shadow-black rounded-xl flex-row items-center p-2 my-2 mx-5"
         onPress={() =>
           router.push({
             pathname: "/pages/questbitdetails",

@@ -44,7 +44,7 @@ const LogIn = () => {
   };
 
   return (
-    <SafeAreaView className="bg-sky h-full">
+    <SafeAreaView className="bg-blue-300 h-full">
       <ScrollView contentContainerStyle={{ height: "100%" }}>
         <View className="flex-1 w-full h-full">
           <ImageBackground
