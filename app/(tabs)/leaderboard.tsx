@@ -7,12 +7,14 @@ import {
   Image,
   ImageBackground,
   ListRenderItem,
-  FlatList
+  FlatList,
+  ImageBackgroundComponent
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { router } from "expo-router";
 import PixelButton from "../../components/PixelButton";
 import IconButton from "../../components/IconButton";
+import Header from "@/components/Header";
 import SearchInput from "../../components/SearchInput";
 import {
   deleteFriendship,
@@ -69,40 +71,34 @@ const Leaderboard = () => {
         1351 XP
       </Text>
     </View>
-    <View className="ml-auto">
-      <IconButton
-        icon="reject"
-        onPress={() =>
-          handleDeletingFriendship(
-            item.$id,
-            false
-          )
-        }
-      />
-    </View>
   </View>
   );
 
-  const filteredFriends = friendships
-    .filter(friendship => friendship.user.username.toLowerCase().includes(searchTerm.toLowerCase()))
-    .slice(0, 3);
+  const filteredFriends = friendships;
+  //  .filter(friendship => friendship.user.xp)
+
+  const topThree = filteredFriends.slice(0, 3);
+  
 
   return (
     <ImageBackground
-      source={require("../../assets/HD/blue_sky.png")}
+      source={require("../../assets/HD/blue_sky_no_clouds.png")}
       className="flex-1"
       resizeMode="cover"
     >
+      <Header header={`Leaderboard!`} />
       <ScrollView className="flex-1 w-full">
         <View className="pt-5 px-5">
-          <Text className="font-zcool text-2xl text-white">Find Friends</Text>
-          <View className="my-5 mb-5">
-            <SearchInput
-              placeholder="Search user..."
-              value={searchTerm}
-              handleChangeText={setSearchTerm}
-            />
+          <View className="mx-auto">
+            <ImageBackground
+              source={require("../../assets/HD/podium.png")}
+              className="w-[89vw] h-[59vw]"
+              resizeMode="cover"
+            >
+                
+            </ImageBackground>
           </View>
+          
           <FlatList
             data={filteredFriends}
             renderItem={renderFriends}

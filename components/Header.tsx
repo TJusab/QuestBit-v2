@@ -15,10 +15,12 @@ const Header: React.FC<HeaderProps> = ({ header }) => {
       <Text className="font-press text-2xl text-center ml-5" style={globalStyles.title}>
         {header}
       </Text>
-      <Image
-        source={getUserIcon(user.icon)}
-        className="w-[70] h-[70] mb-5 ml-5"
-      />
+      <View className="ml-auto">
+        <Image
+          source={getUserIcon(user.icon)}
+          className="w-[70] h-[70] mb-5"
+        />
+      </View>
     </View>
   );
 };
