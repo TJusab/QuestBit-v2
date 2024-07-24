@@ -7,6 +7,7 @@ import FriendList from "../pages/friend_list";
 import Settings from "../pages/settings";
 import MyProfile from "../pages/my_profile";
 import CustomDrawer from "@/components/CustomDrawer";
+import TabIcon from "@/components/TabIcon";
 
 const Drawer = createDrawerNavigator();
 
@@ -16,14 +17,16 @@ const ProfileWithDrawer = () => {
     drawerContent={props => <CustomDrawer {...props}/>}
       initialRouteName="My Profile"
       screenOptions={{
-        drawerLabelStyle: {
-          color: "black",
-          fontFamily: "ZCOOL",
-          fontSize: 20,
-        },
         drawerStyle: {
           width: 240,
         },
+        drawerActiveBackgroundColor: "#8AD1F0",
+        drawerActiveTintColor: "#FFF",
+        drawerInactiveTintColor: "#2E3A59",
+        drawerLabelStyle: {
+          fontFamily: 'ZCOOL',
+          fontSize: 18
+        }
       }}
     >
       <Drawer.Screen

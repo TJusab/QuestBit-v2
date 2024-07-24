@@ -27,13 +27,13 @@ export function getUserIcon(icon: UserIcon): ImageSourcePropType {
 export function getUserBodyIcon(icon: UserIcon): ImageSourcePropType {
   switch (icon) {
     case UserIcon.Assassin:
-      return require("../assets/HD/characters/assassin_headshot.png");
+      return require("../assets/HD/characters/assasin.png");
     case UserIcon.Witch:
       return require("../assets/HD/witch.png");
     case UserIcon.Fairy:
-      return require("../assets/HD/characters/fairy_headshot.png");
+      return require("../assets/HD/characters/fairy.png");
     default:
-      return require("../assets/HD/characters/witch_headshot.png");
+      return require("../assets/HD/characters/witch.png");
   }
 }
 
