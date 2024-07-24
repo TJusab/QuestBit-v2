@@ -16,18 +16,6 @@ const Profile = () => {
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submitLogout = async () => {
-    setIsSubmitting(true);
-    try {
-      await logout();
-      router.replace("/log-in");
-    } catch (error) {
-      Alert.alert("Error", (error as Error).message);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <View className="justify-center items-center mt-10">
       <Text className="font-press text-2xl">{user.username}</Text>
@@ -48,12 +36,6 @@ const Profile = () => {
           onPress={() => console.log("Save button pressed")}
           isLoading={isSubmitting}
           color="green"
-        />
-        <PixelButton
-          text="LOGOUT!"
-          onPress={submitLogout}
-          isLoading={isSubmitting}
-          color="red"
         />
       </View>
     </View>

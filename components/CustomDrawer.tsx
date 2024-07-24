@@ -4,8 +4,9 @@ import {
   ImageBackground,
   Image,
   TouchableOpacity,
+  Alert
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { DrawerNavigationState, ParamListBase } from "@react-navigation/native";
 import {
   DrawerDescriptorMap,
@@ -18,6 +19,9 @@ import {
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { getUserIcon } from "@/utils/icon";
 import { globalStyles } from "@/app/global_styles";
+import MaterialIcon from "react-native-vector-icons/MaterialIcons";
+import { router } from "expo-router";
+import { logout } from "@/lib/account";
 
 interface CustomDrawerProps {
   state: DrawerNavigationState<ParamListBase>;
@@ -31,6 +35,19 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
   descriptors,
 }) => {
   const { user } = useGlobalContext();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const submitLogout = async () => {
+    setIsSubmitting(true);
+    try {
+      await logout();
+      router.replace("/log-in");
+    } catch (error) {
+      Alert.alert("Error", (error as Error).message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <View className="flex-1">
@@ -66,17 +83,25 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
         </View>
       </DrawerContentScrollView>
       <View className="p-5 border-t-2 border-lightgray">
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={submitLogout}>
           <View className="flex-row items-center mb-7">
-            <Text className="font-zcool text-navy" style={{ fontSize: 18 }}>
+            <MaterialIcon name="logout" size={22} />
+            <Text
+              className="font-zcool text-navy ml-3"
+              style={{ fontSize: 18 }}
+            >
               Sign Out
             </Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {}}>
           <View className="flex-row items-center">
-            <Text className="font-zcool text-navy" style={{ fontSize: 18 }}>
-              Rate this App
+            <MaterialIcon name="star" size={22} />
+            <Text
+              className="font-zcool text-navy ml-3"
+              style={{ fontSize: 18 }}
+            >
+              Rate App
             </Text>
           </View>
         </TouchableOpacity>
