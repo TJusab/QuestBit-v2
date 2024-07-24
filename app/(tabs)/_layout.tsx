@@ -1,28 +1,7 @@
 import React from "react";
 import { View, Image, ImageSourcePropType } from "react-native";
 import { Tabs } from "expo-router";
-
-interface TabIconProps {
-  source: ImageSourcePropType;
-  color: string;
-  name: string;
-  focused: boolean;
-}
-
-const TabIcon: React.FC<TabIconProps> = ({ source, color, name, focused }) => {
-  return (
-    <View className="items-center justify-center">
-      <Image
-        source={source}
-        style={{
-          width: 30,
-          height: 30,
-          tintColor: color,
-        }}
-      />
-    </View>
-  );
-};
+import TabIcon from "@/components/TabIcon";
 
 const TabsLayout = () => {
   return (
@@ -45,7 +24,7 @@ const TabsLayout = () => {
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 name="home"
-                source={require("../../assets/HD/icons/home.png")}
+                source={require("../../assets/HD/icons/house.png")}
                 color={color}
                 focused={focused}
               />

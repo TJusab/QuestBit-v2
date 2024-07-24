@@ -4,7 +4,7 @@ import StatusButton from "./StatusButton";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import DeletePopUp from "./DeletePopUp";
 import { router } from "expo-router";
-import { getQuestIcon, getUserIcon } from "../lib/icon";
+import { getQuestIcon, getUserIcon } from "../utils/icon";
 import { deleteQuestBit } from "../lib/database";
 import { QuestBit } from "../constants/types";
 import {

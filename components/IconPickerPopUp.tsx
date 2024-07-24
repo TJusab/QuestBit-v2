@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import PixelButton from "./PixelButton";
-import { getIcons, getQuestIcon } from "../lib/icon";
+import { getIcons, getQuestIcon } from "../utils/icon";
 import { QuestIcon } from "../constants/enums";
 
 interface IconPickerPopUpProps {

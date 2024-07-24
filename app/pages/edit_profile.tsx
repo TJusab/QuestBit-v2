@@ -3,9 +3,8 @@ import { View, Text, TextInput, Image, StyleSheet, Alert } from "react-native";
 import PixelButton from "@/components/PixelButton";
 import { logout } from "../../lib/account";
 import { router } from "expo-router";
-import { getUserIcon } from "../../lib/icon";
+import { getUserIcon } from "../../utils/icon";
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { globalStyles } from "../global_styles";
 import FormField from "@/components/FormField";
 
 const Profile = () => {
@@ -17,18 +16,6 @@ const Profile = () => {
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submitLogout = async () => {
-    setIsSubmitting(true);
-    try {
-      await logout();
-      router.replace("/log-in");
-    } catch (error) {
-      Alert.alert("Error", (error as Error).message);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <View className="justify-center items-center mt-10">
       <Text className="font-press text-2xl">{user.username}</Text>
@@ -37,10 +24,10 @@ const Profile = () => {
         style={{ width: 100, height: 100 }}
       />
       <View className="font-zcool">
-        <FormField title="Nickname" value={nickname} handleChangeText={setNickname} />
-        <FormField title="Username" value={username} handleChangeText={setUsername} />
-        <FormField title="Email" value={email} handleChangeText={setEmail} />
-        <FormField title="Password" value={password} handleChangeText={setPassword} />
+        <FormField title="Nickname" value={nickname} handleChangeText={setNickname} inputStyle="bg-lightgray border-gray" textStyle="text-navy" color="#2E3A59" />
+        <FormField title="Username" value={username} handleChangeText={setUsername} inputStyle="bg-lightgray border-gray" textStyle="text-navy" color="#2E3A59"/>
+        <FormField title="Email" value={email} handleChangeText={setEmail} inputStyle="bg-lightgray border-gray" textStyle="text-navy" color="#2E3A59"/>
+        <FormField title="Password" value={password} handleChangeText={setPassword} inputStyle="bg-lightgray border-gray" textStyle="text-navy" color="#2E3A59" iconColor="#2E3A59"/>
       </View>
 
       <View className="flex-row mt-10">
@@ -49,12 +36,6 @@ const Profile = () => {
           onPress={() => console.log("Save button pressed")}
           isLoading={isSubmitting}
           color="green"
-        />
-        <PixelButton
-          text="LOGOUT!"
-          onPress={submitLogout}
-          isLoading={isSubmitting}
-          color="red"
         />
       </View>
     </View>

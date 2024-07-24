@@ -18,7 +18,7 @@ import {
   deleteFriendship,
   fetchFriendships
 } from "../../lib/database";
-import { getUserIcon } from "../../lib/icon";
+import { getUserIcon } from "../../utils/icon";
 import { Friendship, User } from "@/constants/types";
 
 const FriendList = () => {

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, FlatList } from "react-native";
 import { Calendar, DateData } from "react-native-calendars";
 import { getQuestBitsForUser } from "../../lib/database";
-import { getQuestColor } from "../../lib/icon";
+import { getQuestColor } from "../../utils/icon";
 import QuestBitCard from "../../components/QuestBitCard";
 import Header from "../../components/Header";
 import { QuestBit } from "../../constants/types";

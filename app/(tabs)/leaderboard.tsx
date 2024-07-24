@@ -10,9 +10,6 @@ import {
   FlatList,
   ImageBackgroundComponent
 } from "react-native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { router } from "expo-router";
-import PixelButton from "../../components/PixelButton";
 import IconButton from "../../components/IconButton";
 import Header from "@/components/Header";
 import SearchInput from "../../components/SearchInput";
@@ -20,7 +17,7 @@ import {
   deleteFriendship,
   fetchFriendships
 } from "../../lib/database";
-import { getUserIcon } from "../../lib/icon";
+import { getUserIcon } from "../../utils/icon";
 import { Friendship, User } from "@/constants/types";
 
 const Leaderboard = () => {

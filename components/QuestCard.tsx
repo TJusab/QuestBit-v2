@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
 import { Quest } from "@/constants/types";
 import DeletePopUp from "./DeletePopUp";
-import { getQuestIcon } from "@/lib/icon";
+import { getQuestIcon } from "@/utils/icon";
 import { globalStyles } from "@/app/global_styles";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { router } from "expo-router";
