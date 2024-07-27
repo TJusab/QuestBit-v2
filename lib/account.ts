@@ -32,6 +32,7 @@ export async function register(email: string, password: string, username: string
       {
         email: email,
         username: username,
+        icon: "Witch",
         level: 1,
         experiencePoints: 0,
       }
