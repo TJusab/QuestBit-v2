@@ -1,61 +1,60 @@
-import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import React, { useState } from "react";
+import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 import StatusButton from "./StatusButton";
-import { getColorFromStatus } from "@/utils/utils";
+import { getColorFromStatus, getColorFromDifficulty, getPointsFromDifficulty, getTextFromDates, getColorFromDates} from "@/utils/utils";
 import { QuestBit } from "@/constants/types";
+import { getUserBodyIcon } from "@/utils/icon";
 
 interface QuestBitDetailProps {
   item: QuestBit;
 }
 
 const QuestBitDetail: React.FC<QuestBitDetailProps> = ({ item }) => {
-
   return (
-    <View>
-        <Text style={styles.header}>QuestBit Details</Text>
-      <View>
-        <Text style={styles.label}>Quest</Text>
-        <Text style={styles.title}>{item.title}</Text>
-      </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", paddingRight: 20 }}>
-        <View>
-          <Text style={styles.label}>Title</Text>
-          <Text style={styles.title}>{item.title}</Text>
-        </View>
-        <View>
-          <Text style={styles.label}>Due Date</Text>
-          <View>
-            <MaterialIcons name="event" size={20} color="black" />
-            <Text>{item.dueDates && item.dueDates[0].toLocaleDateString()}</Text>
-          </View>
-        </View>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} pointerEvents="none">
+      <Text style={styles.title}>{item.title}</Text>
+      <View style={styles.row}>
+        <StatusButton
+          color={getColorFromDates(item.dueDates)}
+          text={getTextFromDates(item.dueDates)}
+          textStyle="text-sm"
+        />
+        <View style={{ marginRight: 10 }}></View>
+        <Text style={[styles.label, styles.rowElement]}>Due : </Text>
+        <Text style={[styles.date, styles.rowElement]}>{item.dueDates && item.dueDates[0].toLocaleDateString()}</Text>
       </View>
       <View>
-        <Text style={styles.label}>Recurrence</Text>
-        <Text style={styles.value}>Annually</Text>
+        <Text style={styles.label}>Description</Text>
+        <Text style={styles.description}>{item.description}</Text>
       </View>
-      <View>
-        <Text style={styles.label}> Status</Text>
-        <View pointerEvents="none" style={{ flexDirection: "row", alignItems: "flex-start" }}>
+      
+      <View pointerEvents="none">
+        <View style={styles.row}>
+          <Text style={[styles.label, styles.rowElement]}>Status</Text>
           <StatusButton
             color={getColorFromStatus(item.status)}
             text={item.status}
             textStyle="text-sm"
           />
         </View>
+        <View style={{ height: 1, backgroundColor: 'grey', width: '100%', marginBottom: 15, marginTop: 15 }}></View>
+        <View style={styles.row}>
+          <Text style={[styles.label, styles.rowElement]}>Difficulty</Text>
+          <StatusButton
+            color={getColorFromDifficulty(item.difficulty)}
+            text={item.difficulty + "  |  " + getPointsFromDifficulty(item.difficulty) + "XP"}
+            textStyle="text-sm"
+          />
+        </View>
       </View>
-      <View>
-        <Text style={styles.label}>Description</Text>
-        <Text style={styles.value}>{item.description}</Text>
-      </View>
+      <View style={{ height: 1, backgroundColor: 'grey', width: '100%', marginBottom: 15, marginTop: 15 }}></View>
       <View style={styles.section}>
         <Text style={styles.label}>Assignee(s)</Text>
         <View style={styles.row}>
           {item.assignees && item.assignees.map((assignee) => (
-            <View key={assignee.$id} style={{ alignItems: "center", marginRight: 10 }}>
+            <View key={assignee.$id} style={styles.assignee}>
               <Image
-                source={require("../assets/HD/character_48X48.png")}
+                source={getUserBodyIcon(assignee.icon)}
                 style={styles.character}
               />
               <Text style={styles.username}>{assignee.username}</Text>
@@ -72,30 +71,19 @@ const QuestBitDetail: React.FC<QuestBitDetailProps> = ({ item }) => {
           />
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    margin: 5,
+  },
   log: {
     height: 190,
     alignItems: "center",
     justifyContent: "center",
     padding: 30,
-  },
-  edit_row: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  remove_assignee: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 28,
-    height: 28,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   scroll: {
     width: "120%",
@@ -109,7 +97,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   title: {
-    fontFamily: 'ZCOOL', 
+    marginTop: 20,
+    fontFamily: 'ZCOOL',
     fontSize: 32,
   },
   username: {
@@ -117,44 +106,33 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: -10,
   },
-  header: {
-    marginTop: 20,
-    fontSize: 18,
-    marginBottom: 20,
-    fontFamily: "PressStart2P",
-    color: "black",
-  },
-  quest: { 
-    fontSize: 32,
-    fontFamily: 'ZCOOL', 
-    color: 'black',
-  },
   section: {
     marginBottom: 15,
   },
   label: {
-    fontSize: 23,
+    fontSize: 27,
     fontWeight: "bold",
     fontFamily: "ZCOOL",
     color: "gray",
-    marginBottom: 3,
-    marginTop: 9,
   },
-  edit_label: {
-    fontSize: 23,
-    fontWeight: "bold",
-    fontFamily: "ZCOOL",
-    color: "gray",
-    marginBottom: 3,
-    marginTop: 9,
-    marginRight: 10
-  },
-  value: {
+  description: {
     fontSize: 18,
     fontFamily: "ZCOOL",
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  date: {
+    fontSize: 18,
+    fontFamily: "ZCOOL",
+    alignItems: 'center',
   },
   row: {
     flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  rowElement: {
+    marginRight: 10,
     alignItems: "center",
   },
   status: {
@@ -165,28 +143,6 @@ const styles = StyleSheet.create({
   assignee: {
     alignItems: "center",
     marginRight: 10,
-  },
-  centered: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "black",
-    borderRadius: 5,
-    padding: 8,
-    fontSize: 18,
-    fontFamily: "ZCOOL",
-    marginBottom: 10,
-  },
-  picker: {
-    height: 50,
-    width: "100%",
-    borderWidth: 1,
-    borderColor: "black",
-    borderRadius: 5,
-    marginBottom: 10,
   },
 });
 

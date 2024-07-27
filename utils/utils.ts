@@ -1,4 +1,5 @@
-import { RecurrenceValue, Status, UserIcon } from "../constants/enums";
+import { QuestBit } from "@/constants/types";
+import { Difficulty, RecurrenceValue, Status, UserIcon } from "../constants/enums";
 
 export const getButtonImage = (color: "red" | "blue" | "pink" | "yellow" | "green") => {
   switch (color) {
@@ -39,6 +40,59 @@ export const getColorFromStatus = (status: Status) => {
       return "green";
   }
 };
+
+export const getColorFromDifficulty = (status: Difficulty) => {
+  switch (status) {
+    case Difficulty.Easy:
+      return "yellow";
+    case Difficulty.EasyPeasy:
+      return "blue";
+    case Difficulty.Medium:
+      return "pink";
+    case Difficulty.Hard:
+      return "green";
+    case Difficulty.ExtremelyHard:
+      return "green";
+    case Difficulty.DieHard:
+      return "green";
+  }
+};
+
+export const getPointsFromDifficulty = (status: Difficulty) => {
+  switch (status) {
+    case Difficulty.Easy:
+      return "50";
+    case Difficulty.EasyPeasy:
+      return "100";
+    case Difficulty.Medium:
+      return "200";
+    case Difficulty.Hard:
+      return "300";
+    case Difficulty.ExtremelyHard:
+      return "350";
+    case Difficulty.DieHard:
+      return "400";
+  }
+};
+
+export const getTextFromDates = (dueDates: Date[]) => {
+  switch(dueDates.length) {
+    case 1:
+      return "Does not repeat";
+    default:
+      return "Repeats";
+  }
+};
+
+export const getColorFromDates = (dueDates: Date[]) => {
+  switch(dueDates.length) {
+    case 1:
+      return "blue";
+    default:
+      return "green";
+  }
+};
+
 
 export const getStringFromStatus = (status: Status): string => {
   switch (status) {

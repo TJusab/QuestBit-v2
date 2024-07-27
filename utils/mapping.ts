@@ -1,6 +1,6 @@
 import { Models } from "react-native-appwrite";
 import { User, Quest, QuestBit, Friendship } from "../constants/types";
-import { FriendshipStatus, Status } from "@/constants/enums";
+import { FriendshipStatus, Status, Difficulty } from "@/constants/enums";
 
 export function documentToUser(document: Models.Document): User {
     if ('username' in document && 'email' in document && 'icon' in document) {
@@ -30,6 +30,7 @@ export function documentToQuestBit(document: Models.Document): QuestBit {
         title: document.title,
         tags: document.tags ? document.tags : null,
         status: document.status as Status,
+        difficulty: document.difficulty as Difficulty,
         description: document.description,
         assignees: document.assignees ? document.assignees.map((assignee: Models.Document) => documentToUser(assignee)) : [],
         dueDates: document.dueDates ? document.dueDates.map((dueDate: string) => new Date(dueDate)) : [],

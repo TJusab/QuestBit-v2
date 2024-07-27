@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Image, View, Text, TextInput, TouchableOpacity, StyleSheet, Button } from "react-native";
+import { Image, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import StatusButton from "./StatusButton";
+import RecurrenceButton from "./RecurrenceButton";
+import DifficultyButton from "./DifficultyButton";
 import PixelButton from './PixelButton';
-import Dropdown from './Dropdown';
 import AddPeopleModal from "./AddPeoplePopUp";
 import { QuestBit } from "@/constants/types";
 import { User } from "@/constants/types";
-import { getColorFromStatus } from "@/utils/utils";
 import { RecurrenceValue } from "@/constants/enums";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { getColorFromStatus, getColorFromDifficulty, getPointsFromDifficulty, getTextFromDates, getColorFromDates} from "@/utils/utils";
+import { getUserBodyIcon } from "@/utils/icon";
 
 interface QuestBitEditProps {
   item: QuestBit;
@@ -23,8 +25,8 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
   const [description, setDescription] = useState(item.description);
 
   const [items, setItems] = useState([
-    { label: 'Never', value: 'Never' },
-    { label: 'Weekly', value: 'Weekly' },
+    { label: 'Easy | 50 XP', value: 'Easy' },
+    { label: 'Medium | 100 XP', value: 'Medium' },
     { label: 'Every 2 Weeks', value: '2Weeks' },
     { label: 'Monthly', value: 'Monthly' },
     { label: 'Yearly', value: 'Yearly' },
@@ -44,15 +46,6 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
 
   }
 
-  // useEffect(() => {
-  //   if (item.dueDates?.length === 1) {
-  //     setStatus('Never');
-  //   } else {
-  //     setStatus('Yearly');
-  //   }
-  // }, [item.dueDates]);
-
-
   const [date, setDate] = useState(item.dueDates ? new Date(item.dueDates[0]) : new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -70,75 +63,42 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
   };
 
   return (
-    <View>
-      <Text style={styles.header}>QuestBit Details</Text>
-      <View>
-        <Text style={styles.label}>Quest</Text>
-        <Text style={styles.title}>{item.title}</Text>
-      </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", paddingRight: 20 }}>
-        <View>
-          <View style={styles.edit_row}>
-            <Text style={styles.edit_label}>Title</Text> 
-            <AntDesign name="form" size={20} color="black" />
-          </View>
-          <TextInput
-            style={styles.edit_input}
-            value={title}
-            onChangeText={(text) => setTitle(text)}
-          />
-        </View>
-        <View>
-          <View style={styles.edit_row}>
-          <TouchableOpacity onPress={showDatePicker}>
-            <Text style={styles.edit_label}>Due Date</Text>
-            <AntDesign name="form" size={20} color="black" />
-            </TouchableOpacity>
-            <DateTimePickerModal textColor="black"
-              isVisible={isDatePickerVisible}
-              mode="date"
-              onConfirm={handleConfirm}
-              onCancel={hideDatePicker}
-              date={date}
-            />
-          </View>
-          <View>
-            <MaterialIcons name="event" size={20} color="black" />
-            <Text>{item.dueDates && item.dueDates[0].toLocaleDateString()}</Text>
-          </View>
-        </View>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
+      <Text style={styles.title}>{item.title}</Text>
+      <View style={styles.row}>
+        <RecurrenceButton
+          color={getColorFromDates(item.dueDates)}
+          text={getTextFromDates(item.dueDates)}
+          textStyle="text-sm"
+        />
+        <View style={{ marginRight: 10 }}></View>
+        <Text style={[styles.label, styles.rowElement]}>Due : </Text>
+        <Text style={[styles.date, styles.rowElement]}>{item.dueDates && item.dueDates[0].toLocaleDateString()}</Text>
       </View>
       <View>
-        <View style={styles.edit_row}>
-          <Text style={styles.edit_label}>Recurrence</Text>
-          <AntDesign name="form" size={20} color="black" />
-        </View>
-        <Dropdown initialValue={status} items={items} onChangeValue={onChangeValue} />
+        <Text style={styles.label}>Description</Text>
+        <Text style={styles.description}>{item.description}</Text>
       </View>
       <View>
-        <View style={styles.edit_row}>
-          <Text style={styles.edit_label}> Status</Text>
-          <AntDesign name="form" size={25} color="black" />
-        </View>
-        <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
+        <View style={styles.row}>
+          <Text style={[styles.label, styles.rowElement]}>Status</Text>
           <StatusButton
             color={getColorFromStatus(item.status)}
             text={item.status}
             textStyle="text-sm"
           />
         </View>
-      </View>
-      <View>
-        <View style={styles.edit_row}>
-          <Text style={styles.edit_label}>Description</Text>
-          <AntDesign name="form" size={25} color="black" />
-        </View>
-        <TextInput
-            style={styles.edit_input}
-            value={description}
-            onChangeText={(text) => setDescription(text)}
+        <View style={{ height: 1, backgroundColor: 'grey', width: '100%', marginBottom: 15, marginTop: 15 }}></View>
+        <View style={styles.row}>
+          <Text style={[styles.label, styles.rowElement]}>Difficulty</Text>
+          <DifficultyButton
+            color={getColorFromDifficulty(item.difficulty)}
+            text={item.difficulty + "  |  " + getPointsFromDifficulty(item.difficulty) + " XP"}
+            textStyle="text-sm"
           />
+        </View>
       </View>
+      <View style={{ height: 1, backgroundColor: 'grey', width: '100%', marginBottom: 15, marginTop: 15 }}></View>
       <View style={styles.section}>
         <View style={styles.edit_row}>
           <Text style={styles.edit_label}>Assignee(s)</Text>
@@ -158,7 +118,7 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
           {item.assignees && item.assignees.map((assignee) => (
             <View key={assignee.$id} style={{ alignItems: "center", marginRight: 10 }}>
               <Image
-                source={require("../assets/HD/character_48X48.png")}
+                source={getUserBodyIcon(assignee.icon)}
                 style={styles.character}
               />
               <TouchableOpacity
@@ -184,15 +144,78 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
         onPress={toggleEditing}
       />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({
-    edit_row: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginBottom: 10, 
-    },
+  container: {
+    margin: 5,
+  },
+  log: {
+    height: 190,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 30,
+  },
+  scroll: {
+    width: "120%",
+    height: "100%",
+    marginBottom: 10,
+    marginTop: -35,
+  },
+  character: {
+    width: 90,
+    height: 90,
+    marginBottom: 10,
+  },
+  title: {
+    marginTop: 20,
+    fontFamily: 'ZCOOL',
+    fontSize: 32,
+  },
+  username: {
+    fontFamily: "ZCOOL",
+    fontSize: 18,
+    marginBottom: -10,
+  },
+  section: {
+    marginBottom: 15,
+  },
+  label: {
+    fontSize: 27,
+    fontWeight: "bold",
+    fontFamily: "ZCOOL",
+    color: "gray",
+  },
+  description: {
+    fontSize: 18,
+    fontFamily: "ZCOOL",
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  date: {
+    fontSize: 18,
+    fontFamily: "ZCOOL",
+    alignItems: 'center',
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  rowElement: {
+    marginRight: 10,
+    alignItems: "center",
+  },
+  status: {
+    width: 100,
+    height: 20,
+    backgroundColor: "gray",
+  },
+  assignee: {
+    alignItems: "center",
+    marginRight: 10,
+  },
     remove_assignee: {
       position: 'absolute',
       bottom: 0,
@@ -202,78 +225,6 @@ const styles = StyleSheet.create({
       borderRadius: 12,
       justifyContent: 'center',
       alignItems: 'center',
-    },
-    title: {
-      fontFamily: 'ZCOOL', 
-      fontSize: 32,
-    },
-    character: {
-      width: 90,
-      height: 90,
-      marginBottom: 10,
-    },
-    header: {
-      marginTop: 65,
-      fontSize: 18,
-      fontFamily: "PressStart2P",
-      color: "black",
-    },
-    quest: {
-      fontSize: 32,
-      fontFamily: 'ZCOOL',
-      color: 'black',
-    },
-    section: {
-      marginBottom: 15,
-    },
-    label: {
-      fontSize: 23,
-      fontWeight: "bold",
-      marginBottom: 3,
-      marginTop: 9,
-      fontFamily: "ZCOOL", 
-      color: "gray",
-    },
-    edit_label: {
-      fontSize: 23,
-      fontWeight: "bold",
-      fontFamily: "ZCOOL",
-      color: "gray",
-      marginBottom: 3,
-      marginTop: 9,
-      marginRight: 10,
-    },
-    value: {
-      fontSize: 18,
-      fontFamily: "ZCOOL",
-    },
-    row: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent:"center"
-    },
-    status: {
-      width: 100,
-      height: 20,
-      backgroundColor: "gray",
-    },
-    assignee: {
-      alignItems: "center",
-      marginRight: 10,
-    },
-    centered: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    input: {
-      borderWidth: 1,
-      borderColor: "black",
-      borderRadius: 5,
-      padding: 8,
-      fontSize: 18,
-      marginBottom: 10, 
-      fontFamily: "ZCOOL", 
     },
     button: {
       padding: 10,
@@ -286,14 +237,19 @@ const styles = StyleSheet.create({
       color: "white",
       fontFamily: "ZCOOL",
     },
-    edit_input: {
-      borderWidth: 1,
-      borderColor: "black",
-      borderRadius: 5,
-      padding: 8,
-      fontSize: 18,
+    edit_label: {
+      fontSize: 23,
+      fontWeight: "bold",
+      fontFamily: "ZCOOL",
+      color: "gray",
+      marginBottom: 3,
+      marginTop: 9,
+      marginRight: 10,
+    },
+    edit_row: {
+      flexDirection: "row",
+      alignItems: "center",
       marginBottom: 10, 
-      fontFamily: "ZCOOL", 
     },
   });
   
