@@ -3,15 +3,11 @@ import {
   ScrollView,
   View,
   Text,
-  TouchableOpacity,
   Image,
   ImageBackground,
   ListRenderItem,
   FlatList
 } from "react-native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { router } from "expo-router";
-import PixelButton from "../../components/PixelButton";
 import IconButton from "../../components/IconButton";
 import SearchInput from "../../components/SearchInput";
 import {
@@ -95,7 +91,7 @@ const FriendList = () => {
     >
       <ScrollView className="flex-1 w-full">
         <View className="pt-5 px-5">
-          <Text className="font-zcool text-2xl text-white">Find Friends</Text>
+          <Text className="font-zcool text-2xl text-white">Find friends</Text>
           <View className="my-5 mb-5">
             <SearchInput
               placeholder="Search user..."
