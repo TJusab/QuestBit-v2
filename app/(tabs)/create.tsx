@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 import {
+  ScrollView,
   View,
   Text,
   TouchableOpacity,
@@ -21,6 +22,9 @@ import CalendarModal from "../../components/CalendarPopUp";
 import { addQuestBit } from "../../lib/database";
 
 import { User } from "@/constants/types";
+
+import StatusButton from "../../components/StatusButton";
+import { getColorFromStatus } from "@/utils/utils";
 
 interface CreateQuestBitAttributes {
   title: string;
@@ -127,7 +131,7 @@ const Create = () => {
   // };
 
   return (
-    <View className="flex-1">
+    <ScrollView className="flex-1">
       <View className="z-0 bg-blue-200 z-10 mb-3">
         <View className="w-full mt-5 mb-5">
           <View className="flex-row items-center justify-between px-4 mt-10">
@@ -230,9 +234,10 @@ const Create = () => {
             className="text-xl mb-5"
           />
           <Text className="text-gray font-zcool text-lg">Status</Text>
-          <Image
-            source={require("../../assets/images/small-pixel-btn.png")}
-            style={{ width: 48, height: 48 }}
+          <StatusButton
+            color={getColorFromStatus(status)}
+            text={status}
+            textStyle="text-sm"
           />
           <View flex-row>
             <Text className="text-gray font-zcool text-lg mt-5">Assignees</Text>
@@ -263,7 +268,7 @@ const Create = () => {
         onClose={() => setIsCalendarVisible(false)}
         onUpdate={handleDateUpdate}
       />
-    </View>
+    </ScrollView>
   );
 };
 
