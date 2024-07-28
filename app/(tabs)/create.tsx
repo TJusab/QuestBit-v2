@@ -249,8 +249,8 @@ const Create = () => {
             text={status}
             textStyle="text-sm"
           />
-          <View flex-row>
-            <Text className="text-gray font-zcool text-lg mt-5">Assignees</Text>
+          <View className="flex-row mt-5">
+            <Text className="text-gray font-zcool text-lg">Assignees </Text>
             <TouchableOpacity onPress={() => setVisible(true)}>
               <AntDesign name="pluscircle" size={25} color="green" />
             </TouchableOpacity>
