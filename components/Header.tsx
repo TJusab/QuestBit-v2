@@ -16,12 +16,6 @@ const Header: React.FC<HeaderProps> = ({ header, colorStyle }) => {
       <Text className="font-press text-2xl text-center ml-5" style={ colorStyle=="green" ? globalStyles.greenTitle : globalStyles.title }>
         {header}
       </Text>
-      <View className="ml-auto">
-        <Image
-          source={getUserIcon(user.icon)}
-          className="w-[70] h-[70] mb-5"
-        />
-      </View>
     </View>
   );
 };
