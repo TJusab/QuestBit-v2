@@ -1,12 +1,11 @@
 import { Quest } from "@/constants/types";
 import { useLocalSearchParams } from "expo-router";
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet } from "react-native";
 import QuestDetail from "@/components/QuestDetail";
 
 const QuestDetails = () => {
   const parseQuest = (data: string): Quest => {
-    console.log("data", data);
     const parsedData = JSON.parse(data);
 
     if (parsedData.deadline) {

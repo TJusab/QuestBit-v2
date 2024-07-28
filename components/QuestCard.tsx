@@ -35,7 +35,7 @@ const QuestCard: React.FC<QuestCardProps> = ({ item, onUpdate }) => {
 
   return (
     <TouchableOpacity
-      className="mb-5 p-5 bg-blue-200 rounded-xl mx-5"
+      className="mb-5 p-5 bg-blue-200 rounded-xl mx-5 shadow-xl shadow-black rounded-xl"
       onPress={() => handleQuestPress()}
     >
       <View className="flex-row justify-between items-center">

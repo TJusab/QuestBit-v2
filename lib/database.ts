@@ -220,7 +220,6 @@ export async function getQuestBitsForUser(): Promise<QuestBit[]> {
  * @param newStatus the value of the new status
  */
 export async function updateQuestBitStatus(id: string, newStatus: string) {
-  console.log("What is status here?");
   const status = getEnumFromStatus(newStatus);
   try {
     await databases.updateDocument(

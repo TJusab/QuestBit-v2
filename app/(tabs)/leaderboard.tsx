@@ -33,7 +33,7 @@ const Leaderboard = () => {
 
   const renderFriends: ListRenderItem<User> = ({ item, index }) => (
     <View
-      className="bg-white rounded-xl flex-row items-center p-2 px-5 my-2"
+      className="bg-white shadow-xl shadow-black rounded-xl flex-row items-center p-2 px-5 mx-5 my-2"
       key={item.$id}
     >
       <Text className="font-press text-2xl mr-3 mt-3">{index + 4}</Text>
@@ -62,8 +62,8 @@ const Leaderboard = () => {
     >
       <Header header={`Leaderboard!`} />
       <ScrollView className="flex-1 w-full">
-        <View className="pt-5 px-5">
-          <View className="mx-auto">
+        <View className="pt-5">
+          <View className="mx-auto px-5">
             <View className="flex-row">
               {topThree[1] ? (
                 <View className="mx-auto items-center" style={{ marginTop: 23 }}>
@@ -80,15 +80,22 @@ const Leaderboard = () => {
                   />
                 </View>
               ) : (
-                <View
-                  className="mx-auto items-center"
-                  style={{ width: 128, height: 128 }}
-                ></View>
+                <View className="mx-auto items-center" style={{ marginTop: 23 }}>
+                  <Text className="font-zcool text-xl text-transparent">
+                    name
+                  </Text>
+                  <Text className="font-zcool text-lg text-transparent">
+                    XP
+                  </Text>
+                  <View
+                    style={{ width: 128, height: 128 }}
+                  />
+                </View>
               )}
               {topThree[0] ? (
                 <View
                   className="mx-auto items-center"
-                  style={{ marginTop: -15 }}
+                  style={{ marginTop: -20 }}
                 >
                   <Text className="font-zcool text-xl text-white">
                     {topThree[0].username}
@@ -123,10 +130,18 @@ const Leaderboard = () => {
                   />
                 </View>
               ) : (
-                <View
-                  className="mx-auto items-center"
-                  style={{ width: 128, height: 128 }}
-                ></View>
+                <View className="mx-auto items-center" style={{ marginTop: 50 }}>
+                  <Text className="font-zcool text-xl text-transparent">
+                    name
+                  </Text>
+                  <Text className="font-zcool text-lg text-transparent">
+                    XP
+                  </Text>
+                  <View
+                    style={{ width: 128, height: 128 }}
+                  />
+                </View>
+              
               )}
             </View>
             <View style={{ marginTop: -70 }}>
@@ -137,12 +152,13 @@ const Leaderboard = () => {
               ></Image>
             </View>
           </View>
-
+          
           <FlatList
             data={otherFriends}
             renderItem={renderFriends}
             keyExtractor={(item: User) => item.$id}
             scrollEnabled={false}
+            contentContainerStyle={{ paddingBottom: 20 }}
           />
         </View>
       </ScrollView>
