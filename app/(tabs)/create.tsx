@@ -202,7 +202,23 @@ const Create = () => {
       </View>
       <View className="z-10 shadow-xl flex-1 bg-white rounded-t-2xl -mt-10">
         <View className="mx-7 mb-10 mt-7">
-          <View className="flex-row justify-between items-center mb-5">
+          <Text className="text-gray font-zcool text-lg">
+            Quest
+            <Text className="text-red font-zcool text-lg">*</Text>
+          </Text>
+          <TextInput
+            editable
+            multiline
+            numberOfLines={4}
+            maxLength={100}
+            style={styles.textInput2}
+            value={description}
+            onChangeText={setDescription}
+            placeholderTextColor="black"
+            className="text-xl mb-5"
+          />
+          <Divider color="black" />
+          <View className="flex-row justify-between items-center mt-5 mb-5">
             <View className="flex flex-col space-y-2">
               <Text className="text-black font-zcool text-lg text-gray">
                 Recurring QuestBit?
