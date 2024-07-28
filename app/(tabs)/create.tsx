@@ -28,6 +28,7 @@ import { User } from "@/constants/types";
 import AddPeopleModal from "../../components/AddPeoplePopUp";
 import StatusButton from "../../components/StatusButton";
 import { getColorFromStatus } from "@/utils/utils";
+import { getUserBodyIcon } from "@/utils/icon";
 
 interface CreateQuestBitAttributes {
   title: string;
@@ -263,13 +264,28 @@ const Create = () => {
               text="Assign adventurers to this QuestBit"
             />
           </View>
-          <Image
-            source={require("../../assets/images/small-pixel-btn.png")}
-            style={{ width: 48, height: 48 }}
-          />
+
+          <View>
+            {selectedAdventurers &&
+              selectedAdventurers.map((assignee) => (
+                <View
+                  key={assignee.$id}
+                  style={{ alignItems: "center", marginRight: 10 }}
+                >
+                  <Image
+                    source={getUserBodyIcon(assignee.icon)}
+                    style={styles.assigneeNames}
+                  />
+                  <TouchableOpacity style={styles.remove_assignee}>
+                    <AntDesign name="minuscircle" size={25} color="red" />
+                  </TouchableOpacity>
+                  <Text>{assignee.username}</Text>
+                </View>
+              ))}
+          </View>
         </View>
 
-        <View>
+        <View className="mb-5">
           <TouchableOpacity
             className="items-center justify-center"
             onPress={handleAddQuestBit}
@@ -328,6 +344,21 @@ const styles = StyleSheet.create({
   },
   checkboxChecked: {
     backgroundColor: "coral",
+  },
+  assigneeNames: {
+    width: 90,
+    height: 90,
+    marginBottom: 10,
+  },
+  remove_assignee: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    width: 28,
+    height: 28,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
