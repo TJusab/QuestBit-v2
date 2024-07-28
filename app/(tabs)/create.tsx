@@ -15,7 +15,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import CheckBox from "expo-checkbox";
 import DropDownPicker from "react-native-dropdown-picker";
 import { Divider } from "@rneui/themed";
-import { RecurrenceValue } from "@/constants/enums";
+import { Difficulty, RecurrenceValue } from "@/constants/enums";
 import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import CalendarModal from "../../components/CalendarPopUp";
@@ -48,6 +48,7 @@ const Create = () => {
   const [recurrenceOption, setRecurrenceOption] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState(Status.Unassigned);
+  const [difficulty, setDifficulty] = useState(Difficulty.EasyPeasy);
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [formattedDate, setFormattedDate] = useState("");
@@ -260,12 +261,34 @@ const Create = () => {
             placeholderTextColor="black"
             className="text-xl mb-5"
           />
-          <Text className="text-gray font-zcool text-lg">Status</Text>
-          <StatusButton
-            color={getColorFromStatus(status)}
-            text={status}
-            textStyle="text-sm"
-          />
+          <View className="flex-row">
+            <View className="flex-col mr-7">
+              <Text className="text-gray font-zcool text-lg">Status</Text>
+              <View className="items-start">
+                <StatusButton
+                  color={getColorFromStatus(status)}
+                  text={status}
+                  textStyle="text-sm"
+                />
+              </View>
+            </View>
+
+            <View className="flex-col">
+              <Text className="text-gray font-zcool text-lg">Difficulty</Text>
+              <View className="items-start">
+                <DifficultyButton
+                  color={getColorFromDifficulty(item.difficulty)}
+                  text={
+                    item.difficulty +
+                    "  |  " +
+                    getPointsFromDifficulty(item.difficulty) +
+                    " XP"
+                  }
+                  textStyle="text-sm"
+                />
+              </View>
+            </View>
+          </View>
           <View className="flex-row mt-5">
             <Text className="text-gray font-zcool text-lg">Assignees </Text>
             <TouchableOpacity onPress={() => setVisible(true)}>
@@ -281,7 +304,7 @@ const Create = () => {
             />
           </View>
 
-          <View>
+          <View className="items-start grid grid-col-3 gap-4">
             {selectedAdventurers &&
               selectedAdventurers.map((assignee) => (
                 <View
