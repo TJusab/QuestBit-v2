@@ -220,7 +220,6 @@ export async function getQuestBitsForUser(): Promise<QuestBit[]> {
  * @param newStatus the value of the new status
  */
 export async function updateQuestBitStatus(id: string, newStatus: string) {
-  console.log("What is status here?");
   const status = getEnumFromStatus(newStatus);
   try {
     await databases.updateDocument(
@@ -298,6 +297,50 @@ export async function getAccountFromId(id: string): Promise<User> {
     return documentToUser(account.documents[0]);
   } catch (error) {
     console.error("Error fetching user:", error);
+    throw new Error((error as Error).message);
+  }
+}
+
+export async function fetchFriends(): Promise<User[]> {
+  try {
+    // Get current user details
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("No current user found");
+    const currentUserId = currentUser.$id;
+
+    // Fetch all friendship documents involving the current user with 'Friends' status
+    const response = await databases.listDocuments(
+      config.databaseId,
+      config.friendshipId,
+      [
+        Query.or([
+          Query.equal("userID-1", currentUserId),
+          Query.equal("userID-2", currentUserId),
+        ]),
+        Query.equal("status", "Friends"),
+      ]
+    );
+
+    // Convert response documents to Friendship type
+    const friendships = response.documents.map(documentToFriendship);
+
+    // Fetch user details for each friendship
+    const users = await Promise.all(
+      friendships.map(async (friendship) => {
+        if (friendship.user1 === currentUserId) {
+          return await getAccountFromId(friendship.user2);
+        } else {
+          return await getAccountFromId(friendship.user1);
+        }
+      })
+    );
+
+    // Add the current user to the list of users
+    users.push(currentUser);
+
+    return users;
+  } catch (error) {
+    console.error("Error fetching friends:", error);
     throw new Error((error as Error).message);
   }
 }

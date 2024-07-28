@@ -3,27 +3,25 @@ import {
   ScrollView,
   View,
   Text,
-  TouchableOpacity,
   Image,
   ImageBackground,
   ListRenderItem,
   FlatList
 } from "react-native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { router } from "expo-router";
-import PixelButton from "../../components/PixelButton";
 import IconButton from "../../components/IconButton";
 import SearchInput from "../../components/SearchInput";
+import DeletePopUp from "../../components/DeletePopUp";
 import {
   deleteFriendship,
   fetchFriendships
 } from "../../lib/database";
 import { getUserIcon } from "../../utils/icon";
-import { Friendship, User } from "@/constants/types";
+import { Friendship } from "@/constants/types";
 
 const FriendList = () => {
   const [friendships, setFriendships] = useState<Friendship[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
 
   useEffect(() => {
     const loadFriendshipRequests = async () => {
@@ -72,14 +70,20 @@ const FriendList = () => {
     <View className="ml-auto">
       <IconButton
         icon="reject"
-        onPress={() =>
-          handleDeletingFriendship(
-            item.$id,
-            false
-          )
-        }
+        onPress={() => setDeleteModalVisible(true)}
       />
     </View>
+    <DeletePopUp
+      visible={deleteModalVisible}
+      onClose={() => setDeleteModalVisible(false)}
+      handleDelete={() =>
+        handleDeletingFriendship(
+          item.$id,
+          false
+        )
+      }
+      text={"Are you sure you want to remove " + item.user.username + " from your friends ?"}
+    />
   </View>
   );
 
@@ -95,7 +99,7 @@ const FriendList = () => {
     >
       <ScrollView className="flex-1 w-full">
         <View className="pt-5 px-5">
-          <Text className="font-zcool text-2xl text-white">Find Friends</Text>
+          <Text className="font-zcool text-2xl text-white">Find friends</Text>
           <View className="my-5 mb-5">
             <SearchInput
               placeholder="Search user..."
@@ -106,7 +110,7 @@ const FriendList = () => {
           <FlatList
             data={filteredFriends}
             renderItem={renderFriends}
-            keyExtractor={(item: User) => item.$id}
+            keyExtractor={(item: Friendship) => item.$id}
             scrollEnabled={false}
           />
         </View>

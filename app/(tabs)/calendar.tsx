@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, ScrollView } from "react-native";
 import { Calendar, DateData } from "react-native-calendars";
 import { getQuestBitsForUser } from "../../lib/database";
 import { getQuestColor } from "../../utils/icon";
@@ -96,9 +96,9 @@ const CustomCalendar: React.FC = () => {
   };
 
   return (
-    <View>
-      <Header header={"Calendar !"} />
-      <View className="w-[90%] mx-auto p-5 rounded-xl bg-white border">
+    <ScrollView>
+      <Header header={"Calendar !"} colorStyle={"green"} />
+      <View className="w-[90%] mx-auto mb-3 p-5 rounded-xl bg-white shadow-xl shadow-black">
         <Calendar
           theme={customTheme}
           renderHeader={renderCustomHeader}
@@ -130,8 +130,10 @@ const CustomCalendar: React.FC = () => {
         renderItem={({ item }) => (
           <QuestBitCard item={item} />
         )}
+        scrollEnabled={false}
+        contentContainerStyle={{ paddingBottom: 20 }}
       />
-    </View>
+    </ScrollView>
   );
 };
 

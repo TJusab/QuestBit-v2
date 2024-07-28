@@ -35,11 +35,13 @@ const DeletePopUp: React.FC<DeletePopUpProps> = ({ visible, onClose, handleDelet
                   color="red"
                   onPress={onClose}
                 />
+                <View className="mr-4" />
                 <PixelButton
                   text="Delete"
                   textStyle="text-sm"
                   onPress={handleDelete}
                 />
+                <View className="mr-6" />
               </View>
             </View>
           </ImageBackground>

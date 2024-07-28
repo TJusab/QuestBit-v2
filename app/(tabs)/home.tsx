@@ -28,7 +28,6 @@ const Home: React.FC = () => {
       const response = await getQuestBitsForUser();
       setQuestBits(response);
       setFilteredQuestBits(response);
-      console.log(response)
     } catch (error) {
       Alert.alert("Error", (error as Error).message);
     } finally {
