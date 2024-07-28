@@ -143,7 +143,7 @@ export async function addQuestBit(attributes: {
   isRecurring: boolean;
   recurrenceOption: string;
   description: string;
-  status: string;
+  status: Status;
   adventurerIds: string[];
 }) {
   try {

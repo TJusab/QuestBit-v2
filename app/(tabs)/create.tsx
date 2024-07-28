@@ -20,9 +20,12 @@ import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import CalendarModal from "../../components/CalendarPopUp";
 import { addQuestBit } from "../../lib/database";
+import { Status } from "../../constants/enums";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 import { User } from "@/constants/types";
 
+import AddPeopleModal from "../../components/AddPeoplePopUp";
 import StatusButton from "../../components/StatusButton";
 import { getColorFromStatus } from "@/utils/utils";
 
@@ -32,7 +35,7 @@ interface CreateQuestBitAttributes {
   isRecurring: boolean;
   recurrenceOption: string;
   description: string;
-  status: string;
+  status: Status;
   adventurerIds: string[];
 }
 
@@ -43,14 +46,17 @@ const Create = () => {
   const [isRecurring, setIsRecurring] = useState(false);
   const [recurrenceOption, setRecurrenceOption] = useState("");
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState(Status.Unassigned);
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [formattedDate, setFormattedDate] = useState("");
+
+  const [refreshKey, setRefreshKey] = useState(0);
   const [selectedAdventurers, setSelectedAdventurers] = useState<User[]>([]);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<RecurrenceValue | null>(null);
+  const [visible, setVisible] = useState(false);
 
   const recurrenceOptions = [
     { label: "Daily", value: "Daily" },
@@ -84,6 +90,10 @@ const Create = () => {
       timeZone: "UTC",
     }).format(date);
     setFormattedDate(formattedDate);
+  };
+
+  const handleAddAdventurers = (adventurers: User[]) => {
+    setSelectedAdventurers(adventurers);
   };
 
   const handleSubmit = () => {
@@ -241,6 +251,17 @@ const Create = () => {
           />
           <View flex-row>
             <Text className="text-gray font-zcool text-lg mt-5">Assignees</Text>
+            <TouchableOpacity onPress={() => setVisible(true)}>
+              <AntDesign name="pluscircle" size={25} color="green" />
+            </TouchableOpacity>
+            <AddPeopleModal
+              visible={visible}
+              onClose={() => setVisible(false)}
+              onUpdate={handleAddAdventurers}
+              selectedAdventurers={selectedAdventurers}
+              refreshKey={refreshKey}
+              text="Assign adventurers to this QuestBit"
+            />
           </View>
           <Image
             source={require("../../assets/images/small-pixel-btn.png")}
