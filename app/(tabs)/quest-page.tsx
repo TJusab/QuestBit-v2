@@ -58,14 +58,14 @@ const QuestPage = () => {
   }
 
   return (
-    <View className="bg-blue-50 h-full">
+    <View className="h-full">
       <FlatList
         data={quests}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <QuestCard item={item} onUpdate={handleQuestUpdate} />
         )}
-        ListHeaderComponent={() => <Header header={"My Quests !"} />}
+        ListHeaderComponent={() => <Header header={"My Quests !"} colorStyle={"green"} />}
       />
       <TouchableOpacity
         style={styles.addButton}

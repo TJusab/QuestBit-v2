@@ -97,7 +97,7 @@ const CustomCalendar: React.FC = () => {
 
   return (
     <ScrollView>
-      <Header header={"Calendar !"} />
+      <Header header={"Calendar !"} colorStyle={"green"} />
       <View className="w-[90%] mx-auto mb-3 p-5 rounded-xl bg-white shadow-xl shadow-black">
         <Calendar
           theme={customTheme}

@@ -5,6 +5,12 @@ export const globalStyles = {
     textShadowRadius: 1,
     color: "white",
   },
+  greenTitle: {
+    textShadowColor: "white",
+    textShadowOffset: { width: 3, height: 3 },
+    textShadowRadius: 1,
+    color: "#6ABE30",
+  },
   questTitle: {
     textShadowColor: "#2E3A59",
     textShadowOffset: { width: 3, height: 3 },
