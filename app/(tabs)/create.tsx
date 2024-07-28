@@ -27,7 +27,12 @@ import { User } from "@/constants/types";
 
 import AddPeopleModal from "../../components/AddPeoplePopUp";
 import StatusButton from "../../components/StatusButton";
-import { getColorFromStatus } from "@/utils/utils";
+import DifficultyButton from "../../components/DifficultyButton";
+import {
+  getColorFromStatus,
+  getColorFromDifficulty,
+  getPointsFromDifficulty,
+} from "@/utils/utils";
 import { getUserBodyIcon } from "@/utils/icon";
 
 interface CreateQuestBitAttributes {
@@ -277,11 +282,11 @@ const Create = () => {
               <Text className="text-gray font-zcool text-lg">Difficulty</Text>
               <View className="items-start">
                 <DifficultyButton
-                  color={getColorFromDifficulty(item.difficulty)}
+                  color={getColorFromDifficulty(difficulty)}
                   text={
-                    item.difficulty +
+                    difficulty +
                     "  |  " +
-                    getPointsFromDifficulty(item.difficulty) +
+                    getPointsFromDifficulty(difficulty) +
                     " XP"
                   }
                   textStyle="text-sm"
