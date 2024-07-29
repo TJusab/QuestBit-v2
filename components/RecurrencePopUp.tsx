@@ -33,10 +33,12 @@ const RecurrencePopUp: React.FC<RecurrenceopUpProps> = ({
   };
 
   const items = [
-    { label: RecurrenceValue.Annually, value: RecurrenceValue.Annually},
-    { label: RecurrenceValue.BiWeekly, value: RecurrenceValue.BiWeekly},
+    { label: RecurrenceValue.NoRepeat, value: RecurrenceValue.NoRepeat },
     { label: RecurrenceValue.Daily, value: RecurrenceValue.Daily },
+    { label: RecurrenceValue.BiWeekly, value: RecurrenceValue.BiWeekly},
     { label: RecurrenceValue.Weekly, value: RecurrenceValue.Weekly},
+    { label: RecurrenceValue.Monthly, value: RecurrenceValue.Monthly},
+    { label: RecurrenceValue.Annually, value: RecurrenceValue.Annually},    
   ];
 
   return (

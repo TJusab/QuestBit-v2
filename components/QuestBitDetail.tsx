@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 import StatusButton from "./StatusButton";
 import { getColorFromStatus, getColorFromDifficulty, getPointsFromDifficulty, getTextFromDates, getColorFromDates} from "@/utils/utils";
@@ -10,6 +10,28 @@ interface QuestBitDetailProps {
 }
 
 const QuestBitDetail: React.FC<QuestBitDetailProps> = ({ item }) => {
+
+  const [selectedDate, setSelectedDate] = useState("");
+  const [formattedDate, setFormattedDate] = useState("");
+  const formatDateString = (dateString: string) => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "UTC",
+    }).format(date);
+  };
+
+  useEffect(() => {
+    if (item.dueDates && item.dueDates.length > 0) {
+      const initialDate = item.dueDates[0].toISOString().split('T')[0];
+      setSelectedDate(initialDate);
+      setFormattedDate(formatDateString(initialDate));
+    }
+  }, [item.dueDates]);
+
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} pointerEvents="none">
       <Text style={styles.title}>{item.title}</Text>
@@ -21,7 +43,7 @@ const QuestBitDetail: React.FC<QuestBitDetailProps> = ({ item }) => {
         />
         <View style={{ marginRight: 10 }}></View>
         <Text style={[styles.label, styles.rowElement]}>Due : </Text>
-        <Text style={[styles.date, styles.rowElement]}>{item.dueDates && item.dueDates[0].toLocaleDateString()}</Text>
+        <Text className="font-zcool text-black text-xl">{formattedDate}</Text>
       </View>
       <View>
         <Text style={styles.label}>Description</Text>

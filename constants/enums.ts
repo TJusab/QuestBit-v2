@@ -26,10 +26,12 @@ export enum Difficulty {
 }
 
 export enum RecurrenceValue {
+    NoRepeat="Does not repeat",
     Daily = "Daily",
     Weekly = "Weekly",
     BiWeekly = "Bi-Weekly",
     Annually = "Annually",
+    Monthly = "Monthly",
 }
 
 export enum FriendshipStatus {

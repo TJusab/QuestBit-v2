@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Modal } from "react-native";
 import { Calendar, DateData } from "react-native-calendars";
 import moment from "moment";
@@ -7,14 +7,23 @@ interface CalendarPopUpProps {
   visible: boolean;
   onClose: () => void;
   onUpdate: (date: string) => void;
+  initialDate?: string; // Optional initial date prop
 }
 
 const CalendarPopUp: React.FC<CalendarPopUpProps> = ({
   visible,
   onClose,
   onUpdate,
+  initialDate,
 }) => {
-  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDate, setSelectedDate] = useState<string>("");
+
+  useEffect(() => {
+    if (initialDate) {
+      setSelectedDate(initialDate);
+    }
+  }, [initialDate]);
+
   const customTheme = {
     textMonthFontFamily: "ZCOOL",
     textDayFontFamily: "ZCOOL",
@@ -78,6 +87,11 @@ const CalendarPopUp: React.FC<CalendarPopUpProps> = ({
           disableAllTouchEventsForDisabledDays={true}
           enableSwipeMonths={true}
           onDayPress={handleDayPress}
+          markedDates={
+            selectedDate
+              ? { [selectedDate]: { selected: true, selectedColor: "#6abe30" } }
+              : {}
+          }
         />
       </View>
     </Modal>
