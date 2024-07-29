@@ -1,3 +1,4 @@
+import * as q from "q";
 import { router } from "expo-router";
 import {
   ScrollView,
@@ -19,11 +20,11 @@ import { Difficulty, RecurrenceValue } from "@/constants/enums";
 import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import CalendarModal from "../../components/CalendarPopUp";
-import { addQuestBit } from "../../lib/database";
+import { addQuestBit, getQuests } from "../../lib/database";
 import { Status } from "../../constants/enums";
 import AntDesign from "react-native-vector-icons/AntDesign";
 
-import { User } from "@/constants/types";
+import { User, Quest } from "@/constants/types";
 
 import AddPeopleModal from "../../components/AddPeoplePopUp";
 import StatusButton from "../../components/StatusButton";
@@ -58,12 +59,23 @@ const Create = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [formattedDate, setFormattedDate] = useState("");
 
+  const [questOpen, setQuestOpen] = useState(false);
+  const [quest, setQuest] = useState(null);
+
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedAdventurers, setSelectedAdventurers] = useState<User[]>([]);
 
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState<RecurrenceValue | null>(null);
   const [visible, setVisible] = useState(false);
+
+  const questOptions = await Promise.all(getQuests());
+  q.all(
+    inputs.map(function (input) {
+      return promiseForOutput; // however you go about this
+    })
+  ).then(function (outputs) {
+    // at this event, outputs is an array of output values
+  });
 
   const recurrenceOptions = [
     { label: "Daily", value: "Daily" },
@@ -72,11 +84,6 @@ const Create = () => {
     { label: "Monthly", value: "Monthly" },
     { label: "Anually", value: "Anually" },
   ];
-
-  const handleChangeValue = (newValue: RecurrenceValue) => {
-    setValue(newValue);
-    setRecurrenceOption(newValue);
-  };
 
   const handleDateChange = (
     event: DateTimePickerEvent,
@@ -212,17 +219,19 @@ const Create = () => {
             Quest
             <Text className="text-red font-zcool text-lg">*</Text>
           </Text>
-          <TextInput
-            editable
-            multiline
-            numberOfLines={4}
-            maxLength={100}
-            style={styles.textInput2}
-            value={description}
-            onChangeText={setDescription}
-            placeholderTextColor="black"
-            className="text-xl mb-5"
-          />
+          <View className="mt-3 mb-5">
+            <DropDownPicker
+              open={questOpen}
+              value={quest}
+              items={questOptions}
+              setOpen={setQuestOpen}
+              setValue={(newQuest) => setQuest(newQuest)}
+              placeholder="Select quest"
+              style={styles.dropdown}
+              dropDownContainerStyle={styles.dropdown}
+              textStyle={styles.labelStyle}
+            />
+          </View>
           <Divider color="black" />
           <View className="flex-row justify-between items-center mt-5 mb-5">
             <View className="flex flex-col space-y-2">
@@ -239,10 +248,10 @@ const Create = () => {
             <View className="flex flex-col space-y-2">
               <DropDownPicker
                 open={open}
-                value={value}
+                value={recurrenceOption}
                 items={recurrenceOptions}
                 setOpen={setOpen}
-                setValue={() => handleChangeValue}
+                setValue={(newValue) => setRecurrenceOption(newValue)}
                 placeholder="Select recurrence option"
                 style={styles.dropdown}
                 dropDownContainerStyle={styles.dropdown}
@@ -339,7 +348,7 @@ const Create = () => {
               className={`w-[86vw] h-14`}
             />
             <Text className={`text-white font-zcool absolute text-xl pb-1`}>
-              CREATE QUESTBIT
+              CREATE QUESTBIT !
             </Text>
           </TouchableOpacity>
         </View>
