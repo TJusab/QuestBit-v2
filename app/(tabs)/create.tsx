@@ -1,4 +1,3 @@
-import * as q from "q";
 import { router } from "expo-router";
 import {
   ScrollView,
@@ -14,7 +13,10 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CheckBox from "expo-checkbox";
-import DropDownPicker from "react-native-dropdown-picker";
+import DropDownPicker, {
+  ItemType,
+  ValueType,
+} from "react-native-dropdown-picker";
 import { Divider } from "@rneui/themed";
 import { Difficulty, RecurrenceValue } from "@/constants/enums";
 import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
@@ -68,14 +70,28 @@ const Create = () => {
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
 
-  const questOptions = await Promise.all(getQuests());
-  q.all(
-    inputs.map(function (input) {
-      return promiseForOutput; // however you go about this
-    })
-  ).then(function (outputs) {
-    // at this event, outputs is an array of output values
-  });
+  const [questsOptions, setQuestsOptions] = useState<Quest[]>([]);
+
+  const fetchQuests = async () => {
+    try {
+      const response: Quest[] = await getQuests();
+      setQuestsOptions(response);
+    } catch (error) {
+      Alert.alert("Error", (error as Error).message);
+    }
+  };
+
+  fetchQuests();
+
+  const questDropdown: ItemType<ValueType>[] = [];
+
+  for (const key of questsOptions) {
+    let currQuest: ItemType<ValueType> = {
+      label: key.title,
+      value: key.toString(),
+    };
+    questDropdown.push(currQuest);
+  }
 
   const recurrenceOptions = [
     { label: "Daily", value: "Daily" },
@@ -223,7 +239,7 @@ const Create = () => {
             <DropDownPicker
               open={questOpen}
               value={quest}
-              items={questOptions}
+              items={questDropdown}
               setOpen={setQuestOpen}
               setValue={(newQuest) => setQuest(newQuest)}
               placeholder="Select quest"
