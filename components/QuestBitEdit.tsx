@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Image, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import { Image, View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Icon from "react-native-vector-icons/FontAwesome5";
 import StatusButton from "./StatusButton";
 import RecurrenceButton from "./RecurrenceButton";
 import DifficultyButton from "./DifficultyButton";
 import PixelButton from './PixelButton';
 import AddPeopleModal from "./AddPeoplePopUp";
-import { QuestBit } from "@/constants/types";
-import { User } from "@/constants/types";
-import { RecurrenceValue } from "@/constants/enums";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { getColorFromStatus, getColorFromDifficulty, getPointsFromDifficulty, getTextFromDates, getColorFromDates} from "@/utils/utils";
+import { QuestBit, User } from "@/constants/types";
+import { getColorFromStatus, getColorFromDifficulty, getPointsFromDifficulty, getTextFromDates, getColorFromDates } from "@/utils/utils";
 import { getUserBodyIcon } from "@/utils/icon";
+import CalendarModal from "./CalendarPopUp";
 
 interface QuestBitEditProps {
   item: QuestBit;
@@ -21,46 +19,44 @@ interface QuestBitEditProps {
 }
 
 const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveChanges }) => {
-  const [title, setTitle] = useState(item.title);
-  const [description, setDescription] = useState(item.description);
 
-  const [items, setItems] = useState([
-    { label: 'Easy | 50 XP', value: 'Easy' },
-    { label: 'Medium | 100 XP', value: 'Medium' },
-    { label: 'Every 2 Weeks', value: '2Weeks' },
-    { label: 'Monthly', value: 'Monthly' },
-    { label: 'Yearly', value: 'Yearly' },
-  ]);
-  
-  const [status, setStatus] = useState<RecurrenceValue>(RecurrenceValue.Daily);
-  const [visible, setVisible] = useState(false);
+  const sendUpdate = () => {
+    saveChanges();
+  };
 
+  const [peopleVisible, setPeopleVisible] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedAdventurers, setSelectedAdventurers] = useState<User[]>([]);
-
   const handleAddAdventurers = (adventurers: User[]) => {
     setSelectedAdventurers(adventurers);
   };
 
-  const onChangeValue = () => {
+  const [isCalendarVisible, setIsCalendarVisible] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [formattedDate, setFormattedDate] = useState("");
 
-  }
-
-  const [date, setDate] = useState(item.dueDates ? new Date(item.dueDates[0]) : new Date());
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
+  const formatDateString = (dateString: string) => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "UTC",
+    }).format(date);
   };
 
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
+  const handleDateUpdate = (dateString: string) => {
+    setSelectedDate(dateString);
+    setFormattedDate(formatDateString(dateString));
   };
 
-  const handleConfirm = (selectedDate: Date) => {
-    setDate(selectedDate);
-    hideDatePicker();
-  };
+  useEffect(() => {
+    if (item.dueDates && item.dueDates.length > 0) {
+      const initialDate = item.dueDates[0].toISOString().split('T')[0];
+      setSelectedDate(initialDate);
+      setFormattedDate(formatDateString(initialDate));
+    }
+  }, [item.dueDates]);
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
@@ -73,7 +69,21 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
         />
         <View style={{ marginRight: 10 }}></View>
         <Text style={[styles.label, styles.rowElement]}>Due : </Text>
-        <Text style={[styles.date, styles.rowElement]}>{item.dueDates && item.dueDates[0].toLocaleDateString()}</Text>
+        <TouchableOpacity
+          onPress={() => setIsCalendarVisible(true)}
+          className="flex-row items-center mt-2"
+        >
+          <Icon name="clock" size={20} color="#000" />
+          <Text className="font-zcool text-black text-xl">
+            {formattedDate}
+          </Text>
+        </TouchableOpacity>
+        <CalendarModal
+          visible={isCalendarVisible}
+          onClose={() => setIsCalendarVisible(false)}
+          onUpdate={handleDateUpdate}
+          initialDate={selectedDate}
+        />
       </View>
       <View>
         <Text style={styles.label}>Description</Text>
@@ -102,12 +112,12 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
       <View style={styles.section}>
         <View style={styles.edit_row}>
           <Text style={styles.edit_label}>Assignee(s)</Text>
-          <TouchableOpacity onPress={() => setVisible(true)}>
-          <AntDesign name="pluscircle" size={25} color="green" />
+          <TouchableOpacity onPress={() => setPeopleVisible(true)}>
+            <AntDesign name="pluscircle" size={25} color="green" />
           </TouchableOpacity>
           <AddPeopleModal
-            visible={visible}
-            onClose={() => setVisible(false)}
+            visible={peopleVisible}
+            onClose={() => setPeopleVisible(false)}
             onUpdate={handleAddAdventurers}
             selectedAdventurers={selectedAdventurers}
             refreshKey={refreshKey}
@@ -123,33 +133,36 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
               />
               <TouchableOpacity
                 style={styles.remove_assignee}>
-                  <AntDesign name="minuscircle" size={25} color="red" />
+                <AntDesign name="minuscircle" size={25} color="red" />
               </TouchableOpacity>
               <Text>{assignee.username}</Text>
             </View>
           ))}
         </View>
       </View>
-      <View style={styles.row}>
-      <PixelButton
-        text="Save"
-        textStyle="text-sm"
-        color="green"
-        onPress={saveChanges}
-      />
-      <PixelButton
-        text="Cancel"
-        textStyle="text-sm"
-        color="red"
-        onPress={toggleEditing}
-      />
+      <View style={styles.buttons}>
+        <PixelButton
+          text="Cancel"
+          textStyle="text-sm"
+          color="red"
+          onPress={toggleEditing}
+        />
+        <View style={{ margin: 20 }}></View>
+        <PixelButton
+          text="Save"
+          textStyle="text-sm"
+          color="green"
+          onPress={sendUpdate}
+        />
       </View>
     </ScrollView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     margin: 5,
+    marginTop: 70,
   },
   log: {
     height: 190,
@@ -202,6 +215,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginVertical: 10,
+  },
+  buttons: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 10,
+    justifyContent: 'center',
   },
   rowElement: {
     marginRight: 10,
