@@ -147,6 +147,7 @@ const Create = () => {
       const attributes: CreateQuestBitAttributes = {
         title: title,
         deadline: dueDate ? new Date(dueDate) : null,
+        quest: quest,
         isRecurring: isRecurring,
         recurrenceOption: isRecurring ? recurrenceOption : "",
         description: description,
