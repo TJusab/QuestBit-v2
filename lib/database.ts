@@ -54,7 +54,6 @@ export async function addQuest(attributes: {
     throw new Error((error as Error).message);
   }
 }
-
 /**
  * Gets all the quests that a user is a part of (as owner or as adventurer)
  * @returns all of the user's quests

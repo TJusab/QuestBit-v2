@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Image, View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import { Image, View, Text, Alert, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import StatusButton from "./StatusButton";
@@ -22,6 +22,7 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
 
   const sendUpdate = () => {
     saveChanges();
+
   };
 
   const [peopleVisible, setPeopleVisible] = useState(false);
@@ -34,7 +35,7 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [formattedDate, setFormattedDate] = useState("");
-
+  
   const formatDateString = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat("en-US", {
@@ -44,20 +45,25 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
       timeZone: "UTC",
     }).format(date);
   };
-
+  
   const handleDateUpdate = (dateString: string) => {
     setSelectedDate(dateString);
     setFormattedDate(formatDateString(dateString));
   };
+  
+  const [dueDates, setDueDates] = useState<Date[]>([]);
+  const [selectedRecurrence, setSelectedRecurrence] = useState("");
 
   useEffect(() => {
     if (item.dueDates && item.dueDates.length > 0) {
       const initialDate = item.dueDates[0].toISOString().split('T')[0];
       setSelectedDate(initialDate);
       setFormattedDate(formatDateString(initialDate));
+      setSelectedRecurrence(getTextFromDates(item.dueDates));
     }
+    console.log(item)
   }, [item.dueDates]);
-
+  
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
       <Text style={styles.title}>{item.title}</Text>
@@ -66,6 +72,7 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
           color={getColorFromDates(item.dueDates)}
           text={getTextFromDates(item.dueDates)}
           textStyle="text-sm"
+          onUpdate={() => setSelectedRecurrence}
         />
         <View style={{ marginRight: 10 }}></View>
         <Text style={[styles.label, styles.rowElement]}>Due : </Text>

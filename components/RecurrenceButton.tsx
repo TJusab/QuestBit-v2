@@ -58,8 +58,7 @@ const RecurrenceButton: React.FC<RecurrenceButtonProps> = ({
       <RecurrencePopUp
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        value={text}
-        questbitId={questbitId}
+        initial={text}
         onUpdate={onUpdate}
       />
     </View>

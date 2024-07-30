@@ -8,23 +8,20 @@ import { Difficulty, RecurrenceValue, Status } from "../constants/enums";
 interface RecurrenceopUpProps {
   visible: boolean;
   onClose: () => void;
-  value: string;
-  questbitId?: string;
+  initial: string;
   onUpdate?: () => void;
 }
 
 const RecurrencePopUp: React.FC<RecurrenceopUpProps> = ({
   visible,
   onClose,
-  value,
-  questbitId,
+  initial,
   onUpdate,
 }) => {
-  const [newStatus, setNewStatus] = useState(value);
+  const [newValue, setNewValue] = useState(initial);
 
   const handleUpdate = async () => {
     try {
-      if (questbitId) await updateQuestBitStatus(questbitId, newStatus);
       if (onUpdate) onUpdate();
       onClose();
     } catch (error) {
@@ -57,12 +54,12 @@ const RecurrencePopUp: React.FC<RecurrenceopUpProps> = ({
           >
             <View>
               <Text className="font-zcool text-xl text-brown-200 text-center px-10 pt-5">
-                Select the new difficulty of the QuestBit
+                Select the new recurrence of the QuestBit
               </Text>
               <View className="w-3/5 m-auto my-8 z-10">
                 <Dropdown
-                  initialValue={newStatus}
-                  onChangeValue={(value) => setNewStatus(value)}
+                  initialValue={newValue}
+                  onChangeValue={(value) => setNewValue(value)}
                   items={items}
                 />
               </View>
