@@ -139,7 +139,7 @@ const Create = () => {
   };
 
   const handleAddQuestBit = async () => {
-    if (!title || !description) {
+    if (!title || !description || !quest) {
       Alert.alert("Please fill in all the required fields.");
       return;
     }
