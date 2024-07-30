@@ -165,11 +165,6 @@ const Create = () => {
     }
   };
 
-  // const setToggleCheckBox = (newValue) => {
-  //   // toggle recurring checkbox
-  //   //setIsRecurring(newValue);
-  // };
-
   return (
     <ScrollView className="flex-1">
       <View className="z-0 bg-blue-200 z-10 mb-3">
