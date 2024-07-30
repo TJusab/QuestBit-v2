@@ -41,10 +41,12 @@ import { getUserBodyIcon } from "@/utils/icon";
 interface CreateQuestBitAttributes {
   title: string;
   deadline: Date | null;
+  quest: Quest;
   isRecurring: boolean;
   recurrenceOption: string;
   description: string;
   status: Status;
+  difficulty: Difficulty;
   adventurerIds: string[];
 }
 
@@ -152,6 +154,7 @@ const Create = () => {
         recurrenceOption: isRecurring ? recurrenceOption : "",
         description: description,
         status: status,
+        difficulty: difficulty,
         adventurerIds:
           selectedAdventurers.length > 0
             ? selectedAdventurers.map((adventurer) => adventurer.$id)
