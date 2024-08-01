@@ -16,8 +16,8 @@ interface RecurrenceButtonProps {
   isLoading?: boolean;
   imageStyle?: string;
   textStyle?: string;
-  color?: "red" | "blue" | "pink" | "yellow" | "green";
-  onUpdate?: () => void;
+  color: "red" | "blue" | "pink" | "yellow" | "green";
+  onUpdate?: (value: string) => void; 
 }
 
 const RecurrenceButton: React.FC<RecurrenceButtonProps> = ({

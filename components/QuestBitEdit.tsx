@@ -8,7 +8,7 @@ import DifficultyButton from "./DifficultyButton";
 import PixelButton from './PixelButton';
 import AddPeopleModal from "./AddPeoplePopUp";
 import { QuestBit, User } from "@/constants/types";
-import { getColorFromStatus, getColorFromDifficulty, getPointsFromDifficulty, getTextFromDates, getColorFromDates } from "@/utils/utils";
+import { getColorFromStatus, getColorFromDifficulty, getPointsFromDifficulty, getTextFromDates, getColorFromRecurrence } from "@/utils/utils";
 import { getUserBodyIcon } from "@/utils/icon";
 import CalendarModal from "./CalendarPopUp";
 
@@ -53,6 +53,8 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
   
   const [dueDates, setDueDates] = useState<Date[]>([]);
   const [selectedRecurrence, setSelectedRecurrence] = useState("");
+  const [recurrenceColor, setRecurrenceColor] = useState<"red" | "blue" | "pink" | "yellow" | "green">("green");
+
 
   useEffect(() => {
     if (item.dueDates && item.dueDates.length > 0) {
@@ -61,18 +63,27 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
       setFormattedDate(formatDateString(initialDate));
       setSelectedRecurrence(getTextFromDates(item.dueDates));
     }
+    setSelectedRecurrence(getTextFromDates(item.dueDates));
+    setRecurrenceColor(getColorFromRecurrence(selectedRecurrence));
+
     console.log(item)
   }, [item.dueDates]);
+
+
+  const handleRecurrenceUpdate = (newRecurrence: string) => {
+    setSelectedRecurrence(newRecurrence);
+    setRecurrenceColor(getColorFromRecurrence(newRecurrence));
+  };
   
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
       <Text style={styles.title}>{item.title}</Text>
       <View style={styles.row}>
         <RecurrenceButton
-          color={getColorFromDates(item.dueDates)}
-          text={getTextFromDates(item.dueDates)}
+          color={recurrenceColor}
+          text={selectedRecurrence}
           textStyle="text-sm"
-          onUpdate={() => setSelectedRecurrence}
+          onUpdate={handleRecurrenceUpdate}
         />
         <View style={{ marginRight: 10 }}></View>
         <Text style={[styles.label, styles.rowElement]}>Due : </Text>

@@ -9,7 +9,7 @@ interface RecurrenceopUpProps {
   visible: boolean;
   onClose: () => void;
   initial: string;
-  onUpdate?: () => void;
+  onUpdate?: (value: string) => void;
 }
 
 const RecurrencePopUp: React.FC<RecurrenceopUpProps> = ({
@@ -22,7 +22,7 @@ const RecurrencePopUp: React.FC<RecurrenceopUpProps> = ({
 
   const handleUpdate = async () => {
     try {
-      if (onUpdate) onUpdate();
+      if (onUpdate) onUpdate(newValue);
       onClose();
     } catch (error) {
       console.error("Error updating questbit status:", error);

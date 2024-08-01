@@ -84,14 +84,30 @@ export const getTextFromDates = (dueDates: Date[]) => {
   }
 };
 
-export const getColorFromDates = (dueDates: Date[]) => {
-  switch(dueDates.length) {
-    case 1:
+export const getColorFromRecurrence = (rec: string): "red" | "blue" | "pink" | "yellow" | "green" => {
+  switch (rec) {
+    case "Does not repeat":
+      return "red";
+    case "Weekly":
       return "blue";
+    case "Biweekly":
+      return "pink";
+    case "Monthly":
+      return "yellow";
     default:
       return "green";
   }
 };
+
+export const getColorFromDates = (dueDates: Date[]) => {
+  switch(dueDates.length) {
+    case 1:
+      return "red";
+    default:
+      return "green";
+  }
+};
+
 
 
 export const getStringFromStatus = (status: Status): string => {
