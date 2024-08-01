@@ -15,6 +15,8 @@ import QuestBitCard from "@/components/QuestBitCard";
 import SearchInput from "@/components/SearchInput";
 import { useFocusEffect } from "expo-router";
 import { QuestBit } from "../../constants/types";
+import { updateQuestBitStatus } from "../../lib/database";
+import { Status } from "../../constants/enums";
 
 const Home: React.FC = () => {
   const { user } = useGlobalContext();
@@ -52,10 +54,18 @@ const Home: React.FC = () => {
     }
   }, [searchText, questbits]);
 
-  const handleQuestBitUpdate = async () => {
+  const handleQuestBitUpdate = async (questbitId: string, newStatus: string) => {
     setLoading(true);
-    await fetchQuestBits();
+    try {
+      await updateQuestBitStatus(questbitId, newStatus);
+      await fetchQuestBits();
+    } catch (error) {
+      Alert.alert("Error", (error as Error).message);
+    } finally {
+      setLoading(false);
+    }
   };
+  
 
   return (
     <SafeAreaView className="h-full">
@@ -87,8 +97,11 @@ const Home: React.FC = () => {
               data={filteredQuestBits}
               keyExtractor={(item) => item.$id}
               renderItem={({ item }) => (
-                <QuestBitCard item={item} onUpdate={handleQuestBitUpdate} />
-              )}
+                <QuestBitCard 
+                  item={item} 
+                  onUpdate={(newStatus: string) => handleQuestBitUpdate(item.$id, newStatus)} 
+                />
+              )}             
             />
           </ImageBackground>
         </View>

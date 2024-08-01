@@ -10,7 +10,7 @@ import DifficultyPopUp from "./DifficultyPopUp";
 import { getButtonImage } from "../utils/utils";
 import { Status } from "../constants/enums";
 
-interface StatusButtonProps {
+interface DifficultyButtonProps {
   text: string;
   questbitId?: string;
   isLoading?: boolean;
@@ -20,7 +20,7 @@ interface StatusButtonProps {
   onUpdate?: () => void;
 }
 
-const StatusButton: React.FC<StatusButtonProps> = ({
+const DifficultyButton: React.FC<DifficultyButtonProps> = ({
   text,
   questbitId,
   isLoading = false,
@@ -66,4 +66,4 @@ const StatusButton: React.FC<StatusButtonProps> = ({
   );
 };
 
-export default StatusButton;
+export default DifficultyButton;

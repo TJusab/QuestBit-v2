@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import RecurrencePopUp from "./RecurrencePopUp";
 import { getButtonImage } from "../utils/utils";
-import { Status } from "../constants/enums";
 
 interface RecurrenceButtonProps {
   text: string;

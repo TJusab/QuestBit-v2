@@ -13,9 +13,7 @@ import { useLocalSearchParams } from "expo-router";
 import QuestBitDetail from "../../components/QuestBitDetail";
 import QuestBitEdit from "../../components/QuestBitEdit";
 import { router } from "expo-router";
-import StatusButton from "../../components/StatusButton";
 import { QuestBit } from "@/constants/types";
-import { getColorFromStatus } from "../../utils/utils";
 
 const QuestBitDetails = () => {
   const parseQuestBit = (data: string): QuestBit => {

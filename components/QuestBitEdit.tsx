@@ -11,6 +11,7 @@ import { QuestBit, User } from "@/constants/types";
 import { getColorFromStatus, getColorFromDifficulty, getPointsFromDifficulty, getTextFromDates, getColorFromRecurrence } from "@/utils/utils";
 import { getUserBodyIcon } from "@/utils/icon";
 import CalendarModal from "./CalendarPopUp";
+import { Status } from "../constants/enums";
 
 interface QuestBitEditProps {
   item: QuestBit;
@@ -66,6 +67,8 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
     setSelectedRecurrence(getTextFromDates(item.dueDates));
     setRecurrenceColor(getColorFromRecurrence(selectedRecurrence));
 
+    setStatusColor(getColorFromStatus(item.status));
+
     console.log(item)
   }, [item.dueDates]);
 
@@ -74,6 +77,13 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
     setSelectedRecurrence(newRecurrence);
     setRecurrenceColor(getColorFromRecurrence(newRecurrence));
   };
+
+  const [selectedStatus, setSelectedStatus] = useState<Status>(item.status);
+  const [statusColor, setStatusColor] = useState<"red" | "blue" | "pink" | "yellow" | "green">("green");
+  const handleStatusUpdate = (newStatus: Status) => {
+    setSelectedStatus(newStatus);
+    setStatusColor(getColorFromStatus(newStatus))
+  }
   
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
@@ -112,8 +122,9 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
           <Text style={[styles.label, styles.rowElement]}>Status</Text>
           <StatusButton
             color={getColorFromStatus(item.status)}
-            text={item.status}
+            text={selectedStatus.toString()}
             textStyle="text-sm"
+            onUpdate={handleStatusUpdate}
           />
         </View>
         <View style={{ height: 1, backgroundColor: 'grey', width: '100%', marginBottom: 15, marginTop: 15 }}></View>
