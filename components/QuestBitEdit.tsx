@@ -20,6 +20,7 @@ interface QuestBitEditProps {
 }
 
 const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveChanges }) => {
+  const [questBit, setQuestBit] = useState(item);
 
   const sendUpdate = () => {
     saveChanges();
@@ -31,16 +32,26 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
   const [peopleVisible, setPeopleVisible] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedAdventurers, setSelectedAdventurers] = useState<User[]>([]);
+
   const handleAddAdventurers = (adventurers: User[]) => {
     setSelectedAdventurers(adventurers);
-    item.assignees = item.assignees || [];
-    item.assignees.push(...adventurers);
+    setQuestBit(prevItem => {
+      const updatedAssignees = [...prevItem.assignees || [], ...adventurers];
+      return { ...prevItem, assignees: updatedAssignees };
+    });
+  };
+
+  const handleRemoveAssignee = (adventurer: User) => {
+    setQuestBit(prevItem => {
+      const updatedAssignees = (prevItem.assignees || []).filter(assignee => assignee.$id !== adventurer.$id);
+      return { ...prevItem, assignees: updatedAssignees };
+    });
   };
 
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [formattedDate, setFormattedDate] = useState("");
-  
+
   const formatDateString = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat("en-US", {
@@ -50,12 +61,12 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
       timeZone: "UTC",
     }).format(date);
   };
-  
+
   const handleDateUpdate = (dateString: string) => {
     setSelectedDate(dateString);
     setFormattedDate(formatDateString(dateString));
   };
-  
+
   const [dueDates, setDueDates] = useState<Date[]>([]);
   const [selectedRecurrence, setSelectedRecurrence] = useState(getTextFromDates(item.dueDates));
   const [recurrenceColor, setRecurrenceColor] = useState<"red" | "blue" | "pink" | "yellow" | "green">(getColorFromRecurrence(selectedRecurrence));
@@ -77,6 +88,7 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
 
   const [selectedStatus, setSelectedStatus] = useState(item.status.toString());
   const [statusColor, setStatusColor] = useState<"red" | "blue" | "pink" | "yellow" | "green">(getColorFromStatus(item.status));
+
   const handleStatusUpdate = (newStatus: string) => {
     setSelectedStatus(newStatus);
     setStatusColor(getColorFromStatus(getEnumFromStatus(newStatus)));
@@ -84,11 +96,12 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
 
   const [selectedDifficulty, setSelectedDifficulty] = useState(item.difficulty);
   const [difficultyColor, setDifficultyColor] = useState<"red" | "blue" | "pink" | "yellow" | "green">(getColorFromDifficulty(item.difficulty));
+
   const handleDifficultyUpdate = (newDifficulty: string) => {
     setSelectedDifficulty(Difficulty[newDifficulty as keyof typeof Difficulty]);
     setDifficultyColor(getColorFromDifficulty(Difficulty[newDifficulty as keyof typeof Difficulty]));
   }
-  
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
       <TextInput
@@ -170,14 +183,15 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
           />
         </View>
         <View style={styles.edit_row}>
-          {item.assignees && item.assignees.map((assignee) => (
+          {questBit.assignees && questBit.assignees.map((assignee) => (
             <View key={assignee.$id}>
               <Image
                 source={getUserBodyIcon(assignee.icon)}
                 style={styles.character}
               />
-              <TouchableOpacity
-                style={styles.remove_assignee}>
+              <TouchableOpacity 
+                style={styles.remove_assignee}
+                onPress={() => handleRemoveAssignee(assignee)}>
                 <AntDesign name="minuscircle" size={25} color="red" />
               </TouchableOpacity>
               <Text>{assignee.username}</Text>
