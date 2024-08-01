@@ -104,7 +104,7 @@ export const getColorFromDates = (dueDates: Date[]) => {
     case 1:
       return "red";
     default:
-      return "green";
+      return "blue";
   }
 };
 

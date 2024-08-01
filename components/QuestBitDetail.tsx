@@ -64,7 +64,7 @@ const QuestBitDetail: React.FC<QuestBitDetailProps> = ({ item }) => {
           <Text style={[styles.label, styles.rowElement]}>Difficulty</Text>
           <StatusButton
             color={getColorFromDifficulty(item.difficulty)}
-            text={item.difficulty + "  |  " + getPointsFromDifficulty(item.difficulty) + "XP"}
+            text={item.difficulty + "  |  " + getPointsFromDifficulty(item.difficulty) + " XP"}
             textStyle="text-sm"
           />
         </View>

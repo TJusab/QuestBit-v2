@@ -8,7 +8,7 @@ import DifficultyButton from "./DifficultyButton";
 import PixelButton from './PixelButton';
 import AddPeopleModal from "./AddPeoplePopUp";
 import { QuestBit, User } from "@/constants/types";
-import { getColorFromStatus, getColorFromDifficulty, getPointsFromDifficulty, getTextFromDates, getColorFromRecurrence } from "@/utils/utils";
+import { getColorFromStatus, getColorFromDifficulty, getEnumFromStatus, getPointsFromDifficulty, getTextFromDates, getColorFromRecurrence } from "@/utils/utils";
 import { getUserBodyIcon } from "@/utils/icon";
 import CalendarModal from "./CalendarPopUp";
 import { Status } from "../constants/enums";
@@ -53,8 +53,8 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
   };
   
   const [dueDates, setDueDates] = useState<Date[]>([]);
-  const [selectedRecurrence, setSelectedRecurrence] = useState("");
-  const [recurrenceColor, setRecurrenceColor] = useState<"red" | "blue" | "pink" | "yellow" | "green">("green");
+  const [selectedRecurrence, setSelectedRecurrence] = useState(getTextFromDates(item.dueDates));
+  const [recurrenceColor, setRecurrenceColor] = useState<"red" | "blue" | "pink" | "yellow" | "green">(getColorFromRecurrence(selectedRecurrence));
 
 
   useEffect(() => {
@@ -64,11 +64,6 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
       setFormattedDate(formatDateString(initialDate));
       setSelectedRecurrence(getTextFromDates(item.dueDates));
     }
-    setSelectedRecurrence(getTextFromDates(item.dueDates));
-    setRecurrenceColor(getColorFromRecurrence(selectedRecurrence));
-
-    setStatusColor(getColorFromStatus(item.status));
-
     console.log(item)
   }, [item.dueDates]);
 
@@ -78,11 +73,11 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
     setRecurrenceColor(getColorFromRecurrence(newRecurrence));
   };
 
-  const [selectedStatus, setSelectedStatus] = useState<Status>(item.status);
-  const [statusColor, setStatusColor] = useState<"red" | "blue" | "pink" | "yellow" | "green">("green");
-  const handleStatusUpdate = (newStatus: Status) => {
+  const [selectedStatus, setSelectedStatus] = useState(item.status.toString());
+  const [statusColor, setStatusColor] = useState<"red" | "blue" | "pink" | "yellow" | "green">(getColorFromStatus(item.status));
+  const handleStatusUpdate = (newStatus: string) => {
     setSelectedStatus(newStatus);
-    setStatusColor(getColorFromStatus(newStatus))
+    setStatusColor(getColorFromStatus(getEnumFromStatus(newStatus)));
   }
   
   return (
@@ -121,7 +116,7 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
         <View style={styles.row}>
           <Text style={[styles.label, styles.rowElement]}>Status</Text>
           <StatusButton
-            color={getColorFromStatus(item.status)}
+            color={statusColor}
             text={selectedStatus.toString()}
             textStyle="text-sm"
             onUpdate={handleStatusUpdate}
@@ -140,7 +135,7 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
       <View style={{ height: 1, backgroundColor: 'grey', width: '100%', marginBottom: 15, marginTop: 15 }}></View>
       <View style={styles.section}>
         <View style={styles.edit_row}>
-          <Text style={styles.edit_label}>Assignee(s)</Text>
+          <Text style={styles.label}>Assignee(s)</Text>
           <TouchableOpacity onPress={() => setPeopleVisible(true)}>
             <AntDesign name="pluscircle" size={25} color="green" />
           </TouchableOpacity>
