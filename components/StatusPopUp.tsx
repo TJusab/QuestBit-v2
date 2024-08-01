@@ -2,15 +2,14 @@ import React, { useState } from "react";
 import { View, Text, Modal, ImageBackground } from "react-native";
 import PixelButton from "./PixelButton";
 import Dropdown from "./Dropdown";
-import { updateQuestBitStatus } from "../lib/database";
-import { RecurrenceValue, Status } from "../constants/enums";
+import { Status } from "../constants/enums";
 
 interface StatusPopUpProps {
   visible: boolean;
   onClose: () => void;
   value: string;
   questbitId?: string;
-  onUpdate?: () => void;
+  onUpdate?: (value: string) => void;
 }
 
 const StatusPopUp: React.FC<StatusPopUpProps> = ({
@@ -24,20 +23,17 @@ const StatusPopUp: React.FC<StatusPopUpProps> = ({
 
   const handleUpdate = async () => {
     try {
-      if (questbitId) await updateQuestBitStatus(questbitId, newStatus);
-      if (onUpdate) onUpdate();
+      if (onUpdate) onUpdate(newStatus);
       onClose();
     } catch (error) {
       console.error("Error updating questbit status:", error);
     }
   };
 
-  const items = [
-    { label: Status.Unassigned, value: Status.Unassigned },
-    { label: Status.Assigned, value: Status.Assigned },
-    { label: Status.OnGoing, value: Status.OnGoing },
-    { label: Status.Completed, value: Status.Completed },
-  ];
+  const items = Object.values(Status).map(status => ({
+    label: status,
+    value: status,
+  }));
 
   return (
     <Modal

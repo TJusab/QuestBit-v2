@@ -7,6 +7,7 @@ import { router } from "expo-router";
 import { getQuestIcon, getUserIcon } from "../utils/icon";
 import { deleteQuestBit } from "../lib/database";
 import { QuestBit } from "../constants/types";
+import { Status } from "../constants/enums";
 import {
   getColorFromStatus,
   getEnumFromStatus,
@@ -14,7 +15,7 @@ import {
 } from "../utils/utils";
 interface QuestBitProps {
   item: QuestBit;
-  onUpdate?: () => void;
+  onUpdate?: (newStatus: string) => void;
 }
 
 const QuestBitCard: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
@@ -33,11 +34,15 @@ const QuestBitCard: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
   const handleDelete = async () => {
     try {
       await deleteQuestBit(item.$id);
-      if (onUpdate) onUpdate();
+      if (onUpdate) onUpdate(status);
       setDeleteModalVisible(false);
     } catch (error) {
       console.error("Error deleting questbit:", error);
     }
+  };
+
+  const handleStatusUpdate = (newStatus: string) => {
+    if (onUpdate) onUpdate(newStatus); 
   };
 
   return (
@@ -80,7 +85,7 @@ const QuestBitCard: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
                 text={getStringFromStatus(status)}
                 textStyle="text-sm"
                 questbitId={item.$id}
-                onUpdate={onUpdate}
+                onUpdate={handleStatusUpdate}
               />
               <View className="flex-row mx-3">
                 {item.assignees &&
