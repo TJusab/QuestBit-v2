@@ -19,13 +19,7 @@ const QuestDetails = () => {
 
   const toggleEditing = () => {
     setIsEditing(!isEditing);
-  }
-
-  useEffect(() => {
-    if (item) {
-      console.log('Parsed item:', item);
-    }
-  }, [item]);
+  };
 
   return (
     <View style={styles.container}>
