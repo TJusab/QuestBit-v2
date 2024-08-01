@@ -1,7 +1,7 @@
 import { Databases, Query, ID } from "react-native-appwrite";
 import client, { config } from "./client";
 import { getCurrentUser } from "./account";
-import { Friendship, User } from "../constants/types";
+import { Friendship, User, Quest } from "../constants/types";
 import { QuestIcon, RecurrenceValue, Status } from "../constants/enums";
 import {
   documentToFriendship,
@@ -168,6 +168,47 @@ export async function addQuestBit(attributes: {
     return response;
   } catch (error) {
     console.error("Error adding questbit:", error);
+    throw new Error((error as Error).message);
+  }
+}
+
+
+/**
+ * Update a questbit from the database
+ * @param attributes the questbit attributes
+ * @returns the response of updating the document
+ */
+export async function updateQuestBit(attributes: {
+  id: string;
+  title: string;
+  dueDates: Date[];
+  difficulty: string;
+  description: string;
+  status: Status;
+  quests: Quest;
+  assignees: string[];
+}) {
+  try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("No current user found");
+
+    const response = await databases.updateDocument(
+      config.databaseId,
+      config.questbitCollectionId,
+      attributes.id,
+      {
+        title: attributes.title,
+        status: attributes.status,
+        description: attributes.description,
+        assignees: attributes.assignees,
+        dueDates: attributes.dueDates,
+        quests: attributes.quests,
+        difficulty: attributes.difficulty,
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error updating questbit:", error);
     throw new Error((error as Error).message);
   }
 }

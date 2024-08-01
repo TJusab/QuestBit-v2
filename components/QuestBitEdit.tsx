@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Image, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import { Image, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import StatusButton from "./StatusButton";
@@ -12,6 +12,8 @@ import { getColorFromStatus, getColorFromDifficulty, getEnumFromStatus, getPoint
 import { getUserBodyIcon } from "@/utils/icon";
 import CalendarModal from "./CalendarPopUp";
 import { Difficulty } from "../constants/enums";
+import { updateQuestBit } from '../lib/database';
+
 
 interface QuestBitEditProps {
   item: QuestBit;
@@ -21,10 +23,6 @@ interface QuestBitEditProps {
 
 const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveChanges }) => {
   const [questBit, setQuestBit] = useState(item);
-
-  const sendUpdate = () => {
-    saveChanges();
-  };
 
   const [title, setTitle] = useState(item.title);
   const [description, setDescription] = useState(item.description);
@@ -78,7 +76,6 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
       setFormattedDate(formatDateString(initialDate));
       setSelectedRecurrence(getTextFromDates(item.dueDates));
     }
-    console.log(item)
   }, [item.dueDates]);
 
   const handleRecurrenceUpdate = (newRecurrence: string) => {
@@ -101,6 +98,26 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
     setSelectedDifficulty(Difficulty[newDifficulty as keyof typeof Difficulty]);
     setDifficultyColor(getColorFromDifficulty(Difficulty[newDifficulty as keyof typeof Difficulty]));
   }
+
+  const handleSave = async () => {
+    try {
+      const updatedQuestBit = {
+        id : questBit.$id,
+        title,
+        description,
+        dueDates: [new Date(selectedDate)], 
+        difficulty: selectedDifficulty,
+        status: getEnumFromStatus(selectedStatus),
+        quests: questBit.quests, 
+        assignees: (questBit.assignees || []).map(assignee => assignee.$id) 
+      };
+      await updateQuestBit(updatedQuestBit);
+      saveChanges();
+    } catch (error) {
+      console.error("Failed to save changes:", error);
+      Alert.alert("Error", "Failed to save changes. Please try again.");
+    }
+  };
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
@@ -211,13 +228,12 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
           text="Save"
           textStyle="text-sm"
           color="green"
-          onPress={sendUpdate}
+          onPress={handleSave}
         />
       </View>
     </ScrollView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     margin: 5,
