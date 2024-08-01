@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import DifficultyPopUp from "./DifficultyPopUp";
 import { getButtonImage } from "../utils/utils";
-import { Status } from "../constants/enums";
 
 interface DifficultyButtonProps {
   text: string;
@@ -17,7 +16,7 @@ interface DifficultyButtonProps {
   imageStyle?: string;
   textStyle?: string;
   color?: "red" | "blue" | "pink" | "yellow" | "green";
-  onUpdate?: () => void;
+  onUpdate?: (value: string) => void;
 }
 
 const DifficultyButton: React.FC<DifficultyButtonProps> = ({
@@ -58,7 +57,7 @@ const DifficultyButton: React.FC<DifficultyButtonProps> = ({
       <DifficultyPopUp
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        value={text}
+        initial={text}
         questbitId={questbitId}
         onUpdate={onUpdate}
       />

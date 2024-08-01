@@ -11,7 +11,7 @@ import { QuestBit, User } from "@/constants/types";
 import { getColorFromStatus, getColorFromDifficulty, getEnumFromStatus, getPointsFromDifficulty, getTextFromDates, getColorFromRecurrence } from "@/utils/utils";
 import { getUserBodyIcon } from "@/utils/icon";
 import CalendarModal from "./CalendarPopUp";
-import { Status } from "../constants/enums";
+import { Difficulty, Status } from "../constants/enums";
 
 interface QuestBitEditProps {
   item: QuestBit;
@@ -79,6 +79,13 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
     setSelectedStatus(newStatus);
     setStatusColor(getColorFromStatus(getEnumFromStatus(newStatus)));
   }
+
+  const [selectedDifficulty, setSelectedDifficulty] = useState(item.difficulty);
+  const [difficultyColor, setDifficultyColor] = useState<"red" | "blue" | "pink" | "yellow" | "green">(getColorFromDifficulty(item.difficulty));
+  const handleDifficultyUpdate = (newDifficulty: string) => {
+    setSelectedDifficulty(Difficulty[newDifficulty as keyof typeof Difficulty]);
+    setDifficultyColor(getColorFromDifficulty(Difficulty[newDifficulty as keyof typeof Difficulty]));
+  }
   
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
@@ -126,9 +133,10 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
         <View style={styles.row}>
           <Text style={[styles.label, styles.rowElement]}>Difficulty</Text>
           <DifficultyButton
-            color={getColorFromDifficulty(item.difficulty)}
-            text={item.difficulty + "  |  " + getPointsFromDifficulty(item.difficulty) + " XP"}
+            color={difficultyColor}
+            text={selectedDifficulty + "  |  " + getPointsFromDifficulty(item.difficulty) + " XP"}
             textStyle="text-sm"
+            onUpdate={handleDifficultyUpdate}
           />
         </View>
       </View>

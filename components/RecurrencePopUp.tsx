@@ -25,7 +25,7 @@ const RecurrencePopUp: React.FC<RecurrenceopUpProps> = ({
       if (onUpdate) onUpdate(newValue);
       onClose();
     } catch (error) {
-      console.error("Error updating questbit status:", error);
+      console.error("Error updating questbit recurrence:", error);
     }
   };
 
