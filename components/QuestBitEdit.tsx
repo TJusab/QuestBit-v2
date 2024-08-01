@@ -18,10 +18,10 @@ import { updateQuestBit } from '../lib/database';
 interface QuestBitEditProps {
   item: QuestBit;
   toggleEditing: () => void;
-  saveChanges: () => void;
+  //updatedItem: (questbit: item) => void;
 }
 
-const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveChanges }) => {
+const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing }) => {
   const [questBit, setQuestBit] = useState(item);
 
   const [title, setTitle] = useState(item.title);
@@ -112,7 +112,7 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
         assignees: (questBit.assignees || []).map(assignee => assignee.$id) 
       };
       await updateQuestBit(updatedQuestBit);
-      saveChanges();
+      toggleEditing()
     } catch (error) {
       console.error("Failed to save changes:", error);
       Alert.alert("Error", "Failed to save changes. Please try again.");

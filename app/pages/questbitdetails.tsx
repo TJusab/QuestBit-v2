@@ -62,7 +62,6 @@ const QuestBitDetails = () => {
         <QuestBitEdit
           item={item}
           toggleEditing={toggleEditing}
-          saveChanges={saveChanges}
         />
       ) : (
         <QuestBitDetail item={item} />
