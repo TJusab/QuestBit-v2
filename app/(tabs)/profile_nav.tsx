@@ -1,6 +1,6 @@
 import React from "react";
 import { Image } from "react-native";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createDrawerNavigator, DrawerToggleButton } from "@react-navigation/drawer";
 import "react-native-gesture-handler";
 import EditProfile from "../pages/edit_profile";
 import AddFriends from "../pages/add_friends";
@@ -27,6 +27,7 @@ const ProfileWithDrawer = () => {
           fontSize: 18,
           marginLeft: -20,
         },
+        headerTintColor: "#FFF"
       }}
     >
       <Drawer.Screen
