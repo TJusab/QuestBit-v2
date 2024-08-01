@@ -4,9 +4,13 @@ import { UserIcon, QuestIcon, Status, FriendshipStatus, Difficulty } from './enu
 export interface GlobalContextType {
   isLogged: boolean;
   setIsLogged: Dispatch<SetStateAction<boolean>>;
-  user: any;
-  setUser: Dispatch<SetStateAction<any>>;
+  user: User | null;
+  setUser: Dispatch<SetStateAction<User | null>>;
   loading: boolean;
+  questbits: QuestBit[];
+  setQuestBits: Dispatch<SetStateAction<QuestBit[]>>;
+  quests: Quest[];
+  setQuests: Dispatch<SetStateAction<Quest[]>>;
 }
 
 export interface User {

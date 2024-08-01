@@ -22,6 +22,7 @@ import { globalStyles } from "@/app/global_styles";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import { router } from "expo-router";
 import { logout } from "@/lib/account";
+import { User } from "@/constants/types";
 
 interface CustomDrawerProps {
   state: DrawerNavigationState<ParamListBase>;
@@ -35,6 +36,8 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
   descriptors,
 }) => {
   const { user } = useGlobalContext();
+  const loggedInUser = user as User;
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submitLogout = async () => {
@@ -60,18 +63,18 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
           resizeMode="cover"
         >
           <Image
-            source={getUserIcon(user.icon)}
+            source={getUserIcon(loggedInUser.icon)}
             style={{ width: 100, height: 100 }}
             className="mb-5"
           />
           <Text className="font-press text-xl" style={globalStyles.title}>
-            {user.username}
+            {loggedInUser.username}
           </Text>
-          <Text className="font-zcool text-xl text-white">
-            {user.icon} Class
+          <Text className="font-zcool text-xl text-navy">
+            {loggedInUser.icon} Class
           </Text>
-          <Text className="font-zcool text-xl text-white">
-            Level {user.level}
+          <Text className="font-zcool text-xl text-navy">
+            Level {loggedInUser.level}
           </Text>
         </ImageBackground>
         <View className="bg-white pt-2">

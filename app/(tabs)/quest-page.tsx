@@ -13,19 +13,26 @@ import Header from "../../components/Header";
 import { useFocusEffect, router, useLocalSearchParams } from "expo-router";
 import { Quest } from "@/constants/types";
 import QuestCard from "../../components/QuestCard";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 interface QuestItem {
   item: Quest;
 }
 
 const QuestPage = () => {
-  const [quests, setQuests] = useState<Quest[]>([]);
+  const { quests, setQuests } = useGlobalContext();
   const [loading, setLoading] = useState(true);
 
-  const { refresh } = useLocalSearchParams();
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchQuests();
+    };
+    fetchData();
+  }, []);
 
   const fetchQuests = async () => {
     try {
+      setLoading(true)
       const response: Quest[] = await getQuests();
       setQuests(response);
     } catch (error) {
@@ -33,17 +40,6 @@ const QuestPage = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchQuests();
-    }, [])
-  );
-
-  const handleQuestUpdate = async () => {
-    setLoading(true);
-    await fetchQuests();
   };
 
   if (loading) {
@@ -57,15 +53,22 @@ const QuestPage = () => {
     );
   }
 
+  const handleUpdate = (deletedQuestId: string) => {
+    setQuests(prevQuests => prevQuests.filter(quest => quest.$id !== deletedQuestId));
+  }
+
   return (
-    <View className="h-full">
+    <View>
       <FlatList
         data={quests}
         keyExtractor={(item) => item.$id}
+        extraData={quests}
         renderItem={({ item }) => (
-          <QuestCard item={item} onUpdate={handleQuestUpdate} />
+          <QuestCard item={item} onUpdate={handleUpdate} />
         )}
-        ListHeaderComponent={() => <Header header={"My Quests !"} colorStyle={"green"} />}
+        ListHeaderComponent={() => (
+          <Header header={"My Quests !"} colorStyle={"green"} />
+        )}
       />
       <TouchableOpacity
         style={styles.addButton}

@@ -2,7 +2,12 @@ import { Databases, Query, ID } from "react-native-appwrite";
 import client, { config } from "./client";
 import { getCurrentUser } from "./account";
 import { Friendship, User, Quest } from "../constants/types";
-import { QuestIcon, RecurrenceValue, Status } from "../constants/enums";
+import {
+  Difficulty,
+  QuestIcon,
+  RecurrenceValue,
+  Status,
+} from "../constants/enums";
 import {
   documentToFriendship,
   documentToQuest,
@@ -139,10 +144,12 @@ export async function deleteQuest(id: string) {
 export async function addQuestBit(attributes: {
   title: string;
   deadline: Date | null;
+  quest: Quest;
   isRecurring: boolean;
   recurrenceOption: string;
   description: string;
   status: Status;
+  difficulty: Difficulty;
   adventurerIds: string[];
 }) {
   try {
@@ -157,10 +164,12 @@ export async function addQuestBit(attributes: {
         owner: currentUser.$id,
         title: attributes.title,
         deadline: attributes.deadline,
+        quest: attributes.quest,
         isRecurring: attributes.isRecurring,
         recurrenceOption: attributes.recurrenceOption,
         description: attributes.description,
         status: attributes.status,
+        difficulty: attributes.difficulty,
         adventurers: attributes.adventurerIds, // only send adventurer ids
       }
     );

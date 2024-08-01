@@ -18,8 +18,10 @@ import IconPickerModal from "@/components/IconPickerPopUp";
 import { getQuestIcon } from "@/utils/icon";
 import CalendarModal from "../../components/CalendarPopUp";
 import { addQuest } from "../../lib/database";
-import { User } from "@/constants/types";
+import { Quest, User } from "@/constants/types";
 import { QuestIcon } from "@/constants/enums";
+import { useGlobalContext } from "@/context/GlobalProvider";
+import { documentToQuest } from "@/utils/mapping";
 
 interface CreateQuestAttributes {
     title: string;
@@ -30,6 +32,7 @@ interface CreateQuestAttributes {
 }
 
 const CreateQuest = () => {
+  const { quests, setQuests } = useGlobalContext();
   const [title, setTitle] = useState("");
   const [synopsis, setSynopsis] = useState("");
   const [visible, setVisible] = useState(false);
@@ -88,7 +91,8 @@ const CreateQuest = () => {
         deadline: selectedDate ? new Date(selectedDate) : null,
       };
 
-      await addQuest(attributes);
+      const newQuest: Quest = documentToQuest(await addQuest(attributes));
+      setQuests((prevQuests) => [...prevQuests, newQuest]);
       Alert.alert("Quest added successfully!");
       router.replace("/quest-page?refresh=true");
     } catch (error) {

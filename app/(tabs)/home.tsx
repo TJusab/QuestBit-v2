@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -7,23 +7,34 @@ import {
   FlatList,
   ActivityIndicator,
   ImageBackground,
+  TouchableOpacity,
+  StyleSheet,
+  Image
 } from "react-native";
-import Header from "../../components/Header"
+import Header from "../../components/Header";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { getQuestBitsForUser } from "../../lib/database";
 import QuestBitCard from "@/components/QuestBitCard";
 import SearchInput from "@/components/SearchInput";
-import { useFocusEffect } from "expo-router";
 import { QuestBit } from "../../constants/types";
 import { updateQuestBitStatus } from "../../lib/database";
-import { Status } from "../../constants/enums";
+import { router } from "expo-router";
 
 const Home: React.FC = () => {
-  const { user } = useGlobalContext();
-  const [questbits, setQuestBits] = useState<QuestBit[]>([]);
+  const { user, questbits, setQuestBits } = useGlobalContext();
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [filteredQuestBits, setFilteredQuestBits] = useState<QuestBit[]>([]);
+
+  useEffect(() => {
+    if (questbits.length === 0) {
+      setLoading(true);
+      fetchQuestBits();
+    } else {
+      setFilteredQuestBits(questbits);
+      setLoading(false);
+    }
+  }, []);
 
   const fetchQuestBits = async () => {
     try {
@@ -36,12 +47,6 @@ const Home: React.FC = () => {
       setLoading(false);
     }
   };
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchQuestBits();
-    }, [])
-  );
 
   useEffect(() => {
     if (searchText === "") {
@@ -81,7 +86,7 @@ const Home: React.FC = () => {
             resizeMode="stretch"
           >
             <View>
-              <Header header={`Hello ${user.username}!`} />
+              <Header header={`Hello ${user?.username}!`} />
               <View className="mx-5 mb-5 shadow-xl shadow-black">
                 <SearchInput
                   placeholder="Search QuestBit..."
@@ -104,10 +109,33 @@ const Home: React.FC = () => {
               )}             
             />
           </ImageBackground>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => router.push("/pages/create_questbit")}
+          >
+            <Image
+              source={require("../../assets/HD/add_button.png")}
+              style={{ width: 48, height: 48 }}
+            />
+          </TouchableOpacity>
         </View>
       )}
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  addButton: {
+    position: "absolute",
+    bottom: 30,
+    right: 30,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000,
+  },
+});
 
 export default Home;
