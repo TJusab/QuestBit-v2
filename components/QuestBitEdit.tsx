@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Image, View, Text, Alert, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import { Image, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import StatusButton from "./StatusButton";
@@ -11,7 +11,7 @@ import { QuestBit, User } from "@/constants/types";
 import { getColorFromStatus, getColorFromDifficulty, getEnumFromStatus, getPointsFromDifficulty, getTextFromDates, getColorFromRecurrence } from "@/utils/utils";
 import { getUserBodyIcon } from "@/utils/icon";
 import CalendarModal from "./CalendarPopUp";
-import { Difficulty, Status } from "../constants/enums";
+import { Difficulty } from "../constants/enums";
 
 interface QuestBitEditProps {
   item: QuestBit;
@@ -23,14 +23,18 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
 
   const sendUpdate = () => {
     saveChanges();
-
   };
+
+  const [title, setTitle] = useState(item.title);
+  const [description, setDescription] = useState(item.description);
 
   const [peopleVisible, setPeopleVisible] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedAdventurers, setSelectedAdventurers] = useState<User[]>([]);
   const handleAddAdventurers = (adventurers: User[]) => {
     setSelectedAdventurers(adventurers);
+    item.assignees = item.assignees || [];
+    item.assignees.push(...adventurers);
   };
 
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
@@ -56,7 +60,6 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
   const [selectedRecurrence, setSelectedRecurrence] = useState(getTextFromDates(item.dueDates));
   const [recurrenceColor, setRecurrenceColor] = useState<"red" | "blue" | "pink" | "yellow" | "green">(getColorFromRecurrence(selectedRecurrence));
 
-
   useEffect(() => {
     if (item.dueDates && item.dueDates.length > 0) {
       const initialDate = item.dueDates[0].toISOString().split('T')[0];
@@ -66,7 +69,6 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
     }
     console.log(item)
   }, [item.dueDates]);
-
 
   const handleRecurrenceUpdate = (newRecurrence: string) => {
     setSelectedRecurrence(newRecurrence);
@@ -89,7 +91,12 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
   
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
-      <Text style={styles.title}>{item.title}</Text>
+      <TextInput
+        style={styles.title}
+        value={title}
+        onChangeText={setTitle}
+        placeholder="Title"
+      />
       <View style={styles.row}>
         <RecurrenceButton
           color={recurrenceColor}
@@ -117,7 +124,13 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
       </View>
       <View>
         <Text style={styles.label}>Description</Text>
-        <Text style={styles.description}>{item.description}</Text>
+        <TextInput
+          style={styles.description}
+          value={description}
+          onChangeText={setDescription}
+          placeholder={item.description}
+          multiline
+        />
       </View>
       <View>
         <View style={styles.row}>
@@ -158,7 +171,7 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
         </View>
         <View style={styles.edit_row}>
           {item.assignees && item.assignees.map((assignee) => (
-            <View key={assignee.$id} style={{ alignItems: "center", marginRight: 10 }}>
+            <View key={assignee.$id}>
               <Image
                 source={getUserBodyIcon(assignee.icon)}
                 style={styles.character}
@@ -299,8 +312,10 @@ const styles = StyleSheet.create({
     },
     edit_row: {
       flexDirection: "row",
+      flexWrap: "wrap",
       alignItems: "center",
-      marginBottom: 10, 
+      justifyContent: "flex-start", 
+      marginBottom: 10,
     },
   });
   

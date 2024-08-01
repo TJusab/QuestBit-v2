@@ -33,9 +33,9 @@ const QuestBitDetail: React.FC<QuestBitDetailProps> = ({ item }) => {
 
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} pointerEvents="none">
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
       <Text style={styles.title}>{item.title}</Text>
-      <View style={styles.row}>
+      <View style={styles.row} pointerEvents="none">
         <StatusButton
           color={getColorFromDates(item.dueDates)}
           text={getTextFromDates(item.dueDates)}
@@ -51,7 +51,7 @@ const QuestBitDetail: React.FC<QuestBitDetailProps> = ({ item }) => {
       </View>
       
       <View pointerEvents="none">
-        <View style={styles.row}>
+        <View style={styles.row} pointerEvents="none">
           <Text style={[styles.label, styles.rowElement]}>Status</Text>
           <StatusButton
             color={getColorFromStatus(item.status)}
@@ -60,7 +60,7 @@ const QuestBitDetail: React.FC<QuestBitDetailProps> = ({ item }) => {
           />
         </View>
         <View style={{ height: 1, backgroundColor: 'grey', width: '100%', marginBottom: 15, marginTop: 15 }}></View>
-        <View style={styles.row}>
+        <View style={styles.row} pointerEvents="none">
           <Text style={[styles.label, styles.rowElement]}>Difficulty</Text>
           <StatusButton
             color={getColorFromDifficulty(item.difficulty)}

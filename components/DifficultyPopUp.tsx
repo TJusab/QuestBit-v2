@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { View, Text, Modal, ImageBackground } from "react-native";
 import PixelButton from "./PixelButton";
 import Dropdown from "./Dropdown";
-import { updateQuestBitStatus } from "../lib/database";
-import { Difficulty, RecurrenceValue, Status } from "../constants/enums";
+import { Difficulty } from "../constants/enums";
 
 interface DifficultyPopUpProps {
   visible: boolean;
