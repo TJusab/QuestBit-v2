@@ -9,7 +9,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   StyleSheet,
-  Image
+  Image,
 } from "react-native";
 import Header from "../../components/Header";
 import { useGlobalContext } from "../../context/GlobalProvider";
@@ -21,19 +21,9 @@ import { router } from "expo-router";
 
 const Home: React.FC = () => {
   const { user, questbits, setQuestBits } = useGlobalContext();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [filteredQuestBits, setFilteredQuestBits] = useState<QuestBit[]>([]);
-
-  useEffect(() => {
-    if (questbits.length === 0) {
-      setLoading(true);
-      fetchQuestBits();
-    } else {
-      setFilteredQuestBits(questbits);
-      setLoading(false);
-    }
-  }, []);
 
   const fetchQuestBits = async () => {
     try {
@@ -63,53 +53,58 @@ const Home: React.FC = () => {
     await fetchQuestBits();
   };
 
-  return (
-    <SafeAreaView className="h-full">
-      {loading ? (
-        <View className="flex-1 justify-center items-center">
-          <ActivityIndicator color="#6E7591" size="large" />
-        </View>
-      ) : (
-        <View>
-          <ImageBackground
-            source={require("../../assets/HD/blue_sky.png")}
-            className="w-full h-full"
-            resizeMode="stretch"
-          >
-            <View>
-              <Header header={`Hello ${user?.username}!`} />
-              <View className="mx-5 mb-5 shadow-xl shadow-black">
-                <SearchInput
-                  placeholder="Search QuestBit..."
-                  value={searchText}
-                  handleChangeText={setSearchText}
-                />
+
+  console.log("questbits.length:", questbits.length);
+
+  if (questbits.length > 0) {
+    return (
+      <SafeAreaView className="h-full">
+        {loading ? (
+          <View className="flex-1 justify-center items-center">
+            <ActivityIndicator color="#6E7591" size="large" />
+          </View>
+        ) : (
+          <View>
+            <ImageBackground
+              source={require("../../assets/HD/blue_sky.png")}
+              className="w-full h-full"
+              resizeMode="stretch"
+            >
+              <View>
+                <Header header={`Hello ${user?.username}!`} />
+                <View className="mx-5 mb-5 shadow-xl shadow-black">
+                  <SearchInput
+                    placeholder="Search QuestBit..."
+                    value={searchText}
+                    handleChangeText={setSearchText}
+                  />
+                </View>
+                <Text className="font-press text-lg text-black text-justify mt-5 mx-5">
+                  My QuestBits
+                </Text>
               </View>
-              <Text className="font-press text-lg text-black text-justify mt-5 mx-5">
-                My QuestBits
-              </Text>
-            </View>
-            <FlatList
-              data={filteredQuestBits}
-              keyExtractor={(item) => item.$id}
-              renderItem={({ item }) => (
-                <QuestBitCard item={item} onUpdate={handleQuestBitUpdate} />
-              )}
-            />
-          </ImageBackground>
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => router.push("/pages/create_questbit")}
-          >
-            <Image
-              source={require("../../assets/HD/add_button.png")}
-              style={{ width: 48, height: 48 }}
-            />
-          </TouchableOpacity>
-        </View>
-      )}
-    </SafeAreaView>
-  );
+              <FlatList
+                data={filteredQuestBits}
+                keyExtractor={(item) => item.$id}
+                renderItem={({ item }) => (
+                  <QuestBitCard item={item} onUpdate={handleQuestBitUpdate} />
+                )}
+              />
+            </ImageBackground>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => router.push("/pages/create_questbit")}
+            >
+              <Image
+                source={require("../../assets/HD/add_button.png")}
+                style={{ width: 48, height: 48 }}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
+      </SafeAreaView>
+    );
+  }
 };
 
 const styles = StyleSheet.create({

@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { GlobalContextType, User, QuestBit, Quest } from "../constants/types";
 import { getCurrentUser } from "../lib/account";
+import { getQuests, getQuestBitsForUser } from "@/lib/database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Create default values for the context
@@ -37,8 +38,9 @@ const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
   const [quests, setQuests] = useState<Quest[]>([]);
 
   useEffect(() => {
-    getCurrentUser()
-      .then((res) => {
+    const initializeApp = async () => {
+      try {
+        const res = await getCurrentUser();
         if (res) {
           setIsLogged(true);
           setUser(res);
@@ -46,32 +48,41 @@ const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
           setIsLogged(false);
           setUser(null);
         }
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
 
-    // Load cached questbits and quests from AsyncStorage
-    const loadQuestBitsAndQuests = async () => {
-      try {
+        const [freshQuests, freshQuestBits] = await Promise.all([
+          getQuests(),
+          getQuestBitsForUser()
+        ]);
+
+        // Load cached quests from AsyncStorage
+        const cachedQuests = await AsyncStorage.getItem("quests");
+        if (cachedQuests) {
+          setQuests(JSON.parse(cachedQuests));
+        }
+
+        setQuests(freshQuests);
+
+        // Update AsyncStorage with fresh quests
+        await AsyncStorage.setItem("quests", JSON.stringify(freshQuests));
+
+        // Load cached quests from AsyncStorage
         const cachedQuestBits = await AsyncStorage.getItem("questbits");
         if (cachedQuestBits) {
           setQuestBits(JSON.parse(cachedQuestBits));
         }
 
-        const cachedQuests = await AsyncStorage.getItem("quests");
-        if (cachedQuests) {
-          setQuests(JSON.parse(cachedQuests));
-        }
+        setQuestBits(freshQuestBits);
+
+        // Update AsyncStorage with fresh quests
+        await AsyncStorage.setItem("questbits", JSON.stringify(freshQuestBits));
       } catch (error) {
-        console.error("Failed to load questbits or quests from storage", error);
+        console.error("Error initializing app:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    loadQuestBitsAndQuests();
+    initializeApp();
   }, []);
 
   useEffect(() => {
