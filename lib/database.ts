@@ -59,7 +59,6 @@ export async function addQuest(attributes: {
     throw new Error((error as Error).message);
   }
 }
-
 /**
  * Gets all the quests that a user is a part of (as owner or as adventurer)
  * @returns all of the user's quests
@@ -178,6 +177,47 @@ export async function addQuestBit(attributes: {
     return response;
   } catch (error) {
     console.error("Error adding questbit:", error);
+    throw new Error((error as Error).message);
+  }
+}
+
+
+/**
+ * Update a questbit from the database
+ * @param attributes the questbit attributes
+ * @returns the response of updating the document
+ */
+export async function updateQuestBit(attributes: {
+  id: string;
+  title: string;
+  dueDates: Date[];
+  difficulty: string;
+  description: string;
+  status: Status;
+  quests: Quest;
+  assignees: string[];
+}) {
+  try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("No current user found");
+
+    const response = await databases.updateDocument(
+      config.databaseId,
+      config.questbitCollectionId,
+      attributes.id,
+      {
+        title: attributes.title,
+        status: attributes.status,
+        description: attributes.description,
+        assignees: attributes.assignees,
+        dueDates: attributes.dueDates,
+        quests: attributes.quests,
+        difficulty: attributes.difficulty,
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error updating questbit:", error);
     throw new Error((error as Error).message);
   }
 }

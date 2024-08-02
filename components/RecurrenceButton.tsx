@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import RecurrencePopUp from "./RecurrencePopUp";
 import { getButtonImage } from "../utils/utils";
-import { Status } from "../constants/enums";
 
 interface RecurrenceButtonProps {
   text: string;
@@ -16,8 +15,8 @@ interface RecurrenceButtonProps {
   isLoading?: boolean;
   imageStyle?: string;
   textStyle?: string;
-  color?: "red" | "blue" | "pink" | "yellow" | "green";
-  onUpdate?: () => void;
+  color: "red" | "blue" | "pink" | "yellow" | "green";
+  onUpdate?: (value: string) => void; 
 }
 
 const RecurrenceButton: React.FC<RecurrenceButtonProps> = ({
@@ -58,8 +57,7 @@ const RecurrenceButton: React.FC<RecurrenceButtonProps> = ({
       <RecurrencePopUp
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        value={text}
-        questbitId={questbitId}
+        initial={text}
         onUpdate={onUpdate}
       />
     </View>

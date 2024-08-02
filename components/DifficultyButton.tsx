@@ -8,19 +8,18 @@ import {
 } from "react-native";
 import DifficultyPopUp from "./DifficultyPopUp";
 import { getButtonImage } from "../utils/utils";
-import { Status } from "../constants/enums";
 
-interface StatusButtonProps {
+interface DifficultyButtonProps {
   text: string;
   questbitId?: string;
   isLoading?: boolean;
   imageStyle?: string;
   textStyle?: string;
   color?: "red" | "blue" | "pink" | "yellow" | "green";
-  onUpdate?: () => void;
+  onUpdate?: (value: string) => void;
 }
 
-const StatusButton: React.FC<StatusButtonProps> = ({
+const DifficultyButton: React.FC<DifficultyButtonProps> = ({
   text,
   questbitId,
   isLoading = false,
@@ -58,7 +57,7 @@ const StatusButton: React.FC<StatusButtonProps> = ({
       <DifficultyPopUp
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        value={text}
+        initial={text}
         questbitId={questbitId}
         onUpdate={onUpdate}
       />
@@ -66,4 +65,4 @@ const StatusButton: React.FC<StatusButtonProps> = ({
   );
 };
 
-export default StatusButton;
+export default DifficultyButton;

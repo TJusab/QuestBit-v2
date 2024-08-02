@@ -17,6 +17,7 @@ import { getQuestBitsForUser } from "../../lib/database";
 import QuestBitCard from "@/components/QuestBitCard";
 import SearchInput from "@/components/SearchInput";
 import { QuestBit } from "../../constants/types";
+import { updateQuestBitStatus } from "../../lib/database";
 import { router } from "expo-router";
 
 const Home: React.FC = () => {
@@ -48,10 +49,18 @@ const Home: React.FC = () => {
     }
   }, [searchText, questbits]);
 
-  const handleQuestBitUpdate = async () => {
+  const handleQuestBitUpdate = async (questbitId: string, newStatus: string) => {
     setLoading(true);
-    await fetchQuestBits();
+    try {
+      await updateQuestBitStatus(questbitId, newStatus);
+      await fetchQuestBits();
+    } catch (error) {
+      Alert.alert("Error", (error as Error).message);
+    } finally {
+      setLoading(false);
+    }
   };
+  
 
 
   console.log("questbits.length:", questbits.length);
