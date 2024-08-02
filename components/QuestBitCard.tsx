@@ -15,7 +15,7 @@ import {
 } from "../utils/utils";
 interface QuestBitProps {
   item: QuestBit;
-  onUpdate?: (newStatus: string) => void;
+  onUpdate?: (questbitId: string, newStatus: string) => void;
 }
 
 const QuestBitCard: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
@@ -34,7 +34,7 @@ const QuestBitCard: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
   const handleDelete = async () => {
     try {
       await deleteQuestBit(item.$id);
-      if (onUpdate) onUpdate(status);
+      if (onUpdate) onUpdate(item.$id, status);
       setDeleteModalVisible(false);
     } catch (error) {
       console.error("Error deleting questbit:", error);
@@ -42,7 +42,7 @@ const QuestBitCard: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
   };
 
   const handleStatusUpdate = (newStatus: string) => {
-    if (onUpdate) onUpdate(newStatus); 
+    if (onUpdate) onUpdate(item.$id, newStatus); 
   };
 
   return (

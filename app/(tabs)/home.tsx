@@ -61,8 +61,6 @@ const Home: React.FC = () => {
     }
   };
   
-
-
   console.log("questbits.length:", questbits.length);
 
   if (questbits.length > 0) {
