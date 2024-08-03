@@ -1,8 +1,19 @@
-import { Quest } from "@/constants/types";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from "react-native";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useLocalSearchParams } from "expo-router";
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
-import QuestDetail from "@/components/QuestDetail";
+import QuestDetail from "../../components/QuestDetail";
+import QuestEdit from "../../components/QuestEdit";
+import { router } from "expo-router";
+import { Quest } from "@/constants/types";
 
 const QuestDetails = () => {
   const parseQuest = (data: string): Quest => {
@@ -22,8 +33,31 @@ const QuestDetails = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <QuestDetail item={item} />
+    <View style={{ flex: 1, padding: 30 }}>
+      {!isEditing && (
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 35,
+          }}
+        >
+          <TouchableOpacity onPress={() => router.back()}>
+            <MaterialIcons name="keyboard-backspace" size={30} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={toggleEditing}>
+            <AntDesign name="form" size={25} color="black" />
+          </TouchableOpacity>
+        </View>
+      )}
+      {isEditing ? (
+        <QuestEdit
+          item={item}
+          toggleEditing={toggleEditing}
+        />
+      ) : (
+        <QuestDetail item={item} />
+      )}
     </View>
   );
 };
