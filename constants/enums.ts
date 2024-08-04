@@ -12,7 +12,7 @@ export enum QuestIcon {
 export enum Status {
     Unassigned = "Unassigned",
     Assigned = "Assigned",
-    OnGoing = "On Going",
+    OnGoing = "OnGoing",
     Completed = "Completed",
 }
 

@@ -60,8 +60,6 @@ const Home: React.FC = () => {
       setLoading(false);
     }
   };
-  
-  console.log("questbits.length:", questbits.length);
 
   if (questbits.length > 0) {
     return (

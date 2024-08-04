@@ -78,7 +78,6 @@ export async function getCurrentUser() {
 
     return documentToUser(currentUser.documents[0]);
   } catch (error) {
-    console.error('Error fetching current user:', error);
     return null;
   }
 }

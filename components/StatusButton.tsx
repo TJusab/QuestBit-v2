@@ -17,7 +17,7 @@ interface StatusButtonProps {
   imageStyle?: string;
   textStyle?: string;
   color?: "red" | "blue" | "pink" | "yellow" | "green";
-  onUpdate?: (value: string) => void;
+  onUpdate: (value: string) => void;
 }
 
 const StatusButton: React.FC<StatusButtonProps> = ({
@@ -60,7 +60,7 @@ const StatusButton: React.FC<StatusButtonProps> = ({
         onClose={() => setModalVisible(false)}
         value={text}
         questbitId={questbitId}
-        onUpdate={(newStatus: string) => onUpdate?.(newStatus)}
+        onUpdate={(newStatus: string) => onUpdate(newStatus)}
       />
     </View>
   );

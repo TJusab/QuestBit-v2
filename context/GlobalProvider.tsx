@@ -44,37 +44,11 @@ const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
         if (res) {
           setIsLogged(true);
           setUser(res);
+          await fetchAndSetData(); // Fetch data after user is set
         } else {
           setIsLogged(false);
           setUser(null);
         }
-
-        const [freshQuests, freshQuestBits] = await Promise.all([
-          getQuests(),
-          getQuestBitsForUser()
-        ]);
-
-        // Load cached quests from AsyncStorage
-        const cachedQuests = await AsyncStorage.getItem("quests");
-        if (cachedQuests) {
-          setQuests(JSON.parse(cachedQuests));
-        }
-
-        setQuests(freshQuests);
-
-        // Update AsyncStorage with fresh quests
-        await AsyncStorage.setItem("quests", JSON.stringify(freshQuests));
-
-        // Load cached quests from AsyncStorage
-        const cachedQuestBits = await AsyncStorage.getItem("questbits");
-        if (cachedQuestBits) {
-          setQuestBits(JSON.parse(cachedQuestBits));
-        }
-
-        setQuestBits(freshQuestBits);
-
-        // Update AsyncStorage with fresh quests
-        await AsyncStorage.setItem("questbits", JSON.stringify(freshQuestBits));
       } catch (error) {
         console.error("Error initializing app:", error);
       } finally {
@@ -84,6 +58,51 @@ const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
 
     initializeApp();
   }, []);
+
+  useEffect(() => {
+    if (isLogged && user) {
+      fetchAndSetData();
+    } else {
+      // Clear data when user logs out
+      setQuests([]);
+      setQuestBits([]);
+      AsyncStorage.removeItem("quests");
+      AsyncStorage.removeItem("questbits");
+    }
+  }, [isLogged, user]);
+
+  const fetchAndSetData = async () => {
+    try {
+      const [freshQuests, freshQuestBits] = await Promise.all([
+        getQuests(),
+        getQuestBitsForUser(),
+      ]);
+
+      // Load cached quests from AsyncStorage
+      const cachedQuests = await AsyncStorage.getItem("quests");
+      if (cachedQuests) {
+        setQuests(JSON.parse(cachedQuests));
+      }
+
+      setQuests(freshQuests);
+
+      // Update AsyncStorage with fresh quests
+      await AsyncStorage.setItem("quests", JSON.stringify(freshQuests));
+
+      // Load cached questbits from AsyncStorage
+      const cachedQuestBits = await AsyncStorage.getItem("questbits");
+      if (cachedQuestBits) {
+        setQuestBits(JSON.parse(cachedQuestBits));
+      }
+
+      setQuestBits(freshQuestBits);
+
+      // Update AsyncStorage with fresh questbits
+      await AsyncStorage.setItem("questbits", JSON.stringify(freshQuestBits));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   useEffect(() => {
     // Save questbits to AsyncStorage whenever they change

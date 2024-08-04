@@ -121,7 +121,7 @@ export const getStringFromStatus = (status: Status): string => {
 
 export const getEnumFromStatus = (status: string): Status => {
   switch (status) {
-    case "OnGoing" || "On Going":
+    case "OnGoing":
       return Status.OnGoing;
     case "Unassigned":
       return Status.Unassigned;

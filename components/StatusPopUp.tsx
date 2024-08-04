@@ -3,13 +3,14 @@ import { View, Text, Modal, ImageBackground } from "react-native";
 import PixelButton from "./PixelButton";
 import Dropdown from "./Dropdown";
 import { Status } from "../constants/enums";
+import { getStringFromStatus } from "@/utils/utils";
 
 interface StatusPopUpProps {
   visible: boolean;
   onClose: () => void;
   value: string;
   questbitId?: string;
-  onUpdate?: (value: string) => void;
+  onUpdate: (value: string) => void;
 }
 
 const StatusPopUp: React.FC<StatusPopUpProps> = ({
@@ -23,7 +24,7 @@ const StatusPopUp: React.FC<StatusPopUpProps> = ({
 
   const handleUpdate = async () => {
     try {
-      if (onUpdate) onUpdate(newStatus);
+      onUpdate(newStatus);
       onClose();
     } catch (error) {
       console.error("Error updating questbit status:", error);
@@ -31,7 +32,7 @@ const StatusPopUp: React.FC<StatusPopUpProps> = ({
   };
 
   const items = Object.values(Status).map(status => ({
-    label: status,
+    label: getStringFromStatus(status),
     value: status,
   }));
 

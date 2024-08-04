@@ -15,7 +15,7 @@ import {
 } from "../utils/utils";
 interface QuestBitProps {
   item: QuestBit;
-  onUpdate?: (questbitId: string, newStatus: string) => void;
+  onUpdate: (questbitId: string, newStatus: string) => void;
 }
 
 const QuestBitCard: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
@@ -42,7 +42,7 @@ const QuestBitCard: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
   };
 
   const handleStatusUpdate = (newStatus: string) => {
-    if (onUpdate) onUpdate(item.$id, newStatus); 
+    onUpdate(item.$id, newStatus); 
   };
 
   return (
