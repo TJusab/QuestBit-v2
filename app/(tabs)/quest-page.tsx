@@ -26,7 +26,7 @@ const QuestPage = () => {
 
   if (quests.length > 0) {
     return (
-      <View>
+      <View className="flex-1">
         <FlatList
           data={quests}
           keyExtractor={(item) => item.$id}

@@ -8,7 +8,7 @@ import { useGlobalContext } from "../../context/GlobalProvider";
 import FormField from "@/components/FormField";
 import { User } from "@/constants/types";
 
-const Profile = () => {
+const EditProfile = () => {
   const { user } = useGlobalContext();
   const loggedInUser  = user as User;
 
@@ -76,4 +76,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default EditProfile;

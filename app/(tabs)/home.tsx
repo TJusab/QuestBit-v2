@@ -63,7 +63,7 @@ const Home: React.FC = () => {
 
   if (questbits.length > 0) {
     return (
-      <SafeAreaView className="h-full">
+      <View className="flex-1">
         {loading ? (
           <View className="flex-1 justify-center items-center">
             <ActivityIndicator color="#6E7591" size="large" />
@@ -107,7 +107,7 @@ const Home: React.FC = () => {
             </TouchableOpacity>
           </View>
         )}
-      </SafeAreaView>
+      </View>
     );
   }
 };

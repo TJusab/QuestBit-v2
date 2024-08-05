@@ -40,6 +40,7 @@ const QuestBitDetail: React.FC<QuestBitDetailProps> = ({ item }) => {
           color={getColorFromDates(item.dueDates)}
           text={getTextFromDates(item.dueDates)}
           textStyle="text-sm"
+          
         />
         <View style={{ marginRight: 10 }}></View>
         <Text style={[styles.label, styles.rowElement]}>Due : </Text>
