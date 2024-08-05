@@ -16,8 +16,12 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 const Profile =  () => {
   const { user } = useGlobalContext();
 
+  if (!user) {
+    return null;
+  }
+
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-blue-50">
       <View className="flex-row items-center justify-between mt-10">
         <Image
           source={getUserIcon(user.icon)}

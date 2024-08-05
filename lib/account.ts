@@ -98,21 +98,37 @@ export async function logout() {
 
 /**
  * Saves new profile settings
- * TODO: complete this function
  */
-// export async function saveProfileSettings() {
-//   try {
-//     const user = await getCurrentUser();
-//     if (!user) {
-//       throw new Error("No user found");
-//     }
-//     const response = await databases.updateDocument(
-//       config.databaseId,
-//       config.userCollectionId,
-//       user.$id,
-//       {}
-//     )
-//   } catch (error) {
-//     throw new Error((error as Error).message);
-//   }
-// }
+export async function saveProfileSettings(fields: {
+  username: string;
+  email: string;
+  password: string;
+}) {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      throw new Error("No user found");
+    }
+
+    // Check if username needs to be updated
+    if (user.username !== fields.username) {
+      await databases.updateDocument(
+        config.databaseId,
+        config.userCollectionId,
+        user.$id,
+        { username: fields.username }
+      )
+    }
+
+    // Update email and password
+    if (fields.password !== "") {
+      await account.updateEmail(
+        fields.email,
+        fields.password,
+      );
+    }
+
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+}

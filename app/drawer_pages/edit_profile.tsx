@@ -1,25 +1,44 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Image, StyleSheet, Alert, ScrollView } from "react-native";
+import { View, Text, Image, ScrollView, Alert } from "react-native";
 import PixelButton from "@/components/PixelButton";
-import { logout } from "../../lib/account";
-import { router } from "expo-router";
 import { getUserIcon } from "../../utils/icon";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import FormField from "@/components/FormField";
 import { User } from "@/constants/types";
+import { saveProfileSettings } from "@/lib/account";
+
+interface EditProfileFields {
+  username: string;
+  email: string;
+  password: string;
+}
 
 const EditProfile = () => {
   const { user } = useGlobalContext();
-  const loggedInUser  = user as User;
+  const loggedInUser = user as User;
 
-  const [nickname, setNickname] = useState("");
   const [username, setUsername] = useState(loggedInUser.username);
   const [email, setEmail] = useState(loggedInUser.email);
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const handleSaveSettings = async () => {
+    try {
+      const updatedFields: EditProfileFields = {
+        username: username,
+        email: email,
+        password: password,
+      };
+
+      await saveProfileSettings(updatedFields);
+      Alert.alert("User settings saved successfully!");
+    } catch (error) {
+      Alert.alert("Error saving profile settings:", (error as Error).message);
+    }
+  };
+
   return (
-    <ScrollView>
+    <ScrollView className="bg-blue-50">
       <View className="justify-center items-center mt-10">
         <Text className="font-press text-3xl mb-5 text-navy">
           {loggedInUser.username}
@@ -64,12 +83,7 @@ const EditProfile = () => {
         </View>
 
         <View className="flex-row mt-10">
-          <PixelButton
-            text="SAVE!"
-            onPress={() => console.log("Save button pressed")}
-            isLoading={isSubmitting}
-            color="green"
-          />
+          <PixelButton text="SAVE!" onPress={handleSaveSettings} />
         </View>
       </View>
     </ScrollView>
