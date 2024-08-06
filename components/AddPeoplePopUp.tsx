@@ -22,6 +22,7 @@ interface AddPeoplePopUpProps {
   selectedAdventurers: User[];
   refreshKey: number;
   text: string;
+  except?: User; // Adjusted to add optional except prop
 }
 
 const AddPeoplePopUp: React.FC<AddPeoplePopUpProps> = ({
@@ -31,6 +32,7 @@ const AddPeoplePopUp: React.FC<AddPeoplePopUpProps> = ({
   selectedAdventurers: parentSelectedAdventurers,
   refreshKey,
   text,
+  except,
 }) => {
   const [selectedAdventurers, setSelectedAdventurers] = useState<User[]>([]);
   const [items, setItems] = useState<User[]>([]);
@@ -43,7 +45,10 @@ const AddPeoplePopUp: React.FC<AddPeoplePopUpProps> = ({
   const getAdventurers = async () => {
     try {
       const response = await fetchAdventurers();
-      setItems(response);
+      const filteredResponse = except 
+        ? response.filter(adventurer => adventurer.$id !== except.$id) 
+        : response;
+      setItems(filteredResponse);
     } catch (error) {
       Alert.alert("Error", (error as Error).message);
     } finally {

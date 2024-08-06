@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
-import StatusButton from "./StatusButton";
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, TextInput } from "react-native";
 import { Quest, User } from "@/constants/types";
 import { getUserBodyIcon } from "@/utils/icon";
 import { getQuestIcon } from "@/utils/icon";
@@ -8,6 +7,7 @@ import { QuestIcon } from "@/constants/enums";
 import PixelButton from './PixelButton';
 import AntDesign from "react-native-vector-icons/AntDesign";
 import AddPeopleModal from "./AddPeoplePopUp";
+import CalendarModal from "./CalendarPopUp";
 
 interface QuestEditProps {
   item: Quest;
@@ -16,12 +16,25 @@ interface QuestEditProps {
 
 const QuestEdit: React.FC<QuestEditProps> = ({ item, toggleEditing }) => {
   const [quest, setQuest] = useState(item);
-  const [selectedDate, setSelectedDate] = useState<string | undefined>(undefined);
-  const [formattedDate, setFormattedDate] = useState<string | undefined>(undefined);
   const [selectedIcon, setSelectedIcon] = useState<QuestIcon>(item.icon);
+  const [peopleVisible, setPeopleVisible] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [selectedAdventurers, setSelectedAdventurers] = useState<User[]>([]);
+  const [title, setTitle] = useState(item.title);
+  const [info, setInfo] = useState(item.questInfo);
+  const [isCalendarVisible, setIsCalendarVisible] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(item.deadline);
+  const [formattedDate, setFormattedDate] = useState("");
 
-  const formatDateString = (dateString: string) => {
-    const date = new Date(dateString);
+  useEffect(() => {
+    if (item.deadline) {
+      const initialDate = new Date(item.deadline);
+      setSelectedDate(initialDate);
+      setFormattedDate(formatDateString(initialDate));
+    }
+  }, [item.deadline]);
+
+  const formatDateString = (date: Date) => {
     return new Intl.DateTimeFormat("en-US", {
       year: "numeric",
       month: "long",
@@ -29,15 +42,7 @@ const QuestEdit: React.FC<QuestEditProps> = ({ item, toggleEditing }) => {
       timeZone: "UTC",
     }).format(date);
   };
-  
-  useEffect(() => {
-    const initialDate = item.deadline?.toISOString().split('T')[0];
-    setSelectedDate(initialDate);
-    if (initialDate) {
-      setFormattedDate(formatDateString(initialDate));
-    }
-  }, [item.deadline]);
-  
+
   const handleSave = () => {
     toggleEditing();
   }
@@ -48,26 +53,20 @@ const QuestEdit: React.FC<QuestEditProps> = ({ item, toggleEditing }) => {
       return { ...prevItem, adventurers: updatedAdventurers };
     });
   };
-  
-  
-  const [peopleVisible, setPeopleVisible] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [selectedAdventurers, setSelectedAdventurers] = useState<User[]>([]);
+
   const handleAddAdventurers = (adventurers: User[]) => {
     setSelectedAdventurers(adventurers);
     setQuest(prevItem => {
-      const updatedAssignees = [...prevItem.adventurers || [], ...adventurers];
-      return { ...prevItem, assignees: updatedAssignees };
+      const updatedAssignees = [...(prevItem.adventurers || []), ...adventurers];
+      return { ...prevItem, adventurers: updatedAssignees };
     });
   };
 
-  const [peopleVisibleAdmin, setPeopleVisibleAdmin] = useState(false);
-  const [refreshKeyAdmin, setRefreshKeyAdmin] = useState(0);
-  const [selectedAdmin, setSelectedAdmin] = useState<User[]>([]);
-  const handleAddAdmin = (adventurer: User[]) => {
-    quest.owner = adventurer[0];
+  const handleDateUpdate = (dateString: string) => {
+    const date = new Date(dateString);
+    setSelectedDate(date);
+    setFormattedDate(formatDateString(date));
   };
-
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
@@ -75,39 +74,45 @@ const QuestEdit: React.FC<QuestEditProps> = ({ item, toggleEditing }) => {
           source={getQuestIcon(selectedIcon)}
           style={{ width: 140, height: 140 }}
         />
-      <Text style={styles.title}>{item.title}</Text>
-      <View style={styles.row} pointerEvents="none">
+      <TextInput
+        style={styles.title}
+        value={title}
+        onChangeText={setTitle}
+        placeholder={item.title}
+      />
+      <View style={styles.row}>
         <Text style={[styles.label, styles.rowElement]}>Due : </Text>
+        <TouchableOpacity onPress={() => setIsCalendarVisible(true)}>
         <Text className="font-zcool text-black text-xl">{formattedDate}</Text>
+        </TouchableOpacity>
+        <CalendarModal
+          visible={isCalendarVisible}
+          onClose={() => setIsCalendarVisible(false)}
+          onUpdate={handleDateUpdate}
+          initialDate={selectedDate?.toISOString().split('T')[0]}
+        />
       </View>
       <View>
-        <Text style={styles.description}>{item.questInfo}</Text>
+        <TextInput
+          style={styles.description}
+          value={info}
+          onChangeText={setInfo}
+          placeholder={item.questInfo}
+          multiline
+        />
       </View>
       <View style={{ height: 1, backgroundColor: 'grey', width: '100%', marginBottom: 15, marginTop: 15 }}></View>
       <View style={styles.section}>
+        <Text style={styles.label}>Admin</Text>
         <View style={styles.row}>
-          <Text style={styles.label}>Admin</Text>
-          <TouchableOpacity onPress={() => setPeopleVisibleAdmin(true)}>
-              <AntDesign name="pluscircle" size={25} color="green" />
-          </TouchableOpacity>
+          <View style={styles.icon}>
+            <Image
+              source={getUserBodyIcon(item.owner.icon)}
+              style={styles.character}
+            />
+            <Text style={styles.username}>{item.owner.username}</Text>
+          </View>
         </View>
-        <View style={styles.row}>
-            <View style={styles.icon}>
-              <Image
-                source={getUserBodyIcon(item.owner.icon)}
-                style={styles.character}
-              />
-              <Text style={styles.username}>{item.owner.username}</Text>
-            </View>
-        </View>
-        <AddPeopleModal
-            visible={peopleVisibleAdmin}
-            onClose={() => setPeopleVisibleAdmin(false)}
-            onUpdate={handleAddAdmin}
-            selectedAdventurers={selectedAdmin}
-            refreshKey={refreshKeyAdmin}
-            text='Assign an admin to this Quest'
-          />
       </View>
       <View style={styles.section}>
         <View style={styles.row}>
@@ -123,6 +128,7 @@ const QuestEdit: React.FC<QuestEditProps> = ({ item, toggleEditing }) => {
             selectedAdventurers={selectedAdventurers}
             refreshKey={refreshKey}
             text='Assign adventurers to this Quest'
+            except={item.owner}
           />
         <View style={styles.row}>
           {quest.adventurers && quest.adventurers.map((assignee) => (
