@@ -18,7 +18,6 @@ import { updateQuestBit } from '../lib/database';
 interface QuestBitEditProps {
   item: QuestBit;
   toggleEditing: () => void;
-  //updatedItem: (questbit: item) => void;
 }
 
 const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing }) => {

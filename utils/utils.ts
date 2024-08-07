@@ -109,7 +109,6 @@ export const getColorFromDates = (dueDates: Date[]) => {
 };
 
 
-
 export const getStringFromStatus = (status: Status): string => {
   switch (status) {
     case Status.OnGoing:
