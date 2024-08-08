@@ -161,7 +161,6 @@ export async function addQuestBit(attributes: {
       config.questbitCollectionId,
       ID.unique(),
       {
-        owner: currentUser.$id,
         title: attributes.title,
         deadline: attributes.deadline,
         quest: attributes.quest,
@@ -180,7 +179,6 @@ export async function addQuestBit(attributes: {
     throw new Error((error as Error).message);
   }
 }
-
 
 /**
  * Update a questbit from the database

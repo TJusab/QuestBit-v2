@@ -162,8 +162,8 @@ const Create = () => {
       };
 
       await addQuestBit(attributes);
-      Alert.alert("Quest added successfully!");
-      router.replace("/quest-page?refresh=true");
+      Alert.alert("Questbit added successfully!");
+      router.replace("/home?refresh=true");
     } catch (error) {
       Alert.alert("Error adding questbit:", (error as Error).message);
     }
