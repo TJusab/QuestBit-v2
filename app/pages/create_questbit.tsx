@@ -115,13 +115,13 @@ const Create = () => {
   const handleDateUpdate = (dateString: string) => {
     setSelectedDate(dateString);
     const date = new Date(dateString);
-    const formatDate = new Intl.DateTimeFormat("en-US", {
+    const formattedDate = new Intl.DateTimeFormat("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
       timeZone: "UTC",
     }).format(date);
-    setFormattedDate(formatDate);
+    setFormattedDate(formattedDate);
   };
 
   const handleAddAdventurers = (adventurers: User[]) => {
@@ -148,7 +148,7 @@ const Create = () => {
     try {
       const attributes: CreateQuestBitAttributes = {
         title: title,
-        deadline: formattedDate ? new Date(formattedDate) : null,
+        deadline: selectedDate ? new Date(selectedDate) : null,
         quest: quest,
         isRecurring: isRecurring,
         recurrenceOption: isRecurring ? recurrenceOption : "",
