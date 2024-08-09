@@ -1,6 +1,6 @@
-import { Account, Avatars, Databases, ID, Query } from "react-native-appwrite";
+import { Account, Databases, ID, Query } from "react-native-appwrite";
 import client, { config } from './client';
-import { documentToUser } from "@/utils/mapping";
+import { documentToUser, documentToQuest } from "@/utils/mapping";
 
 const account = new Account(client);
 const databases = new Databases(client);
@@ -127,6 +127,16 @@ export async function saveProfileSettings(fields: {
         fields.password,
       );
     }
+
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+}
+
+export async function deleteAccount() {
+  try {
+    await account.updateStatus();
+    // Delete any quests that the current user is the owner of ? 
 
   } catch (error) {
     throw new Error((error as Error).message);

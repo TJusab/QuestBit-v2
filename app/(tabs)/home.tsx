@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
-  SafeAreaView,
   Alert,
   FlatList,
   ActivityIndicator,
@@ -49,7 +48,10 @@ const Home: React.FC = () => {
     }
   }, [searchText, questbits]);
 
-  const handleQuestBitUpdate = async (questbitId: string, newStatus: string) => {
+  const handleQuestBitUpdate = async (
+    questbitId: string,
+    newStatus: string
+  ) => {
     setLoading(true);
     try {
       await updateQuestBitStatus(questbitId, newStatus);

@@ -599,3 +599,28 @@ export async function deleteFriendship(friendshipID: string) {
     throw new Error((error as Error).message);
   }
 }
+
+export async function saveTokenToUser(userId: string, newToken: string) {
+  try {
+    const result = await databases.listDocuments(
+      config.databaseId,
+      config.userCollectionId,
+      [Query.equal('$id', userId)]
+    );
+
+    const existingToken = result.documents[0]?.token;
+
+    if (existingToken !== newToken) {
+      await databases.updateDocument(
+        config.databaseId,
+        config.userCollectionId,
+        result.documents[0].$id,
+        {
+          pushToken: newToken,
+        }
+      );
+    }
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+}

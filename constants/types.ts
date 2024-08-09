@@ -11,6 +11,8 @@ export interface GlobalContextType {
   setQuestBits: Dispatch<SetStateAction<QuestBit[]>>;
   quests: Quest[];
   setQuests: Dispatch<SetStateAction<Quest[]>>;
+  expoPushToken: string;
+  setExpoPushToken: Dispatch<SetStateAction<string>>;
 }
 
 export interface User {

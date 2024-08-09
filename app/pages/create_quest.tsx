@@ -22,17 +22,18 @@ import { Quest, User } from "@/constants/types";
 import { QuestIcon } from "@/constants/enums";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { documentToQuest } from "@/utils/mapping";
+import * as Notifications from "expo-notifications";
 
 interface CreateQuestAttributes {
-    title: string;
-    icon: QuestIcon;
-    questInfo: string;
-    adventurerIds: string[];
-    deadline: Date | null; 
+  title: string;
+  icon: QuestIcon;
+  questInfo: string;
+  adventurerIds: string[];
+  deadline: Date | null;
 }
 
 const CreateQuest = () => {
-  const { quests, setQuests } = useGlobalContext();
+  const { quests, setQuests, expoPushToken } = useGlobalContext();
   const [title, setTitle] = useState("");
   const [synopsis, setSynopsis] = useState("");
   const [visible, setVisible] = useState(false);
@@ -72,7 +73,7 @@ const CreateQuest = () => {
       year: "numeric",
       month: "long",
       day: "numeric",
-      timeZone: "UTC"
+      timeZone: "UTC",
     }).format(date);
     setFormattedDate(formattedDate);
   };
@@ -87,18 +88,51 @@ const CreateQuest = () => {
         title: title,
         icon: selectedIcon,
         questInfo: synopsis.length > 0 ? synopsis : "",
-        adventurerIds: selectedAdventurers.length > 0 ? selectedAdventurers.map(adventurer => adventurer.$id) : [],
+        adventurerIds:
+          selectedAdventurers.length > 0
+            ? selectedAdventurers.map((adventurer) => adventurer.$id)
+            : [],
         deadline: selectedDate ? new Date(selectedDate) : null,
       };
 
       const newQuest: Quest = documentToQuest(await addQuest(attributes));
       setQuests((prevQuests) => [...prevQuests, newQuest]);
+
+      if (expoPushToken) {
+        await sendPushNotification(expoPushToken, newQuest.title);
+      } else {
+        console.log("No push token available");
+      }
+
       Alert.alert("Quest added successfully!");
       router.replace("/quest-page?refresh=true");
     } catch (error) {
       Alert.alert("Error adding quest:", (error as Error).message);
     }
   };
+
+  // Add this function to send the push notification
+  async function sendPushNotification(
+    expoPushToken: string,
+    questTitle: string
+  ) {
+    const message = {
+      to: expoPushToken,
+      sound: "default",
+      title: "New Quest Created!",
+      body: `A new quest "${questTitle}" has been created.`,
+      data: { someData: "goes here" },
+    };
+
+    const result = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: message.title,
+        body: message.body,
+        data: message.data,
+      },
+      trigger: null, // null means send immediately
+    });
+  }
 
   return (
     <View className="flex-1">

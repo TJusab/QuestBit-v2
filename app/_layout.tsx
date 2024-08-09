@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { SplashScreen, Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
@@ -26,7 +26,6 @@ const RootLayout = () => {
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="pages" options={{ headerShown: false }} />
-          {/* <Stack.Screen name="/search/[query]" options={{ headerShown: false }} /> */}
         </Stack>
       </GlobalProvider>
   );

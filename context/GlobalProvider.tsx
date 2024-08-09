@@ -7,8 +7,15 @@ import React, {
 } from "react";
 import { GlobalContextType, User, QuestBit, Quest } from "../constants/types";
 import { getCurrentUser } from "../lib/account";
-import { getQuests, getQuestBitsForUser } from "@/lib/database";
+import {
+  getQuests,
+  getQuestBitsForUser,
+  saveTokenToUser,
+} from "@/lib/database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
+import * as Device from "expo-device";
+import Constants from "expo-constants";
 
 // Create default values for the context
 const defaultContextValue: GlobalContextType = {
@@ -21,6 +28,8 @@ const defaultContextValue: GlobalContextType = {
   setQuestBits: () => {},
   quests: [],
   setQuests: () => {},
+  expoPushToken: "",
+  setExpoPushToken: () => {},
 };
 
 const GlobalContext = createContext<GlobalContextType>(defaultContextValue);
@@ -36,6 +45,7 @@ const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [questbits, setQuestBits] = useState<QuestBit[]>([]);
   const [quests, setQuests] = useState<Quest[]>([]);
+  const [expoPushToken, setExpoPushToken] = useState<string>("");
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -45,6 +55,7 @@ const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
           setIsLogged(true);
           setUser(res);
           await fetchAndSetData(); // Fetch data after user is set
+          await registerForPushNotifications(); // Register for push notifications
         } else {
           setIsLogged(false);
           setUser(null);
@@ -130,6 +141,47 @@ const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
     saveQuests();
   }, [quests]);
 
+  async function registerForPushNotifications() {
+    let token;
+    if (Device.isDevice) {
+      const { status } = await Notifications.getPermissionsAsync();
+      if (status !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        if (status !== "granted") {
+          alert("Failed to get push token for push notification!");
+          return;
+        }
+      }
+      token = (
+        await Notifications.getExpoPushTokenAsync({
+          projectId: Constants.expoConfig?.extra?.eas?.projectId,
+        })
+      ).data;
+    } else {
+      alert("Must use physical device for Push Notifications");
+    }
+
+    if (token) {
+      setExpoPushToken(token);
+      // Here you would typically send this token to your backend
+      // For example: await sendTokenToBackend(token);
+      const user = await getCurrentUser();
+      if (user == null) {
+        console.error("USER NULL WHILE SETTING NOTIFS");
+        return;
+      }
+      await saveTokenToUser(user.$id, token);
+    }
+
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+      }),
+    });
+  }
+
   return (
     <GlobalContext.Provider
       value={{
@@ -142,6 +194,8 @@ const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
         setQuestBits,
         quests,
         setQuests,
+        expoPushToken,
+        setExpoPushToken,
       }}
     >
       {children}
