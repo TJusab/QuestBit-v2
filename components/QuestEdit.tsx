@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, Alert, Image, StyleSheet, ScrollView, TouchableOpacity, TextInput } from "react-native";
 import { Quest, User } from "@/constants/types";
 import { getUserBodyIcon } from "@/utils/icon";
 import { getQuestIcon } from "@/utils/icon";
@@ -8,6 +8,7 @@ import PixelButton from './PixelButton';
 import AntDesign from "react-native-vector-icons/AntDesign";
 import AddPeopleModal from "./AddPeoplePopUp";
 import CalendarModal from "./CalendarPopUp";
+import { updateQuest } from '../lib/database';
 
 interface QuestEditProps {
   item: Quest;
@@ -43,10 +44,6 @@ const QuestEdit: React.FC<QuestEditProps> = ({ item, toggleEditing }) => {
     }).format(date);
   };
 
-  const handleSave = () => {
-    toggleEditing();
-  }
-
   const handleRemoveAssignee = (adventurer: User) => {
     setQuest(prevItem => {
       const updatedAdventurers = (prevItem.adventurers || []).filter(assignee => assignee.$id !== adventurer.$id);
@@ -67,6 +64,31 @@ const QuestEdit: React.FC<QuestEditProps> = ({ item, toggleEditing }) => {
     setSelectedDate(date);
     setFormattedDate(formatDateString(date));
   };
+
+
+  const handleSave = async () => {
+    try {
+      // Ensure currentUser and quest are properly defined and accessible
+      const updatedQuest = {
+        admin: quest.owner.$id, // Assuming quest.owner is meant to be admin
+        id: quest.$id,
+        title: title || "",
+        questInfo: info || "",
+        icon: selectedIcon,
+        deadline: selectedDate ? new Date(selectedDate) : null,
+        adventurerIds: (quest.adventurers || []).map(adventurer => adventurer.$id),
+        questbits: (quest.questbits || []).map(bit => bit.$id),
+      };
+  
+      await updateQuest(updatedQuest);
+      console.log("Quest updated successfully.");
+      toggleEditing();
+    } catch (error) {
+      console.error("Failed to save changes:", error);
+      Alert.alert("Error", "Failed to save changes. Please try again.");
+    }
+  };
+  
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>

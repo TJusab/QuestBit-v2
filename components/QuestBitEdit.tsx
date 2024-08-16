@@ -63,7 +63,6 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing }) => {
     setSelectedDate(dateString);
     setFormattedDate(formatDateString(dateString));
   };
-
   const [dueDates, setDueDates] = useState<Date[]>([]);
   const [selectedRecurrence, setSelectedRecurrence] = useState(getTextFromDates(item.dueDates));
   const [recurrenceColor, setRecurrenceColor] = useState<"red" | "blue" | "pink" | "yellow" | "green">(getColorFromRecurrence(selectedRecurrence));
