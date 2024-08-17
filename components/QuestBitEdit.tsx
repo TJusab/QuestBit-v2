@@ -33,11 +33,15 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing }) => {
   const handleAddAdventurers = (adventurers: User[]) => {
     setSelectedAdventurers(adventurers);
     setQuestBit(prevItem => {
-      const updatedAssignees = [...prevItem.assignees || [], ...adventurers];
+      const newAdventurers = adventurers.filter(
+        adventurer => !(prevItem.assignees || []).some(assignee => assignee.$id === adventurer.$id)
+      );
+      
+      const updatedAssignees = [...(prevItem.assignees || []), ...newAdventurers];
       return { ...prevItem, assignees: updatedAssignees };
     });
   };
-
+  
   const handleRemoveAssignee = (adventurer: User) => {
     setQuestBit(prevItem => {
       const updatedAssignees = (prevItem.assignees || []).filter(assignee => assignee.$id !== adventurer.$id);
