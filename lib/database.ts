@@ -1,8 +1,13 @@
 import { Databases, Query, ID } from "react-native-appwrite";
 import client, { config } from "./client";
 import { getCurrentUser } from "./account";
-import { Friendship, User } from "../constants/types";
-import { QuestIcon, RecurrenceValue, Status } from "../constants/enums";
+import { Friendship, User, Quest } from "../constants/types";
+import {
+  Difficulty,
+  QuestIcon,
+  RecurrenceValue,
+  Status,
+} from "../constants/enums";
 import {
   documentToFriendship,
   documentToQuest,
@@ -54,7 +59,6 @@ export async function addQuest(attributes: {
     throw new Error((error as Error).message);
   }
 }
-
 /**
  * Gets all the quests that a user is a part of (as owner or as adventurer)
  * @returns all of the user's quests
@@ -140,10 +144,12 @@ export async function deleteQuest(id: string) {
 export async function addQuestBit(attributes: {
   title: string;
   deadline: Date | null;
+  quest: Quest;
   isRecurring: boolean;
   recurrenceOption: string;
   description: string;
-  status: string;
+  status: Status;
+  difficulty: Difficulty;
   adventurerIds: string[];
 }) {
   try {
@@ -155,13 +161,14 @@ export async function addQuestBit(attributes: {
       config.questbitCollectionId,
       ID.unique(),
       {
-        owner: currentUser.$id,
         title: attributes.title,
         deadline: attributes.deadline,
+        quest: attributes.quest,
         isRecurring: attributes.isRecurring,
         recurrenceOption: attributes.recurrenceOption,
         description: attributes.description,
         status: attributes.status,
+        difficulty: attributes.difficulty,
         adventurers: attributes.adventurerIds, // only send adventurer ids
       }
     );
@@ -169,6 +176,46 @@ export async function addQuestBit(attributes: {
     return response;
   } catch (error) {
     console.error("Error adding questbit:", error);
+    throw new Error((error as Error).message);
+  }
+}
+
+/**
+ * Update a questbit from the database
+ * @param attributes the questbit attributes
+ * @returns the response of updating the document
+ */
+export async function updateQuestBit(attributes: {
+  id: string;
+  title: string;
+  dueDates: Date[];
+  difficulty: string;
+  description: string;
+  status: Status;
+  quests: Quest;
+  assignees: string[];
+}) {
+  try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("No current user found");
+
+    const response = await databases.updateDocument(
+      config.databaseId,
+      config.questbitCollectionId,
+      attributes.id,
+      {
+        title: attributes.title,
+        status: attributes.status,
+        description: attributes.description,
+        assignees: attributes.assignees,
+        dueDates: attributes.dueDates,
+        quests: attributes.quests,
+        difficulty: attributes.difficulty,
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error updating questbit:", error);
     throw new Error((error as Error).message);
   }
 }

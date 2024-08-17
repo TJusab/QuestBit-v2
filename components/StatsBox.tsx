@@ -1,17 +1,16 @@
 import { View, Text } from "react-native";
 import React from "react";
-import { globalStyles } from "@/app/global_styles";
 
 interface StatsBoxProps {
-  title: string;
+  stat: number;
+  text: string;
 }
 
-const StatsBox: React.FC<StatsBoxProps> = ({ title }) => {
+const StatsBox: React.FC<StatsBoxProps> = ({ stat, text }) => {
   return (
-    <View className="bg-blue-200 rounded-xl w-[50%] justify-center">
-      <Text className="font-press text-base text-justify m-2" style={globalStyles.questTitle}>
-        {title}
-      </Text>
+    <View className="bg-lightgray rounded-xl justify-center p-5 w-[150]">
+      <Text className="font-press text-2xl text-navy">{stat}</Text>
+      <Text className="font-zcool text-xl text-justify">{text}</Text>
     </View>
   );
 };

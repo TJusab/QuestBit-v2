@@ -23,6 +23,12 @@ const PagesLayout = () => {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="create_questbit"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack>
     </>
   );

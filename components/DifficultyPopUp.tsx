@@ -2,33 +2,30 @@ import React, { useState } from "react";
 import { View, Text, Modal, ImageBackground } from "react-native";
 import PixelButton from "./PixelButton";
 import Dropdown from "./Dropdown";
-import { updateQuestBitStatus } from "../lib/database";
-import { Difficulty, RecurrenceValue, Status } from "../constants/enums";
+import { Difficulty } from "../constants/enums";
 
 interface DifficultyPopUpProps {
   visible: boolean;
   onClose: () => void;
-  value: string;
+  initial: string;
   questbitId?: string;
-  onUpdate?: () => void;
+  onUpdate?: (value: string) => void;
 }
 
 const DifficultyPopUp: React.FC<DifficultyPopUpProps> = ({
   visible,
   onClose,
-  value,
-  questbitId,
+  initial,
   onUpdate,
 }) => {
-  const [newStatus, setNewStatus] = useState(value);
+  const [newValue, setNewValue] = useState(initial);
 
   const handleUpdate = async () => {
     try {
-      if (questbitId) await updateQuestBitStatus(questbitId, newStatus);
-      if (onUpdate) onUpdate();
+      if (onUpdate) onUpdate(newValue);
       onClose();
     } catch (error) {
-      console.error("Error updating questbit status:", error);
+      console.error("Error updating questbit difficulty:", error);
     }
   };
 
@@ -61,8 +58,8 @@ const DifficultyPopUp: React.FC<DifficultyPopUpProps> = ({
               </Text>
               <View className="w-3/5 m-auto my-8 z-10">
                 <Dropdown
-                  initialValue={newStatus}
-                  onChangeValue={(value) => setNewStatus(value)}
+                  initialValue={newValue}
+                  onChangeValue={(value) => setNewValue(value)}
                   items={items}
                 />
               </View>

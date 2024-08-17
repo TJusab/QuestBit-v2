@@ -1,124 +1,153 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { router } from "expo-router";
-import { Quest } from '@/constants/types';
+import React, { useState, useEffect } from "react";
+import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
+import StatusButton from "./StatusButton";
+import { Quest } from "@/constants/types";
+import { getUserBodyIcon } from "@/utils/icon";
+import { getQuestIcon } from "@/utils/icon";
+import { QuestIcon } from "@/constants/enums";
 
 interface QuestDetailProps {
   item: Quest;
 }
 
 const QuestDetail: React.FC<QuestDetailProps> = ({ item }) => {
-  return (
-    <View style={styles.container}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
-        <TouchableOpacity onPress={() => router.back()}>
-            <MaterialIcons name="keyboard-backspace" size={30} color="black" />
-        </TouchableOpacity>
-        <AntDesign name="form" size={25} color="black" />
-      </View>
-      <Text style={styles.header}>Quest Details</Text>
-      <View style={styles.section}>
-        <Text style={styles.label}>Title</Text>
-        <Text style={styles.title}>{item.title}</Text>
-      </View>
-      <View style={styles.section}>
-        <Text style={styles.label}>Icon</Text>
-        <Image source={require("../assets/HD/chest.png")} style={styles.character} resizeMode='stretch' />
-      </View>
-      <View style={styles.section}>
-        <Text style={styles.label}>Target Date</Text>
-        <View style={styles.row}>
-          <MaterialIcons name="event" size={20} color="black" />
+  const [selectedDate, setSelectedDate] = useState<string | undefined>(undefined);
+  const [formattedDate, setFormattedDate] = useState<string | undefined>(undefined);
+  const [selectedIcon, setSelectedIcon] = useState<QuestIcon>(item.icon);
 
+  const formatDateString = (dateString: string) => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "UTC",
+    }).format(date);
+  };
+  
+  useEffect(() => {
+    const initialDate = item.deadline?.toISOString().split('T')[0];
+    setSelectedDate(initialDate);
+    if (initialDate) {
+      setFormattedDate(formatDateString(initialDate));
+    }
+  }, [item.deadline]);
+  
+
+
+  return (
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
+      <Image
+          source={getQuestIcon(selectedIcon)}
+          style={{ width: 140, height: 140 }}
+        />
+      <Text style={styles.title}>{item.title}</Text>
+      <View style={styles.row} pointerEvents="none">
+        <Text style={[styles.label, styles.rowElement]}>Due : </Text>
+        <Text className="font-zcool text-black text-xl">{formattedDate}</Text>
+      </View>
+      <View>
+        <Text style={styles.description}>{item.questInfo}</Text>
+      </View>
+      <View style={{ height: 1, backgroundColor: 'grey', width: '100%', marginBottom: 15, marginTop: 15 }}></View>
+      <View style={styles.section}>
+        <Text style={styles.label}>Admin</Text>
+        <View style={styles.row}>
+            <View style={styles.assignee}>
+              <Image
+                source={getUserBodyIcon(item.owner.icon)}
+                style={styles.character}
+              />
+              <Text style={styles.username}>{item.owner.username}</Text>
+            </View>
         </View>
       </View>
       <View style={styles.section}>
-        <Text style={styles.label}>Description</Text>
-        <Text>{item.questInfo}</Text>
-      </View>
-      <View style={styles.section}>
-        <Text style={styles.label}>Owner(s)</Text>
+        <Text style={styles.label}>Assignee(s)</Text>
         <View style={styles.row}>
-          <View>
-            <Image source={require("../assets/HD/character_48X48.png")} style={styles.character} resizeMode='stretch' />
-            <Text style={styles.username}>{item.owner.username}</Text>
-          </View>
-        </View>
-      </View>
-      <View style={styles.section}>
-        <Text style={styles.label}>Adventurer(s)</Text>
-        <View style={styles.row}>
-          {item.adventurers && item.adventurers.map(assignee => (
-            <View key={assignee.$id}>
-              <Image source={require("../assets/HD/character_48X48.png")} style={styles.character} resizeMode='stretch' />
-              <Text style={styles.username}>{assignee.username}</Text>
+          {item.adventurers && item.adventurers.map((adventurer) => (
+            <View key={adventurer.$id} style={styles.assignee}>
+              <Image
+                source={getUserBodyIcon(adventurer.icon)}
+                style={styles.character}
+              />
+              <Text style={styles.username}>{adventurer.username}</Text>
             </View>
           ))}
         </View>
       </View>
-      <View style={styles.section}>
-        <Text style={styles.label}>QuestBit Diary</Text>
-      </View>
-      <View style={styles.log}>
-        <Image source={require("../assets/HD/scroll.png")} style={styles.scroll} resizeMode='stretch' />
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 30,
-  },
-  header: {
-    fontSize: 18,
-    marginTop: 20,
-    marginBottom: 20,
-    fontFamily: 'PressStart2P',
-    color: 'black',
-  },
-  section: {
-    marginBottom: 15,
-  },
-  label: {
-    fontSize: 23,
-    fontWeight: 'bold',
-    fontFamily: 'ZCOOL',
-    color: 'grey',
-    marginBottom: 8,
-  },
-  title: {
-    fontFamily: 'ZCOOL',
-    fontSize: 40,
-    marginTop: -8,
-  },
-  username: {
-    fontFamily: 'ZCOOL',
-    marginBottom: 7,
-    fontSize: 18,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    margin: 5,
   },
   log: {
-    height: 300,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
+    height: 190,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 30,
   },
   scroll: {
-    width: '100%',
-    height: '100%',
+    width: "120%",
+    height: "100%",
     marginBottom: 10,
+    marginTop: -35,
   },
   character: {
     width: 90,
     height: 90,
     marginBottom: 10,
+  },
+  title: {
+    marginTop: 20,
+    fontFamily: 'ZCOOL',
+    fontSize: 32,
+  },
+  username: {
+    fontFamily: "ZCOOL",
+    fontSize: 18,
+    marginBottom: -10,
+  },
+  section: {
+    marginBottom: 15,
+  },
+  label: {
+    fontSize: 27,
+    fontWeight: "bold",
+    fontFamily: "ZCOOL",
+    color: "gray",
+  },
+  description: {
+    fontSize: 18,
+    fontFamily: "ZCOOL",
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  date: {
+    fontSize: 18,
+    fontFamily: "ZCOOL",
+    alignItems: 'center',
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  rowElement: {
+    marginRight: 10,
+    alignItems: "center",
+  },
+  status: {
+    width: 100,
+    height: 20,
+    backgroundColor: "gray",
+  },
+  assignee: {
+    alignItems: "center",
+    marginRight: 10,
   },
 });
 

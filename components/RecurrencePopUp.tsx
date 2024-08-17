@@ -2,41 +2,39 @@ import React, { useState } from "react";
 import { View, Text, Modal, ImageBackground } from "react-native";
 import PixelButton from "./PixelButton";
 import Dropdown from "./Dropdown";
-import { updateQuestBitStatus } from "../lib/database";
-import { Difficulty, RecurrenceValue, Status } from "../constants/enums";
+import { RecurrenceValue } from "../constants/enums";
 
 interface RecurrenceopUpProps {
   visible: boolean;
   onClose: () => void;
-  value: string;
-  questbitId?: string;
-  onUpdate?: () => void;
+  initial: string;
+  onUpdate?: (value: string) => void;
 }
 
 const RecurrencePopUp: React.FC<RecurrenceopUpProps> = ({
   visible,
   onClose,
-  value,
-  questbitId,
+  initial,
   onUpdate,
 }) => {
-  const [newStatus, setNewStatus] = useState(value);
+  const [newValue, setNewValue] = useState(initial);
 
   const handleUpdate = async () => {
     try {
-      if (questbitId) await updateQuestBitStatus(questbitId, newStatus);
-      if (onUpdate) onUpdate();
+      if (onUpdate) onUpdate(newValue);
       onClose();
     } catch (error) {
-      console.error("Error updating questbit status:", error);
+      console.error("Error updating questbit recurrence:", error);
     }
   };
 
   const items = [
-    { label: RecurrenceValue.Annually, value: RecurrenceValue.Annually},
-    { label: RecurrenceValue.BiWeekly, value: RecurrenceValue.BiWeekly},
+    { label: RecurrenceValue.NoRepeat, value: RecurrenceValue.NoRepeat },
     { label: RecurrenceValue.Daily, value: RecurrenceValue.Daily },
+    { label: RecurrenceValue.BiWeekly, value: RecurrenceValue.BiWeekly},
     { label: RecurrenceValue.Weekly, value: RecurrenceValue.Weekly},
+    { label: RecurrenceValue.Monthly, value: RecurrenceValue.Monthly},
+    { label: RecurrenceValue.Annually, value: RecurrenceValue.Annually},    
   ];
 
   return (
@@ -55,12 +53,12 @@ const RecurrencePopUp: React.FC<RecurrenceopUpProps> = ({
           >
             <View>
               <Text className="font-zcool text-xl text-brown-200 text-center px-10 pt-5">
-                Select the new difficulty of the QuestBit
+                Select the new recurrence of the QuestBit
               </Text>
               <View className="w-3/5 m-auto my-8 z-10">
                 <Dropdown
-                  initialValue={newStatus}
-                  onChangeValue={(value) => setNewStatus(value)}
+                  initialValue={newValue}
+                  onChangeValue={(value) => setNewValue(value)}
                   items={items}
                 />
               </View>

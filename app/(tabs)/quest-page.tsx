@@ -13,71 +13,43 @@ import Header from "../../components/Header";
 import { useFocusEffect, router, useLocalSearchParams } from "expo-router";
 import { Quest } from "@/constants/types";
 import QuestCard from "../../components/QuestCard";
-
-interface QuestItem {
-  item: Quest;
-}
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const QuestPage = () => {
-  const [quests, setQuests] = useState<Quest[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { quests, setQuests } = useGlobalContext();
 
-  const { refresh } = useLocalSearchParams();
-
-  const fetchQuests = async () => {
-    try {
-      const response: Quest[] = await getQuests();
-      setQuests(response);
-    } catch (error) {
-      Alert.alert("Error", (error as Error).message);
-    } finally {
-      setLoading(false);
-    }
+  const handleUpdate = (deletedQuestId: string) => {
+    setQuests((prevQuests) =>
+      prevQuests.filter((quest) => quest.$id !== deletedQuestId)
+    );
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchQuests();
-    }, [])
-  );
-
-  const handleQuestUpdate = async () => {
-    setLoading(true);
-    await fetchQuests();
-  };
-
-  if (loading) {
+  if (quests.length > 0) {
     return (
-      <View
-        className="flex-1 align-items-center"
-        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-      >
-        <ActivityIndicator size="large" />
+      <View className="flex-1">
+        <FlatList
+          data={quests}
+          keyExtractor={(item) => item.$id}
+          extraData={quests}
+          renderItem={({ item }) => (
+            <QuestCard item={item} onUpdate={handleUpdate} />
+          )}
+          ListHeaderComponent={() => (
+            <Header header={"My Quests !"} colorStyle={"green"} />
+          )}
+        />
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => router.push("/pages/create_quest")}
+        >
+          <Image
+            source={require("../../assets/HD/add_button.png")}
+            style={{ width: 48, height: 48 }}
+          />
+        </TouchableOpacity>
       </View>
     );
   }
-
-  return (
-    <View className="h-full">
-      <FlatList
-        data={quests}
-        keyExtractor={(item) => item.$id}
-        renderItem={({ item }) => (
-          <QuestCard item={item} onUpdate={handleQuestUpdate} />
-        )}
-        ListHeaderComponent={() => <Header header={"My Quests !"} colorStyle={"green"} />}
-      />
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => router.push("/pages/create_quest")}
-      >
-        <Image
-          source={require("../../assets/HD/add_button.png")}
-          style={{ width: 48, height: 48 }}
-        />
-      </TouchableOpacity>
-    </View>
-  );
 };
 
 const styles = StyleSheet.create({

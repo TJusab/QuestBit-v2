@@ -1,113 +1,197 @@
 import React, { useState, useEffect } from "react";
-import { Image, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import { Image, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Icon from "react-native-vector-icons/FontAwesome5";
 import StatusButton from "./StatusButton";
 import RecurrenceButton from "./RecurrenceButton";
 import DifficultyButton from "./DifficultyButton";
 import PixelButton from './PixelButton';
 import AddPeopleModal from "./AddPeoplePopUp";
-import { QuestBit } from "@/constants/types";
-import { User } from "@/constants/types";
-import { RecurrenceValue } from "@/constants/enums";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { getColorFromStatus, getColorFromDifficulty, getPointsFromDifficulty, getTextFromDates, getColorFromDates} from "@/utils/utils";
+import { QuestBit, User } from "@/constants/types";
+import { getColorFromStatus, getColorFromDifficulty, getEnumFromStatus, getPointsFromDifficulty, getTextFromDates, getColorFromRecurrence } from "@/utils/utils";
 import { getUserBodyIcon } from "@/utils/icon";
+import CalendarModal from "./CalendarPopUp";
+import { Difficulty } from "../constants/enums";
+import { updateQuestBit } from '../lib/database';
+
 
 interface QuestBitEditProps {
   item: QuestBit;
   toggleEditing: () => void;
-  saveChanges: () => void;
 }
 
-const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveChanges }) => {
+const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing }) => {
+  const [questBit, setQuestBit] = useState(item);
+
   const [title, setTitle] = useState(item.title);
   const [description, setDescription] = useState(item.description);
 
-  const [items, setItems] = useState([
-    { label: 'Easy | 50 XP', value: 'Easy' },
-    { label: 'Medium | 100 XP', value: 'Medium' },
-    { label: 'Every 2 Weeks', value: '2Weeks' },
-    { label: 'Monthly', value: 'Monthly' },
-    { label: 'Yearly', value: 'Yearly' },
-  ]);
-  
-  const [status, setStatus] = useState<RecurrenceValue>(RecurrenceValue.Daily);
-  const [visible, setVisible] = useState(false);
-
+  const [peopleVisible, setPeopleVisible] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedAdventurers, setSelectedAdventurers] = useState<User[]>([]);
 
   const handleAddAdventurers = (adventurers: User[]) => {
     setSelectedAdventurers(adventurers);
+    setQuestBit(prevItem => {
+      const updatedAssignees = [...prevItem.assignees || [], ...adventurers];
+      return { ...prevItem, assignees: updatedAssignees };
+    });
   };
 
-  const onChangeValue = () => {
+  const handleRemoveAssignee = (adventurer: User) => {
+    setQuestBit(prevItem => {
+      const updatedAssignees = (prevItem.assignees || []).filter(assignee => assignee.$id !== adventurer.$id);
+      return { ...prevItem, assignees: updatedAssignees };
+    });
+  };
 
+  const [isCalendarVisible, setIsCalendarVisible] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [formattedDate, setFormattedDate] = useState("");
+
+  const formatDateString = (dateString: string) => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "UTC",
+    }).format(date);
+  };
+
+  const handleDateUpdate = (dateString: string) => {
+    setSelectedDate(dateString);
+    setFormattedDate(formatDateString(dateString));
+  };
+
+  const [dueDates, setDueDates] = useState<Date[]>([]);
+  const [selectedRecurrence, setSelectedRecurrence] = useState(getTextFromDates(item.dueDates));
+  const [recurrenceColor, setRecurrenceColor] = useState<"red" | "blue" | "pink" | "yellow" | "green">(getColorFromRecurrence(selectedRecurrence));
+
+  useEffect(() => {
+    if (item.dueDates && item.dueDates.length > 0) {
+      const initialDate = item.dueDates[0].toISOString().split('T')[0];
+      setSelectedDate(initialDate);
+      setFormattedDate(formatDateString(initialDate));
+      setSelectedRecurrence(getTextFromDates(item.dueDates));
+    }
+  }, [item.dueDates]);
+
+  const handleRecurrenceUpdate = (newRecurrence: string) => {
+    setSelectedRecurrence(newRecurrence);
+    setRecurrenceColor(getColorFromRecurrence(newRecurrence));
+  };
+
+  const [selectedStatus, setSelectedStatus] = useState(item.status.toString());
+  const [statusColor, setStatusColor] = useState<"red" | "blue" | "pink" | "yellow" | "green">(getColorFromStatus(item.status));
+
+  const handleStatusUpdate = (newStatus: string) => {
+    setSelectedStatus(newStatus);
+    setStatusColor(getColorFromStatus(getEnumFromStatus(newStatus)));
   }
 
-  const [date, setDate] = useState(item.dueDates ? new Date(item.dueDates[0]) : new Date());
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [selectedDifficulty, setSelectedDifficulty] = useState(item.difficulty);
+  const [difficultyColor, setDifficultyColor] = useState<"red" | "blue" | "pink" | "yellow" | "green">(getColorFromDifficulty(item.difficulty));
 
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
+  const handleDifficultyUpdate = (newDifficulty: string) => {
+    setSelectedDifficulty(Difficulty[newDifficulty as keyof typeof Difficulty]);
+    setDifficultyColor(getColorFromDifficulty(Difficulty[newDifficulty as keyof typeof Difficulty]));
+  }
 
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleConfirm = (selectedDate: Date) => {
-    setDate(selectedDate);
-    hideDatePicker();
+  const handleSave = async () => {
+    try {
+      const updatedQuestBit = {
+        id : questBit.$id,
+        title,
+        description,
+        dueDates: [new Date(selectedDate)], 
+        difficulty: selectedDifficulty,
+        status: getEnumFromStatus(selectedStatus),
+        quests: questBit.quests, 
+        assignees: (questBit.assignees || []).map(assignee => assignee.$id) 
+      };
+      await updateQuestBit(updatedQuestBit);
+      toggleEditing()
+    } catch (error) {
+      console.error("Failed to save changes:", error);
+      Alert.alert("Error", "Failed to save changes. Please try again.");
+    }
   };
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
-      <Text style={styles.title}>{item.title}</Text>
+      <TextInput
+        style={styles.title}
+        value={title}
+        onChangeText={setTitle}
+        placeholder="Title"
+      />
       <View style={styles.row}>
         <RecurrenceButton
-          color={getColorFromDates(item.dueDates)}
-          text={getTextFromDates(item.dueDates)}
+          color={recurrenceColor}
+          text={selectedRecurrence}
           textStyle="text-sm"
+          onUpdate={handleRecurrenceUpdate}
         />
         <View style={{ marginRight: 10 }}></View>
         <Text style={[styles.label, styles.rowElement]}>Due : </Text>
-        <Text style={[styles.date, styles.rowElement]}>{item.dueDates && item.dueDates[0].toLocaleDateString()}</Text>
+        <TouchableOpacity
+          onPress={() => setIsCalendarVisible(true)}
+          className="flex-row items-center mt-2"
+        >
+          <Icon name="clock" size={20} color="#000" />
+          <Text className="font-zcool text-black text-xl">
+            {formattedDate}
+          </Text>
+        </TouchableOpacity>
+        <CalendarModal
+          visible={isCalendarVisible}
+          onClose={() => setIsCalendarVisible(false)}
+          onUpdate={handleDateUpdate}
+          initialDate={selectedDate}
+        />
       </View>
       <View>
         <Text style={styles.label}>Description</Text>
-        <Text style={styles.description}>{item.description}</Text>
+        <TextInput
+          style={styles.description}
+          value={description}
+          onChangeText={setDescription}
+          placeholder={item.description}
+          multiline
+        />
       </View>
       <View>
         <View style={styles.row}>
           <Text style={[styles.label, styles.rowElement]}>Status</Text>
           <StatusButton
-            color={getColorFromStatus(item.status)}
-            text={item.status}
+            color={statusColor}
+            text={selectedStatus.toString()}
             textStyle="text-sm"
+            onUpdate={handleStatusUpdate}
           />
         </View>
         <View style={{ height: 1, backgroundColor: 'grey', width: '100%', marginBottom: 15, marginTop: 15 }}></View>
         <View style={styles.row}>
           <Text style={[styles.label, styles.rowElement]}>Difficulty</Text>
           <DifficultyButton
-            color={getColorFromDifficulty(item.difficulty)}
-            text={item.difficulty + "  |  " + getPointsFromDifficulty(item.difficulty) + " XP"}
+            color={difficultyColor}
+            text={selectedDifficulty + "  |  " + getPointsFromDifficulty(item.difficulty) + " XP"}
             textStyle="text-sm"
+            onUpdate={handleDifficultyUpdate}
           />
         </View>
       </View>
       <View style={{ height: 1, backgroundColor: 'grey', width: '100%', marginBottom: 15, marginTop: 15 }}></View>
       <View style={styles.section}>
         <View style={styles.edit_row}>
-          <Text style={styles.edit_label}>Assignee(s)</Text>
-          <TouchableOpacity onPress={() => setVisible(true)}>
-          <AntDesign name="pluscircle" size={25} color="green" />
+          <Text style={styles.label}>Assignee(s)</Text>
+          <TouchableOpacity onPress={() => setPeopleVisible(true)}>
+            <AntDesign name="pluscircle" size={25} color="green" />
           </TouchableOpacity>
           <AddPeopleModal
-            visible={visible}
-            onClose={() => setVisible(false)}
+            visible={peopleVisible}
+            onClose={() => setPeopleVisible(false)}
             onUpdate={handleAddAdventurers}
             selectedAdventurers={selectedAdventurers}
             refreshKey={refreshKey}
@@ -115,34 +199,36 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
           />
         </View>
         <View style={styles.edit_row}>
-          {item.assignees && item.assignees.map((assignee) => (
-            <View key={assignee.$id} style={{ alignItems: "center", marginRight: 10 }}>
+          {questBit.assignees && questBit.assignees.map((assignee) => (
+            <View key={assignee.$id}>
               <Image
                 source={getUserBodyIcon(assignee.icon)}
                 style={styles.character}
               />
-              <TouchableOpacity
-                style={styles.remove_assignee}>
-                  <AntDesign name="minuscircle" size={25} color="red" />
+              <TouchableOpacity 
+                style={styles.remove_assignee}
+                onPress={() => handleRemoveAssignee(assignee)}>
+                <AntDesign name="minuscircle" size={25} color="red" />
               </TouchableOpacity>
               <Text>{assignee.username}</Text>
             </View>
           ))}
         </View>
       </View>
-      <View style={styles.row}>
-      <PixelButton
-        text="Save"
-        textStyle="text-sm"
-        color="green"
-        onPress={saveChanges}
-      />
-      <PixelButton
-        text="Cancel"
-        textStyle="text-sm"
-        color="red"
-        onPress={toggleEditing}
-      />
+      <View style={styles.buttons}>
+        <PixelButton
+          text="Cancel"
+          textStyle="text-sm"
+          color="red"
+          onPress={toggleEditing}
+        />
+        <View style={{ margin: 20 }}></View>
+        <PixelButton
+          text="Save"
+          textStyle="text-sm"
+          color="green"
+          onPress={handleSave}
+        />
       </View>
     </ScrollView>
   );
@@ -150,6 +236,7 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing, saveCh
 const styles = StyleSheet.create({
   container: {
     margin: 5,
+    marginTop: 70,
   },
   log: {
     height: 190,
@@ -203,6 +290,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 10,
   },
+  buttons: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 10,
+    justifyContent: 'center',
+  },
   rowElement: {
     marginRight: 10,
     alignItems: "center",
@@ -248,8 +341,10 @@ const styles = StyleSheet.create({
     },
     edit_row: {
       flexDirection: "row",
+      flexWrap: "wrap",
       alignItems: "center",
-      marginBottom: 10, 
+      justifyContent: "flex-start", 
+      marginBottom: 10,
     },
   });
   

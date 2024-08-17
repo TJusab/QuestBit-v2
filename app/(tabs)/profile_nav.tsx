@@ -1,11 +1,11 @@
 import React from "react";
-import { Image } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import "react-native-gesture-handler";
-import EditProfile from "../pages/edit_profile";
-import AddFriends from "../pages/add_friends";
-import FriendList from "../pages/friend_list";
-import Settings from "../pages/settings";
+import EditProfile from "../drawer_pages/edit_profile";
+import AddFriends from "../drawer_pages/add_friends";
+import FriendList from "../drawer_pages/friend_list";
+import Settings from "../drawer_pages/settings";
+import Profile from "../drawer_pages/profile";
 import CustomDrawer from "@/components/CustomDrawer";
 import FontAwesome from "react-native-vector-icons/FontAwesome6";
 
@@ -27,8 +27,29 @@ const ProfileWithDrawer = () => {
           fontSize: 18,
           marginLeft: -20,
         },
+        headerTintColor: "#FFF",
       }}
     >
+      <Drawer.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          headerTitle: "Profile",
+          headerTitleStyle: {
+            fontFamily: "PressStart2P",
+            textShadowColor: "#2E3A59",
+            textShadowOffset: { width: 3, height: 3 },
+            textShadowRadius: 0.1,
+            color: "white",
+          },
+          headerStyle: {
+            backgroundColor: "#8AD1F0",
+          },
+          drawerIcon: ({ color }) => (
+            <FontAwesome name="user-large" size={22} color={color} />
+          ),
+        }}
+      ></Drawer.Screen>
       <Drawer.Screen
         name="Edit Profile"
         component={EditProfile}

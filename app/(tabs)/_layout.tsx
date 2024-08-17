@@ -68,22 +68,6 @@ const TabsLayout = () => {
         />
 
         <Tabs.Screen
-          name="create"
-          options={{
-            title: "Create",
-            headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                name="create"
-                source={require("../../assets/HD/icons/quest.png")}
-                color={color}
-                focused={focused}
-              />
-            ),
-          }}
-        />
-
-        <Tabs.Screen
           name="leaderboard"
           options={{
             title: "Leaderboard",
