@@ -4,6 +4,7 @@ import { Image } from "react-native";
 import { Tabs } from "expo-router";
 import TabIcon from "@/components/TabIcon";
 import { getUserIcon } from "@/utils/icon";
+import { UserIcon } from "@/constants/enums";
 
 const TabsLayout = () => {
   const { user } = useGlobalContext();

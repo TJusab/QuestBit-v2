@@ -148,7 +148,7 @@ const AddFriends = () => {
       <ScrollView className="flex-1 w-full">
         <View className="bg-white rounded-b-3xl z-10 px-5">
           <View className="w-full">
-            <View className="mx-3 mb-5 mt-5" style={{ minHeight: 100 }}>
+            <View className="mb-5 mt-5" style={{ minHeight: 100 }}>
               <Text className="font-zcool text-2xl text-navy">
                 Friend requests
               </Text>

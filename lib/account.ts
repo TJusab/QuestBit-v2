@@ -1,6 +1,7 @@
 import { Account, Avatars, Databases, ID, Query } from "react-native-appwrite";
 import client, { config } from './client';
 import { documentToUser } from "@/utils/mapping";
+import { UserIcon } from "@/constants/enums";
 
 const account = new Account(client);
 const databases = new Databases(client);
@@ -12,13 +13,18 @@ const databases = new Databases(client);
  * @param username of the new user
  * @returns the new user object
  */
-export async function register(email: string, password: string, username: string) {
+export async function register(
+  email: string,
+  password: string,
+  username: string,
+  icon: UserIcon
+) {
   try {
     const newAccount = await account.create(
       ID.unique(),
       email,
       password,
-      username,
+      username
     );
 
     if (!newAccount) throw new Error("Account creation failed");
@@ -32,15 +38,22 @@ export async function register(email: string, password: string, username: string
       {
         email: email,
         username: username,
-        icon: "Witch",
+        icon: icon,
         level: 1,
-        experiencePoints: 0,
+        experiencePoints: 0
       }
     );
+    const userDocument = newUser; // Directly use newUser if it's the document
+    if (!userDocument) {
+      throw new Error("User document is undefined");
+    }
 
-    return newUser;
+    const user = documentToUser(userDocument);
+
+    return user;
   } catch (error) {
-    throw new Error((error as Error).message)
+    console.error("Registration Error:", (error as Error).message);
+    throw new Error((error as Error).message);
   }
 }
 
