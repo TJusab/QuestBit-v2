@@ -18,7 +18,7 @@ import DropDownPicker, {
   ValueType,
 } from "react-native-dropdown-picker";
 import { Divider } from "@rneui/themed";
-import { Difficulty, RecurrenceValue } from "@/constants/enums";
+import { Difficulty, Recurrence } from "@/constants/enums";
 import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import CalendarModal from "../../components/CalendarPopUp";

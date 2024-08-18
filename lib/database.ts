@@ -5,7 +5,7 @@ import { Friendship, User, Quest } from "../constants/types";
 import {
   Difficulty,
   QuestIcon,
-  RecurrenceValue,
+  Recurrence,
   Status,
 } from "../constants/enums";
 import {

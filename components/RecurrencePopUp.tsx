@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, Modal, ImageBackground } from "react-native";
 import PixelButton from "./PixelButton";
 import Dropdown from "./Dropdown";
-import { RecurrenceValue } from "../constants/enums";
+import { Recurrence } from "../constants/enums";
 
 interface RecurrenceopUpProps {
   visible: boolean;
@@ -29,12 +29,12 @@ const RecurrencePopUp: React.FC<RecurrenceopUpProps> = ({
   };
 
   const items = [
-    { label: RecurrenceValue.NoRepeat, value: RecurrenceValue.NoRepeat },
-    { label: RecurrenceValue.Daily, value: RecurrenceValue.Daily },
-    { label: RecurrenceValue.BiWeekly, value: RecurrenceValue.BiWeekly},
-    { label: RecurrenceValue.Weekly, value: RecurrenceValue.Weekly},
-    { label: RecurrenceValue.Monthly, value: RecurrenceValue.Monthly},
-    { label: RecurrenceValue.Annually, value: RecurrenceValue.Annually},    
+    { label: Recurrence.NoRepeat, value: Recurrence.NoRepeat },
+    { label: Recurrence.Daily, value: Recurrence.Daily },
+    { label: Recurrence.BiWeekly, value: Recurrence.BiWeekly},
+    { label: Recurrence.Weekly, value: Recurrence.Weekly},
+    { label: Recurrence.Monthly, value: Recurrence.Monthly},
+    { label: Recurrence.Annually, value: Recurrence.Annually},    
   ];
 
   return (
