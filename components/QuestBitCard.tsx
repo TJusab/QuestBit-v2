@@ -75,7 +75,7 @@ const QuestBitCard: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
               <Icon name="ellipsis-v" size={24} color="#408C28" />
             </TouchableOpacity>
           </View>
-          <Text className="font-zcool text-md text-justify text-gray mb-2">
+          <Text className="font-zcool text-md text-justify text-gray-100 mb-2">
             {item.description}
           </Text>
           <View className="flex-row items-center">
@@ -105,7 +105,7 @@ const QuestBitCard: React.FC<QuestBitProps> = ({ item, onUpdate }) => {
             {date && (
               <View className="flex-row items-center">
                 <Icon name="clock" size={20} color="#6E7591" />
-                <Text className="font-zcool text-gray text-md px-2">
+                <Text className="font-zcool text-gray-100 text-md px-2">
                   {formattedDate}
                 </Text>
               </View>

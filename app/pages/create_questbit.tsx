@@ -230,7 +230,7 @@ const Create = () => {
       </View>
       <View className="z-10 shadow-xl flex-1 bg-white rounded-t-2xl -mt-10">
         <View className="mx-7 mb-10 mt-7">
-          <Text className="text-gray font-zcool text-lg">
+          <Text className="text-gray-100 font-zcool text-lg">
             Quest
             <Text className="text-red font-zcool text-lg">*</Text>
           </Text>
@@ -250,7 +250,7 @@ const Create = () => {
           <Divider color="black" />
           <View className="flex-row justify-between items-center mt-5 mb-5">
             <View className="flex flex-col space-y-2">
-              <Text className="text-black font-zcool text-lg text-gray">
+              <Text className="text-black font-zcool text-lg text-gray-100">
                 Recurring QuestBit?
               </Text>
               <CheckBox
@@ -275,7 +275,7 @@ const Create = () => {
             </View>
           </View>
           <Divider color="black" />
-          <Text className="text-gray font-zcool text-lg mt-3">
+          <Text className="text-gray-100 font-zcool text-lg mt-3">
             Description
             <Text className="text-red font-zcool text-lg">*</Text>
           </Text>
@@ -292,7 +292,7 @@ const Create = () => {
           />
           <View className="flex-row">
             <View className="flex-col mr-7">
-              <Text className="text-gray font-zcool text-lg">Status</Text>
+              <Text className="text-gray-100 font-zcool text-lg">Status</Text>
               <View className="items-start">
                 <StatusButton
                   color={getColorFromStatus(status)}
@@ -303,7 +303,7 @@ const Create = () => {
             </View>
 
             <View className="flex-col">
-              <Text className="text-gray font-zcool text-lg">Difficulty</Text>
+              <Text className="text-gray-100 font-zcool text-lg">Difficulty</Text>
               <View className="items-start">
                 <DifficultyButton
                   color={getColorFromDifficulty(difficulty)}
@@ -319,7 +319,7 @@ const Create = () => {
             </View>
           </View>
           <View className="flex-row mt-5">
-            <Text className="text-gray font-zcool text-lg">Assignees </Text>
+            <Text className="text-gray-100 font-zcool text-lg">Assignees</Text>
             <TouchableOpacity onPress={() => setVisible(true)}>
               <AntDesign name="pluscircle" size={25} color="green" />
             </TouchableOpacity>

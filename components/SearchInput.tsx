@@ -19,7 +19,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
         <Icon name="search" size={20} color="#2E3A59" />
       </TouchableOpacity>
       <TextInput
-        className="flex-1 text-gray font-zcool text-lg h-full mx-2 items-center mt-1"
+        className="flex-1 text-gray-100 font-zcool text-lg h-full mx-2 items-center mt-1"
         placeholder={placeholder}
         value={value}
         onChangeText={handleChangeText}

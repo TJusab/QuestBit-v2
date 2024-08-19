@@ -44,7 +44,7 @@ const Leaderboard = () => {
       />
       <View className="px-2">
         <Text className="font-zcool text-2xl">{item.username}</Text>
-        <Text className="font-zcool text-lg text-gray">
+        <Text className="font-zcool text-lg text-gray-100">
           {item.experiencePoints} XP
         </Text>
       </View>
