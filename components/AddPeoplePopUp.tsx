@@ -13,7 +13,6 @@ import PixelButton from "./PixelButton";
 import { fetchAdventurers } from "../lib/database";
 import { getUserIcon } from "../utils/icon";
 import { User } from "../constants/types";
-import { Models } from "react-native-appwrite";
 
 interface AddPeoplePopUpProps {
   visible: boolean;
