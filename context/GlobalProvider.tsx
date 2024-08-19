@@ -50,13 +50,20 @@ const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        const res = await getCurrentUser();
-        if (res) {
+        const [user, cachedQuests, cachedQuestBits] = await Promise.all([
+          getCurrentUser(),
+          AsyncStorage.getItem("quests"),
+          AsyncStorage.getItem("questbits"),
+        ]);
+
+        if (user) {
           setIsLogged(true);
-          setUser(res);
-          await fetchAndSetData(); // Fetch data after user is set
-          await registerForPushNotifications(); // Register for push notifications
+          setUser(user);
+          if (cachedQuests) setQuests(JSON.parse(cachedQuests));
+          if (cachedQuestBits) setQuestBits(JSON.parse(cachedQuestBits));
+          fetchAndSetData();
         } else {
+          console.log("No user found, setting isLogged to false");
           setIsLogged(false);
           setUser(null);
         }
@@ -82,6 +89,12 @@ const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
     }
   }, [isLogged, user]);
 
+  useEffect(() => {
+    if (isLogged && user && !loading) {
+      registerForPushNotifications();
+    }
+  }, [isLogged, user, loading]);
+
   const fetchAndSetData = async () => {
     try {
       const [freshQuests, freshQuestBits] = await Promise.all([
@@ -89,27 +102,12 @@ const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
         getQuestBitsForUser(),
       ]);
 
-      // Load cached quests from AsyncStorage
-      const cachedQuests = await AsyncStorage.getItem("quests");
-      if (cachedQuests) {
-        setQuests(JSON.parse(cachedQuests));
-      }
-
       setQuests(freshQuests);
-
-      // Update AsyncStorage with fresh quests
-      await AsyncStorage.setItem("quests", JSON.stringify(freshQuests));
-
-      // Load cached questbits from AsyncStorage
-      const cachedQuestBits = await AsyncStorage.getItem("questbits");
-      if (cachedQuestBits) {
-        setQuestBits(JSON.parse(cachedQuestBits));
-      }
-
       setQuestBits(freshQuestBits);
 
-      // Update AsyncStorage with fresh questbits
-      await AsyncStorage.setItem("questbits", JSON.stringify(freshQuestBits));
+      // Update AsyncStorage in the background
+      AsyncStorage.setItem("quests", JSON.stringify(freshQuests));
+      AsyncStorage.setItem("questbits", JSON.stringify(freshQuestBits));
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -142,36 +140,39 @@ const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
   }, [quests]);
 
   async function registerForPushNotifications() {
-    let token;
-    if (Device.isDevice) {
-      const { status } = await Notifications.getPermissionsAsync();
-      if (status !== "granted") {
-        const { status } = await Notifications.requestPermissionsAsync();
-        if (status !== "granted") {
-          alert("Failed to get push token for push notification!");
-          return;
-        }
-      }
-      token = (
-        await Notifications.getExpoPushTokenAsync({
-          projectId: Constants.expoConfig?.extra?.eas?.projectId,
-        })
-      ).data;
-    } else {
-      alert("Must use physical device for Push Notifications");
+    if (!Device.isDevice) {
+      console.log("Push notifications are only supported on physical devices");
+      return;
     }
 
-    if (token) {
-      setExpoPushToken(token);
-      // Here you would typically send this token to your backend
-      // For example: await sendTokenToBackend(token);
-      const user = await getCurrentUser();
-      if (user == null) {
-        console.error("USER NULL WHILE SETTING NOTIFS");
-        return;
-      }
-      await saveTokenToUser(user.$id, token);
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
     }
+
+    if (finalStatus !== "granted") {
+      console.log("Failed to get push token for push notification!");
+      return;
+    }
+
+    const token = (
+      await Notifications.getExpoPushTokenAsync({
+        projectId: Constants.expoConfig?.extra?.eas?.projectId,
+      })
+    ).data;
+
+    setExpoPushToken(token);
+
+    // Save token to user in the background
+    getCurrentUser().then((user) => {
+      if (user) {
+        saveTokenToUser(user.$id, token);
+      }
+    });
 
     Notifications.setNotificationHandler({
       handleNotification: async () => ({
