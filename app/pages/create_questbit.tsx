@@ -18,7 +18,7 @@ import DropDownPicker, {
   ValueType,
 } from "react-native-dropdown-picker";
 import { Divider } from "@rneui/themed";
-import { Difficulty, RecurrenceValue } from "@/constants/enums";
+import { Difficulty, Recurrence } from "@/constants/enums";
 import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import CalendarModal from "../../components/CalendarPopUp";
@@ -148,7 +148,7 @@ const Create = () => {
     try {
       const attributes: CreateQuestBitAttributes = {
         title: title,
-        deadline: dueDate ? new Date(dueDate) : null,
+        deadline: selectedDate ? new Date(selectedDate) : null,
         quest: quest,
         isRecurring: isRecurring,
         recurrenceOption: isRecurring ? recurrenceOption : "",
@@ -162,8 +162,8 @@ const Create = () => {
       };
 
       await addQuestBit(attributes);
-      Alert.alert("Quest added successfully!");
-      router.replace("/quest-page?refresh=true");
+      Alert.alert("Questbit added successfully!");
+      router.replace("/home?refresh=true");
     } catch (error) {
       Alert.alert("Error adding questbit:", (error as Error).message);
     }

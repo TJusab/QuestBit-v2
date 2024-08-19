@@ -6,6 +6,7 @@ import { register } from "../../lib/account";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { router } from "expo-router";
 import { globalStyles } from "../global_styles";
+import { UserIcon } from "@/constants/enums";
 
 const SignUp = () => {
   const { setUser, setIsLogged } = useGlobalContext();
@@ -16,6 +17,9 @@ const SignUp = () => {
     password: "",
   });
 
+  // Define formIcon as a state variable
+  const [formIcon, setFormIcon] = useState<UserIcon | null>(null);
+
   const formFields = [
     { title: "Username", name: "username" },
     { title: "Email", name: "email", keyboardType: "email-address" as const },
@@ -25,13 +29,14 @@ const SignUp = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submit = async () => {
-    if (form.username === "" || form.email === "" || form.password === "") {
+    if (form.username === "" || form.email === "" || form.password === "" || !formIcon ) {
       Alert.alert("Error", "Please fill in all fields");
+      return;
     }
 
     setIsSubmitting(true);
     try {
-      const result = await register(form.email, form.password, form.username);
+      const result = await register(form.email, form.password, form.username, formIcon);
       setUser(result);
       setIsLogged(true);
 
@@ -56,12 +61,15 @@ const SignUp = () => {
             <Form
               form={form}
               setForm={setForm}
+              icon={formIcon} // Pass the icon state
+              setIcon={setFormIcon} // Pass the function to update the icon state
               formFields={formFields}
               linkText="Have an account already?"
               link="/log-in"
               buttonText="Sign Up"
               buttonPress={submit}
               isLoading={isSubmitting}
+              longScroll={true}
             />
           </ImageBackground>
         </View>

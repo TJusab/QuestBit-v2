@@ -32,7 +32,7 @@ export interface Quest {
   progress: number;
   icon: QuestIcon;
   questInfo?: string;
-  deadline?: Date;
+  deadline: Date;
   adventurers?: User[];
   questbits?: QuestBit[];
 }

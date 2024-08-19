@@ -11,9 +11,9 @@ import { QuestBit, User } from "@/constants/types";
 import { getColorFromStatus, getColorFromDifficulty, getEnumFromStatus, getPointsFromDifficulty, getTextFromDates, getColorFromRecurrence } from "@/utils/utils";
 import { getUserBodyIcon } from "@/utils/icon";
 import CalendarModal from "./CalendarPopUp";
-import { Difficulty } from "../constants/enums";
+import { Difficulty, Recurrence } from "../constants/enums";
 import { updateQuestBit } from '../lib/database';
-
+import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 interface QuestBitEditProps {
   item: QuestBit;
@@ -33,11 +33,15 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing }) => {
   const handleAddAdventurers = (adventurers: User[]) => {
     setSelectedAdventurers(adventurers);
     setQuestBit(prevItem => {
-      const updatedAssignees = [...prevItem.assignees || [], ...adventurers];
+      const newAdventurers = adventurers.filter(
+        adventurer => !(prevItem.assignees || []).some(assignee => assignee.$id === adventurer.$id)
+      );
+      
+      const updatedAssignees = [...(prevItem.assignees || []), ...newAdventurers];
       return { ...prevItem, assignees: updatedAssignees };
     });
   };
-
+  
   const handleRemoveAssignee = (adventurer: User) => {
     setQuestBit(prevItem => {
       const updatedAssignees = (prevItem.assignees || []).filter(assignee => assignee.$id !== adventurer.$id);
@@ -77,9 +81,120 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing }) => {
     }
   }, [item.dueDates]);
 
+  const deadline = questBit.quests.deadline;
+
   const handleRecurrenceUpdate = (newRecurrence: string) => {
     setSelectedRecurrence(newRecurrence);
     setRecurrenceColor(getColorFromRecurrence(newRecurrence));
+
+    let newDueDates: Date[] = [];
+
+    console.log("selectedDate " + selectedDate)
+
+    switch (newRecurrence) {
+      case Recurrence.NoRepeat:
+        newDueDates = [new Date(selectedDate)];
+        break;
+      case Recurrence.Daily:
+        newDueDates = calculateDailyDueDates(new Date(selectedDate), deadline);
+        break;
+      case Recurrence.Weekly:
+        newDueDates = calculateWeeklyDueDates(new Date(selectedDate), deadline);
+        break;
+      case Recurrence.BiWeekly:
+        newDueDates = calculateBiWeeklyDueDates(new Date(selectedDate), deadline);
+        break;
+      case Recurrence.Monthly:
+        newDueDates = calculateMonthlyDueDates(new Date(selectedDate), deadline);
+        break;
+      case Recurrence.Annually:
+        newDueDates = calculateAnnuallyDueDates(new Date(selectedDate), deadline);
+        break;
+      default:
+        newDueDates = [new Date(selectedDate)];
+        break;
+    }
+    console.log("info")
+    console.log(deadline)
+    console.log(newRecurrence);
+    console.log(newDueDates);
+    setDueDates(newDueDates);
+  };
+
+  const calculateDailyDueDates = (startDate: Date, deadline: Date): Date[] => {
+    let dueDates: Date[] = [];
+    let currentDate = new Date(startDate);
+
+    const deadlineUTC = new Date(deadline);
+    const currentDateUTC = new Date(currentDate.toISOString());
+  
+    while (currentDateUTC <= deadlineUTC) {
+      dueDates.push(new Date(currentDateUTC));
+      currentDateUTC.setDate(currentDateUTC.getDate() + 1);
+    }
+
+    return dueDates;
+  };
+
+  const calculateWeeklyDueDates = (startDate: Date, deadline: Date): Date[] => {
+    let dueDates: Date[] = [];
+    let currentDate = new Date(startDate);
+  
+    const deadlineUTC = new Date(deadline);
+    const currentDateUTC = new Date(currentDate.toISOString());
+  
+    while (currentDateUTC <= deadlineUTC) {
+      dueDates.push(new Date(currentDateUTC));
+      currentDateUTC.setDate(currentDateUTC.getDate() + 7);
+    }
+  
+    return dueDates;
+  };
+  
+
+  const calculateBiWeeklyDueDates = (startDate: Date, deadline: Date): Date[] => {
+    let dueDates: Date[] = [];
+    let currentDate = new Date(startDate);
+
+    const deadlineUTC = new Date(deadline);
+    const currentDateUTC = new Date(currentDate.toISOString());
+  
+    while (currentDateUTC <= deadlineUTC) {
+      dueDates.push(new Date(currentDateUTC));
+      currentDateUTC.setDate(currentDateUTC.getDate() + 14);
+    }
+
+    return dueDates;
+  };
+
+  const calculateMonthlyDueDates = (startDate: Date, deadline: Date): Date[] => {
+    let dueDates: Date[] = [];
+    let currentDate = new Date(startDate);
+
+    const deadlineUTC = new Date(deadline);
+    const currentDateUTC = new Date(currentDate.toISOString());
+
+    while (currentDateUTC <= deadlineUTC) {
+      dueDates.push(new Date(currentDateUTC));
+      currentDateUTC.setMonth(currentDateUTC.getMonth() + 1);
+    }
+
+    return dueDates;
+  };
+
+  const calculateAnnuallyDueDates = (startDate: Date, deadline: Date): Date[] => {
+    let dueDates: Date[] = [];
+    let currentDate = new Date(startDate);
+
+    const deadlineUTC = new Date(deadline);
+    const currentDateUTC = new Date(currentDate.toISOString());
+
+    while (currentDateUTC <= deadlineUTC) {
+      dueDates.push(new Date(currentDateUTC));
+      currentDateUTC.setFullYear(currentDateUTC.getFullYear() + 1);
+    }
+
+    return dueDates;
   };
 
   const [selectedStatus, setSelectedStatus] = useState(item.status.toString());
@@ -88,7 +203,7 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing }) => {
   const handleStatusUpdate = (newStatus: string) => {
     setSelectedStatus(newStatus);
     setStatusColor(getColorFromStatus(getEnumFromStatus(newStatus)));
-  }
+  };
 
   const [selectedDifficulty, setSelectedDifficulty] = useState(item.difficulty);
   const [difficultyColor, setDifficultyColor] = useState<"red" | "blue" | "pink" | "yellow" | "green">(getColorFromDifficulty(item.difficulty));
@@ -96,27 +211,28 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing }) => {
   const handleDifficultyUpdate = (newDifficulty: string) => {
     setSelectedDifficulty(Difficulty[newDifficulty as keyof typeof Difficulty]);
     setDifficultyColor(getColorFromDifficulty(Difficulty[newDifficulty as keyof typeof Difficulty]));
-  }
+  };
 
   const handleSave = async () => {
     try {
       const updatedQuestBit = {
-        id : questBit.$id,
+        id: questBit.$id,
         title,
         description,
-        dueDates: [new Date(selectedDate)], 
+        dueDates: dueDates,
         difficulty: selectedDifficulty,
         status: getEnumFromStatus(selectedStatus),
-        quests: questBit.quests, 
-        assignees: (questBit.assignees || []).map(assignee => assignee.$id) 
+        quests: questBit.quests,
+        assignees: (questBit.assignees || []).map(assignee => assignee.$id)
       };
       await updateQuestBit(updatedQuestBit);
-      toggleEditing()
+      toggleEditing();
     } catch (error) {
       console.error("Failed to save changes:", error);
       Alert.alert("Error", "Failed to save changes. Please try again.");
     }
   };
+
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>

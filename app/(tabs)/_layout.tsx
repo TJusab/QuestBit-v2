@@ -1,9 +1,13 @@
 import React from "react";
-import { View, Image, ImageSourcePropType } from "react-native";
+import { useGlobalContext } from "../../context/GlobalProvider";
+import { Image } from "react-native";
 import { Tabs } from "expo-router";
 import TabIcon from "@/components/TabIcon";
+import { getUserIcon } from "@/utils/icon";
+import { UserIcon } from "@/constants/enums";
 
 const TabsLayout = () => {
+  const { user } = useGlobalContext();
   return (
     <>
       <Tabs
@@ -86,11 +90,9 @@ const TabsLayout = () => {
             title: "ProfileNavigator",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                name="profile_nav"
-                source={require("../../assets/HD/icons/profile.png")}
-                color={color}
-                focused={focused}
+              <Image
+                source={getUserIcon(user.icon)}
+                style={{width: 40, height: 40}}
               />
             ),
           }}

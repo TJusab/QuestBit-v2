@@ -5,7 +5,7 @@ import { Friendship, User, Quest } from "../constants/types";
 import {
   Difficulty,
   QuestIcon,
-  RecurrenceValue,
+  Recurrence,
   Status,
 } from "../constants/enums";
 import {
@@ -59,6 +59,47 @@ export async function addQuest(attributes: {
     throw new Error((error as Error).message);
   }
 }
+
+/**
+ * Adds a quest to the database
+ * @param attributes the quest attributes
+ * @returns the response of adding the document
+ */
+export async function updateQuest(attributes: {
+  admin: string;
+  id: string;
+  title: string;
+  icon: QuestIcon;
+  questInfo: string;
+  adventurerIds: string[];
+  deadline: Date | null;
+  questbits: string[];
+}) {
+  try {
+    const response = await databases.updateDocument(
+      config.databaseId,
+      config.questCollectionId,
+      attributes.id,
+      {
+        owner: attributes.admin,
+        title: attributes.title,
+        progress: 0.0,
+        icon: attributes.icon,
+        questInfo: attributes.questInfo,
+        deadline: attributes.deadline,
+        adventurers: attributes.adventurerIds,
+        questbits: attributes.questbits,
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error updating quest:", error);
+    throw new Error((error as Error).message);
+  }
+}
+
+
 /**
  * Gets all the quests that a user is a part of (as owner or as adventurer)
  * @returns all of the user's quests
@@ -161,7 +202,6 @@ export async function addQuestBit(attributes: {
       config.questbitCollectionId,
       ID.unique(),
       {
-        owner: currentUser.$id,
         title: attributes.title,
         deadline: attributes.deadline,
         quest: attributes.quest,
@@ -180,7 +220,6 @@ export async function addQuestBit(attributes: {
     throw new Error((error as Error).message);
   }
 }
-
 
 /**
  * Update a questbit from the database

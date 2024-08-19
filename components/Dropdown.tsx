@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import DropDownPicker, { ItemType } from "react-native-dropdown-picker";
-import { RecurrenceValue, Status, Difficulty } from "../constants/enums";
+import { Recurrence, Status, Difficulty } from "../constants/enums";
 
 interface DropdownProps {
   initialValue: string;
   items: ItemType<string>[];
-  onChangeValue: (value: Status | RecurrenceValue | Difficulty) => void;
+  onChangeValue: (value: Status | Recurrence | Difficulty) => void;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({

@@ -1,5 +1,5 @@
 import { QuestBit } from "@/constants/types";
-import { Difficulty, RecurrenceValue, Status, UserIcon } from "../constants/enums";
+import { Difficulty, Recurrence, Status, UserIcon } from "../constants/enums";
 
 export const getButtonImage = (color: "red" | "blue" | "pink" | "yellow" | "green") => {
   switch (color) {

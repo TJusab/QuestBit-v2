@@ -52,7 +52,7 @@ const Leaderboard = () => {
   );
 
   const topThree = friends.slice(0, 3);
-  const otherFriends = friends.slice(3);
+  const otherFriends = friends.slice(3, 13);
 
   return (
     <ImageBackground
