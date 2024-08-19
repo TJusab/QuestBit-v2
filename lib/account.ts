@@ -1,6 +1,6 @@
 import { Account, Databases, ID, Query } from "react-native-appwrite";
 import client, { config } from './client';
-import { documentToUser, documentToQuest } from "@/utils/mapping";
+import { documentToUser } from "@/utils/mapping";
 import { UserIcon } from "@/constants/enums";
 
 const account = new Account(client);
