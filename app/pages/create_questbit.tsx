@@ -170,7 +170,7 @@ const Create = () => {
   };
 
   return (
-    <ScrollView className="flex-1">
+    <View className="flex-1">
       <View className="z-0 bg-blue-200 z-10 mb-3">
         <View className="w-full mt-5 mb-5">
           <View className="flex-row items-center justify-between px-4 mt-10">
@@ -373,7 +373,7 @@ const Create = () => {
         onClose={() => setIsCalendarVisible(false)}
         onUpdate={handleDateUpdate}
       />
-    </ScrollView>
+    </View>
   );
 };
 

@@ -5,15 +5,19 @@ import { getUserIcon } from "@/utils/icon";
 import GrayButton from "@/components/GrayButton";
 import StatsBox from "@/components/StatsBox";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { DrawerParamList } from "@/constants/types";
 
 /**
  * TODO: Get REAL statistics by calculating questbits completed + quests completed
  * Make Share Profile --> somehow link to a social media page?
  * Make edit profile route to drawer page
  */
+interface ProfileProps {
+  navigation: DrawerNavigationProp<DrawerParamList, 'Profile'>;
+}
 
-
-const Profile =  () => {
+const Profile: React.FC<ProfileProps> =  ({ navigation }) => {
   const { user } = useGlobalContext();
 
   if (!user) {
@@ -39,10 +43,9 @@ const Profile =  () => {
         </View>
       </View>
       <View className="flex-row justify-between mx-10 mt-5">
-        <TouchableOpacity onPress={() => console.log("edit profile clicked!")}>
+        <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
           <GrayButton text="Edit Profile" />
         </TouchableOpacity>
-        <GrayButton text="Share Profile" />
       </View>
       <View className="border-b-2 border-lightgray my-10"></View>
       <View className="flex-row justify-center">

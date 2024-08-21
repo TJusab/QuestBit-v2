@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { View, Text, FlatList, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, FlatList, ScrollView, Alert } from "react-native";
 import { Calendar, DateData } from "react-native-calendars";
 import { getQuestBitsForUser } from "../../lib/database";
 import { getQuestColor } from "../../utils/icon";
 import QuestBitCard from "../../components/QuestBitCard";
 import Header from "../../components/Header";
 import { QuestBit } from "../../constants/types";
-import moment, { Moment } from "moment";
+import moment from "moment";
+import { updateQuestBitStatus } from "../../lib/database";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 interface MarkedDate {
   dots: { color: string }[];
@@ -14,48 +16,69 @@ interface MarkedDate {
 }
 
 const CustomCalendar: React.FC = () => {
-  const [questbits, setQuestBits] = useState<QuestBit[]>([]);
+  const { questbits, setQuestBits } = useGlobalContext();
   const [markedDates, setMarkedDates] = useState<Record<string, MarkedDate>>(
     {}
   );
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedQuestbits, setSelectedQuestbits] = useState<QuestBit[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchQuestBits = async () => {
+    try {
+      const response = await getQuestBitsForUser();
+      setQuestBits(response);
+    } catch (error) {
+      Alert.alert("Error", (error as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleQuestBitUpdate = async (
+    questbitId: string,
+    newStatus: string
+  ) => {
+    setLoading(true);
+    try {
+      await updateQuestBitStatus(questbitId, newStatus);
+      await fetchQuestBits();
+    } catch (error) {
+      Alert.alert("Error", (error as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Simulated fetch from database
-    const fetchQuestBits = async () => {
-      try {
-        const response = await getQuestBitsForUser();
+    try {
+      const newMarkedDates: Record<string, MarkedDate> = {};
 
-        setQuestBits(response);
-        const newMarkedDates: Record<string, MarkedDate> = {};
-
-        response.forEach((questbit) => {
-          if (questbit.dueDates && questbit.dueDates.length > 0) {
-            const questColor = getQuestColor(questbit.quests.icon);
-            const formattedDate = moment(questbit.dueDates[0]).format(
-              "YYYY-MM-DD"
-            );
-            if (!newMarkedDates[formattedDate]) {
-              newMarkedDates[formattedDate] = { dots: [] };
-            }
-            newMarkedDates[formattedDate].dots.push({ color: questColor });
+      questbits.forEach((questbit) => {
+        if (questbit.dueDates && questbit.dueDates.length > 0) {
+          const questColor = getQuestColor(questbit.quests.icon);
+          const formattedDate = moment(questbit.dueDates[0]).format(
+            "YYYY-MM-DD"
+          );
+          if (!newMarkedDates[formattedDate]) {
+            newMarkedDates[formattedDate] = { dots: [] };
           }
-        });
-        setMarkedDates(newMarkedDates);
-      } catch (error) {
-        console.error("Error fetching quests:", error);
-      }
-    };
-
-    fetchQuestBits();
-  }, []);
+          newMarkedDates[formattedDate].dots.push({ color: questColor });
+        }
+      });
+      setMarkedDates(newMarkedDates);
+    } catch (error) {
+      console.error("Error fetching quests:", error);
+    }
+  }, [questbits]);
 
   const handleDayPress = (day: DateData) => {
     setSelectedDate(day.dateString);
     const questbitsForSelectedDate = questbits.filter((questbit) => {
       if (questbit.dueDates && questbit.dueDates.length > 0) {
-        return moment(questbit.dueDates[0]).format("YYYY-MM-DD") === day.dateString;
+        return (
+          moment(questbit.dueDates[0]).format("YYYY-MM-DD") === day.dateString
+        );
       }
     });
     setSelectedQuestbits(questbitsForSelectedDate);
@@ -128,7 +151,7 @@ const CustomCalendar: React.FC = () => {
         data={selectedQuestbits}
         keyExtractor={(questbit) => questbit.$id}
         renderItem={({ item }) => (
-          <QuestBitCard item={item} />
+          <QuestBitCard item={item} onUpdate={handleQuestBitUpdate} />
         )}
         scrollEnabled={false}
         contentContainerStyle={{ paddingBottom: 20 }}

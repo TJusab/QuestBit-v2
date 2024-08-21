@@ -57,3 +57,8 @@ export interface Friendship {
   status: FriendshipStatus;
   user: User;
 }
+
+export type DrawerParamList = {
+  Profile: undefined;
+  EditProfile: undefined;
+}

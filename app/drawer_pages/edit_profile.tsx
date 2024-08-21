@@ -4,8 +4,9 @@ import PixelButton from "@/components/PixelButton";
 import { getUserIcon } from "../../utils/icon";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import FormField from "@/components/FormField";
-import { User } from "@/constants/types";
+import { DrawerParamList, User } from "@/constants/types";
 import { saveProfileSettings } from "@/lib/account";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
 
 interface EditProfileFields {
   username: string;
@@ -13,7 +14,11 @@ interface EditProfileFields {
   password: string;
 }
 
-const EditProfile = () => {
+interface EditProfileProps {
+  navigation: DrawerNavigationProp<DrawerParamList, 'EditProfile'>
+}
+
+const EditProfile: React.FC<EditProfileProps> = ({ navigation }) => {
   const { user } = useGlobalContext();
   const loggedInUser = user as User;
 
