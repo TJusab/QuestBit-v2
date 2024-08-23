@@ -273,14 +273,14 @@ const Create = () => {
   };
 
   const handleAddQuestBit = async () => {
-    if (!title || !description || !quest) {
+    if (!title || !selectedDate || !quest || !description) {
       Alert.alert("Please fill in all the required fields.");
       return;
     }
     try {
       const attributes: CreateQuestBitAttributes = {
         title: title,
-        dueDates: selectedDate ? new Date(selectedDate) : null,
+        dueDates: new Date(selectedDate),
         quest: quest,
         isRecurring: isRecurring,
         recurrenceOption: isRecurring ? recurrenceOption : "",
@@ -332,7 +332,9 @@ const Create = () => {
               placeholderTextColor="white"
               className="text-xl mb-5"
             />
-            <Text className="text-white font-zcool text-lg mt-5">Due Date</Text>
+            <Text className="text-white font-zcool text-lg mt-5">
+              Due Date<Text className="text-red font-zcool text-lg">*</Text>
+            </Text>
             <View>
               <TouchableOpacity
                 onPress={() => setIsCalendarVisible(true)}
