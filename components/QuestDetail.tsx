@@ -133,8 +133,10 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
+    flexWrap: "wrap",
     alignItems: "center",
-    marginVertical: 10,
+    justifyContent: "flex-start", 
+    marginBottom: 10,
   },
   rowElement: {
     marginRight: 10,

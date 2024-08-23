@@ -376,6 +376,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontFamily: 'ZCOOL',
     fontSize: 32,
+    borderWidth: 2,
+    borderRadius: 15,
+    padding: 4,
   },
   username: {
     fontFamily: "ZCOOL",
@@ -396,6 +399,9 @@ const styles = StyleSheet.create({
     fontFamily: "ZCOOL",
     marginBottom: 10,
     marginTop: 10,
+    borderWidth: 2,
+    borderRadius: 15,
+    padding: 5,
   },
   date: {
     fontSize: 18,

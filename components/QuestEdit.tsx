@@ -232,6 +232,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontFamily: 'ZCOOL',
     fontSize: 32,
+    borderWidth: 2,
+    borderRadius: 15,
+    padding: 5,
   },
   username: {
     fontFamily: "ZCOOL",
@@ -252,6 +255,9 @@ const styles = StyleSheet.create({
     fontFamily: "ZCOOL",
     marginBottom: 10,
     marginTop: 10,
+    borderWidth: 2,
+    borderRadius: 15,
+    padding: 5
   },
   buttons: {
     flexDirection: "row",
@@ -269,8 +275,10 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
+    flexWrap: "wrap",
     alignItems: "center",
-    marginVertical: 10,
+    justifyContent: "flex-start", 
+    marginBottom: 10,
   },
   rowElement: {
     marginRight: 10,
