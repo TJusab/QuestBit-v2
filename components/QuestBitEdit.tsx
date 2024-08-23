@@ -312,6 +312,7 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing }) => {
             selectedAdventurers={selectedAdventurers}
             refreshKey={refreshKey}
             text='Assign adventurers to this QuestBit'
+            except={questBit.assignees[0]} //need to make multiple people can be exception
           />
         </View>
         <View style={styles.edit_row}>
@@ -369,7 +370,7 @@ const styles = StyleSheet.create({
   character: {
     width: 90,
     height: 90,
-    marginBottom: 10,
+    marginTop: 13,
   },
   title: {
     marginTop: 20,

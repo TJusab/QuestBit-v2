@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   character: {
     width: 90,
     height: 90,
-    marginBottom: 10,
+    marginTop: 13,
   },
   title: {
     marginTop: 20,
@@ -150,9 +150,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   row: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 10,
+      flexDirection: "row",
+      flexWrap: "wrap",
+      alignItems: "center",
+      justifyContent: "flex-start", 
+      marginBottom: 10,
   },
   rowElement: {
     marginRight: 10,
