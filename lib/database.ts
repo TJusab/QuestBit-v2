@@ -2,12 +2,7 @@ import { Databases, Query, ID } from "react-native-appwrite";
 import client, { config } from "./client";
 import { getCurrentUser } from "./account";
 import { Friendship, User, Quest } from "../constants/types";
-import {
-  Difficulty,
-  QuestIcon,
-  Recurrence,
-  Status,
-} from "../constants/enums";
+import { Difficulty, QuestIcon, Recurrence, Status } from "../constants/enums";
 import {
   documentToFriendship,
   documentToQuest,
@@ -99,7 +94,6 @@ export async function updateQuest(attributes: {
   }
 }
 
-
 /**
  * Gets all the quests that a user is a part of (as owner or as adventurer)
  * @returns all of the user's quests
@@ -184,7 +178,7 @@ export async function deleteQuest(id: string) {
  */
 export async function addQuestBit(attributes: {
   title: string;
-  deadline: Date | null;
+  dueDates: Date | null;
   quest: Quest;
   isRecurring: boolean;
   recurrenceOption: string;
@@ -203,7 +197,7 @@ export async function addQuestBit(attributes: {
       ID.unique(),
       {
         title: attributes.title,
-        deadline: attributes.deadline,
+        dueDates: attributes.dueDates,
         quest: attributes.quest,
         isRecurring: attributes.isRecurring,
         recurrenceOption: attributes.recurrenceOption,
@@ -644,7 +638,7 @@ export async function saveTokenToUser(userId: string, newToken: string) {
     const result = await databases.listDocuments(
       config.databaseId,
       config.userCollectionId,
-      [Query.equal('$id', userId)]
+      [Query.equal("$id", userId)]
     );
 
     const existingToken = result.documents[0]?.token;

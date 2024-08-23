@@ -10,7 +10,7 @@ import {
   Alert,
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CheckBox from "expo-checkbox";
 import DropDownPicker, {
@@ -40,7 +40,7 @@ import { getUserBodyIcon } from "@/utils/icon";
 
 interface CreateQuestBitAttributes {
   title: string;
-  deadline: Date | null;
+  dueDates: Date | null;
   quest: Quest;
   isRecurring: boolean;
   recurrenceOption: string;
@@ -74,26 +74,24 @@ const Create = () => {
 
   const [questsOptions, setQuestsOptions] = useState<Quest[]>([]);
 
-  const fetchQuests = async () => {
-    try {
-      const response: Quest[] = await getQuests();
-      setQuestsOptions(response);
-    } catch (error) {
-      Alert.alert("Error", (error as Error).message);
-    }
-  };
-
-  fetchQuests();
-
-  const questDropdown: ItemType<ValueType>[] = [];
-
-  for (const key of questsOptions) {
-    let currQuest: ItemType<ValueType> = {
-      label: key.title,
-      value: key.toString(),
+  useEffect(() => {
+    const fetchQuests = async () => {
+      try {
+        const response: Quest[] = await getQuests();
+        setQuestsOptions(response);
+      } catch (error) {
+        Alert.alert("Error", (error as Error).message);
+      }
     };
-    questDropdown.push(currQuest);
-  }
+
+    fetchQuests();
+  }, []); // Dependency array is empty, so this effect only runs once on mount
+
+  // Convert quest options into dropdown items
+  const questDropdown: ItemType<ValueType>[] = questsOptions.map((key) => ({
+    label: key.title,
+    value: key.title,
+  }));
 
   const recurrenceOptions = [
     { label: "Daily", value: "Daily" },
@@ -148,7 +146,7 @@ const Create = () => {
     try {
       const attributes: CreateQuestBitAttributes = {
         title: title,
-        deadline: selectedDate ? new Date(selectedDate) : null,
+        dueDates: selectedDate ? new Date(selectedDate) : null,
         quest: quest,
         isRecurring: isRecurring,
         recurrenceOption: isRecurring ? recurrenceOption : "",
@@ -240,7 +238,7 @@ const Create = () => {
               value={quest}
               items={questDropdown}
               setOpen={setQuestOpen}
-              setValue={(newQuest) => setQuest(newQuest)}
+              setValue={setQuest}
               placeholder="Select quest"
               style={styles.dropdown}
               dropDownContainerStyle={styles.dropdown}
@@ -303,7 +301,9 @@ const Create = () => {
             </View>
 
             <View className="flex-col">
-              <Text className="text-gray-100 font-zcool text-lg">Difficulty</Text>
+              <Text className="text-gray-100 font-zcool text-lg">
+                Difficulty
+              </Text>
               <View className="items-start">
                 <DifficultyButton
                   color={getColorFromDifficulty(difficulty)}
