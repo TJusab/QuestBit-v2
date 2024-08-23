@@ -50,7 +50,7 @@ export interface QuestBit {
   status: Status;
   difficulty: Difficulty;
   description: string;
-  assignees?: User[];
+  assignees: User[];
   dueDates: Date[];
   quests: Quest;
 }
