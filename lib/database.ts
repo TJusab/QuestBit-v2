@@ -178,14 +178,12 @@ export async function deleteQuest(id: string) {
  */
 export async function addQuestBit(attributes: {
   title: string;
-  dueDates: Date | null;
-  quest: Quest;
-  isRecurring: boolean;
-  recurrenceOption: string;
+  dueDates: Date[];
+  quests: Quest;
   description: string;
   status: Status;
   difficulty: Difficulty;
-  adventurerIds: string[];
+  assignees: User[];
 }) {
   try {
     const currentUser = await getCurrentUser();
@@ -198,13 +196,11 @@ export async function addQuestBit(attributes: {
       {
         title: attributes.title,
         dueDates: attributes.dueDates,
-        quest: attributes.quest,
-        isRecurring: attributes.isRecurring,
-        recurrenceOption: attributes.recurrenceOption,
+        quests: attributes.quests,
         description: attributes.description,
         status: attributes.status,
         difficulty: attributes.difficulty,
-        adventurers: attributes.adventurerIds, // only send adventurer ids
+        assignees: attributes.assignees,
       }
     );
 
