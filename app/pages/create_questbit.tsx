@@ -10,7 +10,7 @@ import {
   Alert,
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CheckBox from "expo-checkbox";
 import DropDownPicker, {
@@ -74,8 +74,6 @@ const Create = () => {
   const [visible, setVisible] = useState(false);
 
   const [questsOptions, setQuestsOptions] = useState<Quest[]>([]);
-
-  let newDueDates: Date[] = [];
 
   useEffect(() => {
     const fetchQuests = async () => {
@@ -144,9 +142,16 @@ const Create = () => {
   };
   */
 
-  const handleRecurrenceUpdate = () => {
-    console.log("selectedDate " + selectedDate);
+  useEffect(() => {
+    if (recurrenceOption) {
+      handleRecurrenceUpdate(recurrenceOption);
+    }
+  }, [recurrenceOption]);
+
+  const handleRecurrenceUpdate = useCallback((newRecurrence: string) => {
+    let newDueDates: Date[] = [];
     const deadline = new Date(selectedDate);
+    setRecurrenceOption(newRecurrence);
 
     switch (recurrenceOption) {
       case Recurrence.NoRepeat:
@@ -180,11 +185,8 @@ const Create = () => {
         newDueDates = [new Date(selectedDate)];
         break;
     }
-    console.log("info");
-    console.log(deadline);
-    console.log(newDueDates);
     setDueDates(newDueDates);
-  };
+  }, []);
 
   const calculateDailyDueDates = (startDate: Date, deadline: Date): Date[] => {
     let dueDates: Date[] = [];
@@ -396,8 +398,8 @@ const Create = () => {
                 value={recurrenceOption}
                 items={recurrenceOptions}
                 setOpen={setOpen}
-                onChangeValue={handleRecurrenceUpdate}
                 setValue={setRecurrenceOption}
+                onChangeValue={(value) => {}}
                 placeholder="Select recurrence option"
                 style={styles.dropdown}
                 dropDownContainerStyle={styles.dropdown}
