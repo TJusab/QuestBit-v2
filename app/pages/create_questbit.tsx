@@ -52,7 +52,8 @@ interface CreateQuestBitAttributes {
 
 const Create = () => {
   const [title, setTitle] = useState("");
-  const [dueDate, setDueDate] = useState<Date | null>(null);
+  const [deadline, setDeadline] = useState<Date | null>(null);
+  const [dueDates, setDueDates] = useState<Date[]>([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isRecurring, setIsRecurring] = useState(false);
   const [recurrenceOption, setRecurrenceOption] = useState("");
@@ -103,6 +104,7 @@ const Create = () => {
     { label: "Annually", value: "Annually" },
   ];
 
+  /*
   const handleDateChange = (
     event: DateTimePickerEvent,
     selectedDate: Date | undefined
@@ -111,6 +113,7 @@ const Create = () => {
     setShowDatePicker(false);
     setDueDate(currentDate);
   };
+  */
 
   const handleDateUpdate = (dateString: string) => {
     setSelectedDate(dateString);
@@ -127,7 +130,7 @@ const Create = () => {
   const handleAddAdventurers = (adventurers: User[]) => {
     setSelectedAdventurers(adventurers);
   };
-
+  /*
   const handleSubmit = () => {
     // Handle form submission
     console.log({
@@ -139,10 +142,11 @@ const Create = () => {
       status,
     });
   };
+  */
 
   const handleRecurrenceUpdate = () => {
     console.log("selectedDate " + selectedDate);
-    const deadline = quest.deadline;
+    const deadline = new Date(selectedDate);
 
     switch (recurrenceOption) {
       case Recurrence.NoRepeat:
