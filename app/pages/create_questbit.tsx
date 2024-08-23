@@ -74,6 +74,8 @@ const Create = () => {
 
   const [questsOptions, setQuestsOptions] = useState<Quest[]>([]);
 
+  let newDueDates: Date[] = [];
+
   useEffect(() => {
     const fetchQuests = async () => {
       try {
@@ -98,7 +100,7 @@ const Create = () => {
     { label: "Weekly", value: "Weekly" },
     { label: "Biweekly", value: "Biweekly" },
     { label: "Monthly", value: "Monthly" },
-    { label: "Anually", value: "Anually" },
+    { label: "Annually", value: "Annually" },
   ];
 
   const handleDateChange = (
@@ -136,6 +138,132 @@ const Create = () => {
       description,
       status,
     });
+  };
+
+  const handleRecurrenceUpdate = () => {
+    console.log("selectedDate " + selectedDate);
+    const deadline = quest.deadline;
+
+    switch (recurrenceOption) {
+      case Recurrence.NoRepeat:
+        newDueDates = [new Date(selectedDate)];
+        break;
+      case Recurrence.Daily:
+        newDueDates = calculateDailyDueDates(new Date(selectedDate), deadline);
+        break;
+      case Recurrence.Weekly:
+        newDueDates = calculateWeeklyDueDates(new Date(selectedDate), deadline);
+        break;
+      case Recurrence.BiWeekly:
+        newDueDates = calculateBiWeeklyDueDates(
+          new Date(selectedDate),
+          deadline
+        );
+        break;
+      case Recurrence.Monthly:
+        newDueDates = calculateMonthlyDueDates(
+          new Date(selectedDate),
+          deadline
+        );
+        break;
+      case Recurrence.Annually:
+        newDueDates = calculateAnnuallyDueDates(
+          new Date(selectedDate),
+          deadline
+        );
+        break;
+      default:
+        newDueDates = [new Date(selectedDate)];
+        break;
+    }
+    console.log("info");
+    console.log(deadline);
+    console.log(newDueDates);
+    setDueDates(newDueDates);
+  };
+
+  const calculateDailyDueDates = (startDate: Date, deadline: Date): Date[] => {
+    let dueDates: Date[] = [];
+    let currentDate = new Date(startDate);
+
+    const deadlineUTC = new Date(deadline);
+    const currentDateUTC = new Date(currentDate.toISOString());
+
+    while (currentDateUTC <= deadlineUTC) {
+      dueDates.push(new Date(currentDateUTC));
+      currentDateUTC.setDate(currentDateUTC.getDate() + 1);
+    }
+
+    return dueDates;
+  };
+
+  const calculateWeeklyDueDates = (startDate: Date, deadline: Date): Date[] => {
+    let dueDates: Date[] = [];
+    let currentDate = new Date(startDate);
+
+    const deadlineUTC = new Date(deadline);
+    const currentDateUTC = new Date(currentDate.toISOString());
+
+    while (currentDateUTC <= deadlineUTC) {
+      dueDates.push(new Date(currentDateUTC));
+      currentDateUTC.setDate(currentDateUTC.getDate() + 7);
+    }
+
+    return dueDates;
+  };
+
+  const calculateBiWeeklyDueDates = (
+    startDate: Date,
+    deadline: Date
+  ): Date[] => {
+    let dueDates: Date[] = [];
+    let currentDate = new Date(startDate);
+
+    const deadlineUTC = new Date(deadline);
+    const currentDateUTC = new Date(currentDate.toISOString());
+
+    while (currentDateUTC <= deadlineUTC) {
+      dueDates.push(new Date(currentDateUTC));
+      currentDateUTC.setDate(currentDateUTC.getDate() + 14);
+    }
+
+    return dueDates;
+  };
+
+  const calculateMonthlyDueDates = (
+    startDate: Date,
+    deadline: Date
+  ): Date[] => {
+    let dueDates: Date[] = [];
+    let currentDate = new Date(startDate);
+
+    const deadlineUTC = new Date(deadline);
+    const currentDateUTC = new Date(currentDate.toISOString());
+
+    while (currentDateUTC <= deadlineUTC) {
+      dueDates.push(new Date(currentDateUTC));
+      currentDateUTC.setMonth(currentDateUTC.getMonth() + 1);
+    }
+
+    return dueDates;
+  };
+
+  const calculateAnnuallyDueDates = (
+    startDate: Date,
+    deadline: Date
+  ): Date[] => {
+    let dueDates: Date[] = [];
+    let currentDate = new Date(startDate);
+
+    const deadlineUTC = new Date(deadline);
+    const currentDateUTC = new Date(currentDate.toISOString());
+
+    while (currentDateUTC <= deadlineUTC) {
+      dueDates.push(new Date(currentDateUTC));
+      currentDateUTC.setFullYear(currentDateUTC.getFullYear() + 1);
+    }
+
+    return dueDates;
   };
 
   const handleAddQuestBit = async () => {
@@ -264,7 +392,8 @@ const Create = () => {
                 value={recurrenceOption}
                 items={recurrenceOptions}
                 setOpen={setOpen}
-                setValue={(newValue) => setRecurrenceOption(newValue)}
+                onChangeValue={handleRecurrenceUpdate}
+                setValue={setRecurrenceOption}
                 placeholder="Select recurrence option"
                 style={styles.dropdown}
                 dropDownContainerStyle={styles.dropdown}
