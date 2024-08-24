@@ -40,14 +40,12 @@ import { getUserBodyIcon } from "@/utils/icon";
 
 interface CreateQuestBitAttributes {
   title: string;
-  dueDates: Date | null;
-  quest: Quest;
-  isRecurring: boolean;
-  recurrenceOption: string;
+  dueDates: Date[];
+  quests: Quest;
   description: string;
   status: Status;
   difficulty: Difficulty;
-  adventurerIds: string[];
+  assignees: User[];
 }
 
 const Create = () => {
@@ -74,6 +72,8 @@ const Create = () => {
   const [visible, setVisible] = useState(false);
 
   const [questsOptions, setQuestsOptions] = useState<Quest[]>([]);
+
+  let newDueDates: Date[] = [];
 
   useEffect(() => {
     const fetchQuests = async () => {
@@ -280,17 +280,12 @@ const Create = () => {
     try {
       const attributes: CreateQuestBitAttributes = {
         title: title,
-        dueDates: new Date(selectedDate),
-        quest: quest,
-        isRecurring: isRecurring,
-        recurrenceOption: isRecurring ? recurrenceOption : "",
+        dueDates: newDueDates,
+        quests: quest,
         description: description,
         status: status,
         difficulty: difficulty,
-        adventurerIds:
-          selectedAdventurers.length > 0
-            ? selectedAdventurers.map((adventurer) => adventurer.$id)
-            : [],
+        assignees: selectedAdventurers,
       };
 
       await addQuestBit(attributes);
