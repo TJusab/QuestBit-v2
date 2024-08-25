@@ -141,7 +141,7 @@ const AddFriends = () => {
 
   return (
     <ImageBackground
-      source={require("../../assets/HD/blue_sky.png")}
+      source={require("../../assets/HD/backgrounds/sky_clouds.png")}
       className="flex-1"
       resizeMode="cover"
     >

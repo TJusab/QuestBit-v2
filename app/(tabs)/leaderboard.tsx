@@ -56,7 +56,7 @@ const Leaderboard = () => {
 
   return (
     <ImageBackground
-      source={require("../../assets/HD/blue_sky_no_clouds.png")}
+      source={require("../../assets/HD/backgrounds/sky.png")}
       className="flex-1"
       resizeMode="cover"
     >

@@ -73,7 +73,7 @@ const Home: React.FC = () => {
         ) : (
           <View>
             <ImageBackground
-              source={require("../../assets/HD/blue_sky.png")}
+              source={require("../../assets/HD/backgrounds/sky_clouds.png")}
               className="w-full h-full"
               resizeMode="stretch"
             >

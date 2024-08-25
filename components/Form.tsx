@@ -52,8 +52,8 @@ const Form: React.FC<FormProps> = ({
     <ImageBackground
       source={
         longScroll
-          ? require("../assets/HD/long_scroll.png")
-          : require("../assets/HD/scroll.png")
+          ? require("../assets/HD/scrolls/scroll_long.png")
+          : require("../assets/HD/scrolls/scroll.png")
       }
       style={{
         width: 400,

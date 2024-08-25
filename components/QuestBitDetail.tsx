@@ -89,7 +89,7 @@ const QuestBitDetail: React.FC<QuestBitDetailProps> = ({ item }) => {
         <Text style={styles.label}>QuestBit Diary</Text>
         <View style={styles.log}>
           <Image
-            source={require("../assets/HD/scroll_small.png")}
+            source={require("../assets/HD/scrolls/scroll_small.png")}
             style={styles.scroll}
           />
         </View>

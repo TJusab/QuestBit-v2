@@ -58,7 +58,7 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
         contentContainerStyle={{ backgroundColor: "#61C6ED" }}
       >
         <ImageBackground
-          source={require("../assets/HD/blue_sky.png")}
+          source={require("../assets/HD/backgrounds/sky_clouds.png")}
           className="p-5"
           resizeMode="cover"
         >

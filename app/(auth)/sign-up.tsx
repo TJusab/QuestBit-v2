@@ -53,7 +53,7 @@ const SignUp = () => {
       <ScrollView contentContainerStyle={{ height: "100%" }}>
         <View className="flex-1 w-full h-full">
           <ImageBackground
-            source={require("../../assets/HD/background1.png")}
+            source={require("../../assets/HD/backgrounds/sky_grass.png")}
             className="flex-1 items-center justify-center"
             resizeMode="cover"
           >
