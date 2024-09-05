@@ -312,22 +312,19 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing }) => {
             selectedAdventurers={selectedAdventurers}
             refreshKey={refreshKey}
             text='Assign adventurers to this QuestBit'
-            except={questBit.assignees[0]} //need to make multiple people can be exception
+            except={questBit.assignees[0]} 
           />
         </View>
-        <View style={styles.edit_row}>
+        <View style={styles.centeredRow}>
           {questBit.assignees && questBit.assignees.map((assignee) => (
-            <View key={assignee.$id}>
-              <Image
-                source={getUserBodyIcon(assignee.icon)}
-                style={styles.character}
-              />
-              <TouchableOpacity 
-                style={styles.remove_assignee}
-                onPress={() => handleRemoveAssignee(assignee)}>
-                <AntDesign name="minuscircle" size={25} color="red" />
-              </TouchableOpacity>
-              <Text>{assignee.username}</Text>
+            <View key={assignee.$id} style={styles.assignee}>
+                <Image source={getUserBodyIcon(assignee.icon)} style={styles.character} />
+                <TouchableOpacity
+                  style={styles.remove_assignee}
+                  onPress={() => handleRemoveAssignee(assignee)}>
+                  <AntDesign name="minuscircle" size={25} color="red" />
+                </TouchableOpacity>
+              <Text style={styles.username}>{assignee.username}</Text>
             </View>
           ))}
         </View>
@@ -355,18 +352,6 @@ const styles = StyleSheet.create({
     margin: 5,
     marginTop: 70,
   },
-  log: {
-    height: 190,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 30,
-  },
-  scroll: {
-    width: "120%",
-    height: "100%",
-    marginBottom: 10,
-    marginTop: -35,
-  },
   character: {
     width: 90,
     height: 90,
@@ -383,7 +368,7 @@ const styles = StyleSheet.create({
   username: {
     fontFamily: "ZCOOL",
     fontSize: 18,
-    marginBottom: -10,
+    textAlign: "center",
   },
   section: {
     marginBottom: 15,
@@ -413,6 +398,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 10,
   },
+  centeredRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+  },
   buttons: {
     flexDirection: "row",
     alignItems: "center",
@@ -431,17 +421,18 @@ const styles = StyleSheet.create({
   assignee: {
     alignItems: "center",
     marginRight: 10,
+    position: 'relative'
   },
-    remove_assignee: {
-      position: 'absolute',
-      bottom: 0,
-      right: 0,
-      width: 28,
-      height: 28,
-      borderRadius: 12,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
+  remove_assignee: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 28,
+    height: 28,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
     button: {
       padding: 10,
       marginTop: 10,

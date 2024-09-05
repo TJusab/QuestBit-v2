@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
-import StatusButton from "./StatusButton";
 import { Quest } from "@/constants/types";
 import { getUserBodyIcon } from "@/utils/icon";
 import { getQuestIcon } from "@/utils/icon";
@@ -110,6 +109,7 @@ const styles = StyleSheet.create({
     fontFamily: "ZCOOL",
     fontSize: 18,
     marginBottom: -10,
+    textAlign: "center",
   },
   section: {
     marginBottom: 15,

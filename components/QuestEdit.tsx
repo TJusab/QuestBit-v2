@@ -68,9 +68,8 @@ const QuestEdit: React.FC<QuestEditProps> = ({ item, toggleEditing }) => {
 
   const handleSave = async () => {
     try {
-      // Ensure currentUser and quest are properly defined and accessible
       const updatedQuest = {
-        admin: quest.owner.$id, // Assuming quest.owner is meant to be admin
+        admin: quest.owner.$id,
         id: quest.$id,
         title: title || "",
         questInfo: info || "",
@@ -92,10 +91,7 @@ const QuestEdit: React.FC<QuestEditProps> = ({ item, toggleEditing }) => {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
-      <Image
-          source={getQuestIcon(selectedIcon)}
-          style={{ width: 140, height: 140 }}
-        />
+      <Image source={getQuestIcon(selectedIcon)} style={{ width: 140, height: 140 }} />
       <TextInput
         style={styles.title}
         value={title}
@@ -103,9 +99,9 @@ const QuestEdit: React.FC<QuestEditProps> = ({ item, toggleEditing }) => {
         placeholder={item.title}
       />
       <View style={styles.row}>
-        <Text style={[styles.label, styles.rowElement]}>Due : </Text>
+        <Text style={[styles.label, styles.rowElement]}>Due :</Text>
         <TouchableOpacity onPress={() => setIsCalendarVisible(true)}>
-        <Text className="font-zcool text-black text-xl">{formattedDate}</Text>
+          <Text className="font-zcool text-black text-xl">{formattedDate}</Text>
         </TouchableOpacity>
         <CalendarModal
           visible={isCalendarVisible}
@@ -126,12 +122,11 @@ const QuestEdit: React.FC<QuestEditProps> = ({ item, toggleEditing }) => {
       <View style={{ height: 1, backgroundColor: 'grey', width: '100%', marginBottom: 15, marginTop: 15 }}></View>
       <View style={styles.section}>
         <Text style={styles.label}>Admin</Text>
-        <View style={styles.row}>
-          <View style={styles.icon}>
-            <Image
-              source={getUserBodyIcon(item.owner.icon)}
-              style={styles.character}
-            />
+        <View style={styles.centeredRow}>
+          <View style={styles.assignee}>
+            <View>
+              <Image source={getUserBodyIcon(item.owner.icon)} style={styles.character} />
+            </View>
             <Text style={styles.username}>{item.owner.username}</Text>
           </View>
         </View>
@@ -140,50 +135,39 @@ const QuestEdit: React.FC<QuestEditProps> = ({ item, toggleEditing }) => {
         <View style={styles.row}>
           <Text style={styles.label}>Assignee(s)</Text>
           <TouchableOpacity onPress={() => setPeopleVisible(true)}>
-              <AntDesign name="pluscircle" size={25} color="green" />
+            <AntDesign name="pluscircle" size={25} color="green" />
           </TouchableOpacity>
         </View>
         <AddPeopleModal
-            visible={peopleVisible}
-            onClose={() => setPeopleVisible(false)}
-            onUpdate={handleAddAdventurers}
-            selectedAdventurers={selectedAdventurers}
-            refreshKey={refreshKey}
-            text='Assign adventurers to this Quest'
-            except={item.owner}
-          />
-        <View style={styles.row}>
+          visible={peopleVisible}
+          onClose={() => setPeopleVisible(false)}
+          onUpdate={handleAddAdventurers}
+          selectedAdventurers={selectedAdventurers}
+          refreshKey={refreshKey}
+          text="Assign adventurers to this Quest"
+          except={item.owner}
+        />
+        <View style={styles.centeredRow}>
           {quest.adventurers && quest.adventurers.map((assignee) => (
-            <View key={assignee.$id}>
-              <Image
-                source={getUserBodyIcon(assignee.icon)}
-                style={styles.character}
-              />
-              <TouchableOpacity 
-                style={styles.remove_assignee}
-                onPress={() => handleRemoveAssignee(assignee)}>
-                <AntDesign name="minuscircle" size={25} color="red" />
-              </TouchableOpacity>
-              <Text>{assignee.username}</Text>
+            <View key={assignee.$id} style={styles.assignee}>
+              <View>
+                <Image source={getUserBodyIcon(assignee.icon)} style={styles.character} />
+                <TouchableOpacity
+                  style={styles.remove_assignee}
+                  onPress={() => handleRemoveAssignee(assignee)}>
+                  <AntDesign name="minuscircle" size={25} color="red" />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.username}>{assignee.username}</Text>
             </View>
           ))}
         </View>
       </View>
 
       <View style={styles.buttons}>
-        <PixelButton
-          text="Cancel"
-          textStyle="text-sm"
-          color="red"
-          onPress={toggleEditing}
-        />
+        <PixelButton text="Cancel" textStyle="text-sm" color="red" onPress={toggleEditing} />
         <View style={{ margin: 20 }}></View>
-        <PixelButton
-          text="Save"
-          textStyle="text-sm"
-          color="green"
-          onPress={handleSave}
-        />
+        <PixelButton text="Save" textStyle="text-sm" color="green" onPress={handleSave} />
       </View>
     </ScrollView>
   );
@@ -194,6 +178,17 @@ const styles = StyleSheet.create({
     margin: 5,
     marginTop: 70,
   },
+  row: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    justifyContent: "flex-start", 
+    marginTop: 10,
+  },
+  rowElement: {
+    marginRight: 10,
+    alignItems: "center",
+  },
   remove_assignee: {
     position: 'absolute',
     bottom: 0,
@@ -203,25 +198,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  edit_row: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "center",
-    justifyContent: "flex-start", 
-    marginBottom: 10,
-  },
-  log: {
-    height: 190,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 30,
-  },
-  scroll: {
-    width: "120%",
-    height: "100%",
-    marginBottom: 10,
-    marginTop: -35,
   },
   character: {
     width: 90,
@@ -239,7 +215,8 @@ const styles = StyleSheet.create({
   username: {
     fontFamily: "ZCOOL",
     fontSize: 18,
-    marginBottom: -10,
+    textAlign: "center",
+    marginTop: -5,
   },
   section: {
     marginBottom: 15,
@@ -249,6 +226,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontFamily: "ZCOOL",
     color: "gray",
+    marginBottom: 10,
   },
   description: {
     fontSize: 18,
@@ -257,7 +235,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderWidth: 2,
     borderRadius: 15,
-    padding: 5
+    padding: 5,
   },
   buttons: {
     flexDirection: "row",
@@ -265,29 +243,11 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     justifyContent: 'center',
   },
-  date: {
-    fontSize: 18,
-    fontFamily: "ZCOOL",
+  centeredRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
-  },
-  icon: {
-    marginTop: 10,
-  },
-  row: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "center",
-    justifyContent: "flex-start", 
-    marginBottom: 10,
-  },
-  rowElement: {
-    marginRight: 10,
-    alignItems: "center",
-  },
-  status: {
-    width: 100,
-    height: 20,
-    backgroundColor: "gray",
+
   },
   assignee: {
     alignItems: "center",
