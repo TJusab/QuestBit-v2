@@ -57,7 +57,7 @@ const AddPeoplePopUp: React.FC<AddPeoplePopUpProps> = ({
 
   useEffect(() => {
     getAdventurers();
-  }, []);
+  }, [except]);
 
   const handleAdventurerPress = (adventurer: User) => {
     const index = selectedAdventurers.indexOf(adventurer);
@@ -94,13 +94,13 @@ const AddPeoplePopUp: React.FC<AddPeoplePopUpProps> = ({
             resizeMode="contain"
           >
             <View className="absolute">
-              <Text className="font-zcool text-xl text-brown-200 text-center px-10">
+              <Text className="font-zcool text-xl text-brown-200 text-center px-10 pt-5">
                 {text}
               </Text>
               <ScrollView
                 contentContainerStyle={{ alignItems: "center" }}
                 showsVerticalScrollIndicator={true}
-                style={{ maxHeight: 100}}
+                style={{ maxHeight: 140, maxWidth: 250, marginLeft: 40}}
               >
                 <View className="flex-wrap flex-row justify-center">
                   {items.length > 0 &&
@@ -130,18 +130,20 @@ const AddPeoplePopUp: React.FC<AddPeoplePopUpProps> = ({
                     ))}
                 </View>
               </ScrollView>
-              <View className="flex-row items-center justify-center ml-10 mt-5">
+              <View className="flex-row items-center justify-center ml-6 mt-2">
                 <PixelButton
                   text="Cancel"
                   textStyle="text-sm"
                   color="red"
                   onPress={onClose}
                 />
-                <PixelButton
-                  text="Add"
-                  textStyle="text-sm"
-                  onPress={addAdventurers}
-                />
+                <View className="m-2">
+                  <PixelButton
+                    text="Add"
+                    textStyle="text-sm"
+                    onPress={addAdventurers}
+                  />
+                </View>
               </View>
             </View>
           </ImageBackground>

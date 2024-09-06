@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import {
-  ScrollView,
+  FlatList,
   View,
   Text,
   TouchableOpacity,
@@ -25,6 +25,7 @@ import CalendarModal from "../../components/CalendarPopUp";
 import { addQuestBit, getQuests } from "../../lib/database";
 import { Status } from "../../constants/enums";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import PixelButton from "@/components/PixelButton";
 
 import { User, Quest } from "@/constants/types";
 
@@ -68,10 +69,14 @@ const Create = () => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedAdventurers, setSelectedAdventurers] = useState<User[]>([]);
 
-  const [open, setOpen] = useState(false);
+  const [recurrOpen, setRecurrOpen] = useState(false);
   const [visible, setVisible] = useState(false);
 
   const [questsOptions, setQuestsOptions] = useState<Quest[]>([]);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const data = [{ key: '1' }]; // Dummy data for FlatList
 
   let newDueDates: Date[] = [];
 
@@ -89,9 +94,9 @@ const Create = () => {
   }, []); // Dependency array is empty, so this effect only runs once on mount
 
   // Convert quest options into dropdown items
-  const questDropdown: ItemType<ValueType>[] = questsOptions.map((key) => ({
+  const questDropdown: ItemType<Quest>[] = questsOptions.map((key) => ({
     label: key.title,
-    value: key.title,
+    value: key,
   }));
 
   const recurrenceOptions = [
@@ -280,7 +285,7 @@ const Create = () => {
     try {
       const attributes: CreateQuestBitAttributes = {
         title: title,
-        dueDates: newDueDates,
+        dueDates: isRecurring ? newDueDates : [new Date(selectedDate)],
         quests: quest,
         description: description,
         status: status,
@@ -296,8 +301,26 @@ const Create = () => {
     }
   };
 
+  // Updated function to handle either a boolean or a functional update
+  const handleQuestOpen = (open: boolean | ((prevOpen: boolean) => boolean)) => {
+    const isOpen = typeof open === 'function' ? open(questOpen) : open;
+    setQuestOpen(isOpen);
+    setIsDropdownOpen(isOpen); // Sync scroll-enabled state
+  };
+
+  // Updated function to handle either a boolean or a functional update
+  const handleRecurrOpen = (open: boolean | ((prevOpen: boolean) => boolean)) => {
+    const isOpen = typeof open === 'function' ? open(recurrOpen) : open;
+    setRecurrOpen(isOpen);
+    setIsDropdownOpen(isOpen); // Sync scroll-enabled state
+  };
+
   return (
-    <ScrollView className="flex-1">
+    <FlatList
+      data={data}
+      renderItem={() => (
+    
+    <View className="flex-1">
       <View className="z-0 bg-blue-200 z-10 mb-3">
         <View className="w-full mt-5 mb-5">
           <View className="flex-row items-center justify-between px-4 mt-10">
@@ -368,7 +391,7 @@ const Create = () => {
               open={questOpen}
               value={quest}
               items={questDropdown}
-              setOpen={setQuestOpen}
+              setOpen={handleQuestOpen} // Call synchronized function
               setValue={setQuest}
               placeholder="Select quest"
               style={styles.dropdown}
@@ -391,10 +414,10 @@ const Create = () => {
             </View>
             <View className="flex flex-col space-y-2">
               <DropDownPicker
-                open={open}
+                open={recurrOpen}
                 value={recurrenceOption}
                 items={recurrenceOptions}
-                setOpen={setOpen}
+                setOpen={handleRecurrOpen}
                 setValue={setRecurrenceOption}
                 onChangeValue={(value) => {}}
                 placeholder="Select recurrence option"
@@ -486,18 +509,11 @@ const Create = () => {
         </View>
 
         <View className="mb-5">
-          <TouchableOpacity
-            className="items-center justify-center"
+          <PixelButton
+            text="Create questBit!"
+            textStyle="text-sm"
             onPress={handleAddQuestBit}
-          >
-            <Image
-              source={require("../../assets/images/pixelButton.png")}
-              className={`w-[86vw] h-14`}
-            />
-            <Text className={`text-white font-zcool absolute text-xl pb-1`}>
-              CREATE QUESTBIT !
-            </Text>
-          </TouchableOpacity>
+          />
         </View>
       </View>
       <CalendarModal
@@ -505,7 +521,11 @@ const Create = () => {
         onClose={() => setIsCalendarVisible(false)}
         onUpdate={handleDateUpdate}
       />
-    </ScrollView>
+    </View>
+    
+  )}
+  keyExtractor={(item) => item.key}
+/>
   );
 };
 

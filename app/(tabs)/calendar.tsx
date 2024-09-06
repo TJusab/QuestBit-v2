@@ -26,7 +26,7 @@ const CustomCalendar: React.FC = () => {
     const fetchQuestBits = async () => {
       try {
         const response = await getQuestBitsForUser();
-
+        console.log(response);
         setQuestBits(response);
         const newMarkedDates: Record<string, MarkedDate> = {};
 
@@ -95,6 +95,14 @@ const CustomCalendar: React.FC = () => {
     addMonth();
   };
 
+  const handleQuestBitUpdate = async (
+    questbitId: string,
+    newStatus: string
+  ) => {
+    
+  };
+
+
   return (
     <ScrollView>
       <Header header={"Calendar !"} colorStyle={"green"} />
@@ -128,7 +136,7 @@ const CustomCalendar: React.FC = () => {
         data={selectedQuestbits}
         keyExtractor={(questbit) => questbit.$id}
         renderItem={({ item }) => (
-          <QuestBitCard item={item} />
+          <QuestBitCard item={item} onUpdate={handleQuestBitUpdate} />
         )}
         scrollEnabled={false}
         contentContainerStyle={{ paddingBottom: 20 }}

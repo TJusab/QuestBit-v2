@@ -8,6 +8,7 @@ import {
   Image,
   Alert,
 } from "react-native";
+import { useEffect } from "react";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import PixelButton from "@/components/PixelButton";
@@ -21,8 +22,12 @@ import { addQuest } from "../../lib/database";
 import { Quest, User } from "@/constants/types";
 import { QuestIcon } from "@/constants/enums";
 import { useGlobalContext } from "@/context/GlobalProvider";
-import { documentToQuest } from "@/utils/mapping";
 import * as Notifications from "expo-notifications";
+import { getCurrentUser } from "@/lib/account";
+import {
+  documentToQuest,
+  documentToUser,
+} from "@/utils/mapping";
 
 interface CreateQuestAttributes {
   title: string;
@@ -134,6 +139,22 @@ const CreateQuest = () => {
     });
   }
 
+  const [currentUser, setCurrentUser] = useState<User | null>(null); // State accepts User or null
+
+  useEffect(() => {
+    async function fetchUser() {
+      const user = await getCurrentUser();  // Returns User or null
+      if (user) {
+        setCurrentUser(user);  // If user is not null, convert it and set it
+      } else {
+        setCurrentUser(null);  // Set it to null if no user is found
+      }
+      console.log("current user:");
+      console.log(user);
+    }
+    fetchUser();
+  }, []);
+
   return (
     <View className="flex-1">
       <View className="h-[40%] bg-white rounded-b-3xl z-10">
@@ -239,6 +260,7 @@ const CreateQuest = () => {
         selectedAdventurers={selectedAdventurers}
         refreshKey={refreshKey}
         text="Recruit adventurers to your quest!"
+        except={currentUser || undefined} 
       />
       <IconPickerModal
         visible={iconModalVisible}
