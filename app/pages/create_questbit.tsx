@@ -384,7 +384,7 @@ const Create = () => {
                   setOpen={handleQuestOpen} // Call synchronized function
                   setValue={setQuest}
                   placeholder="Select quest"
-                  style={styles.dropdown}
+                  style={[styles.dropdown, { zIndex: 2 }]}
                   dropDownContainerStyle={styles.dropdown}
                   textStyle={styles.labelStyle}
                 />
@@ -414,7 +414,7 @@ const Create = () => {
                     setValue={setRecurrenceOption}
                     onChangeValue={(value) => {}}
                     placeholder="Select recurrence option"
-                    style={styles.dropdown}
+                    style={[styles.dropdown, { zIndex: 1 }]}
                     dropDownContainerStyle={styles.dropdown}
                     textStyle={styles.labelStyle}
                     disabled={!isRecurring}
