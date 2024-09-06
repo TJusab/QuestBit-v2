@@ -26,7 +26,6 @@ const CustomCalendar: React.FC = () => {
     const fetchQuestBits = async () => {
       try {
         const response = await getQuestBitsForUser();
-        console.log(response);
         setQuestBits(response);
         const newMarkedDates: Record<string, MarkedDate> = {};
 

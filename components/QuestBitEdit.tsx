@@ -89,8 +89,6 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing }) => {
 
     let newDueDates: Date[] = [];
 
-    console.log("selectedDate " + selectedDate)
-
     switch (newRecurrence) {
       case Recurrence.NoRepeat:
         newDueDates = [new Date(selectedDate)];
@@ -114,10 +112,6 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing }) => {
         newDueDates = [new Date(selectedDate)];
         break;
     }
-    console.log("info")
-    console.log(deadline)
-    console.log(newRecurrence);
-    console.log(newDueDates);
     setDueDates(newDueDates);
   };
 

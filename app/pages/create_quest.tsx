@@ -149,8 +149,6 @@ const CreateQuest = () => {
       } else {
         setCurrentUser(null);  // Set it to null if no user is found
       }
-      console.log("current user:");
-      console.log(user);
     }
     fetchUser();
   }, []);
