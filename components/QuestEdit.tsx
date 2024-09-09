@@ -145,7 +145,7 @@ const QuestEdit: React.FC<QuestEditProps> = ({ item, toggleEditing }) => {
           selectedAdventurers={selectedAdventurers}
           refreshKey={refreshKey}
           text="Assign adventurers to this Quest"
-          except={item.owner}
+          except={[...item.adventurers, item.owner]}
         />
         <View style={styles.centeredRow}>
           {quest.adventurers && quest.adventurers.map((assignee) => (

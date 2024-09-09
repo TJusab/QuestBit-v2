@@ -306,7 +306,7 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing }) => {
             selectedAdventurers={selectedAdventurers}
             refreshKey={refreshKey}
             text='Assign adventurers to this QuestBit'
-            except={questBit.assignees[0]} 
+            except={[...questBit.assignees]}
           />
         </View>
         <View style={styles.centeredRow}>

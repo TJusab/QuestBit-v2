@@ -39,7 +39,7 @@ export interface Quest {
   icon: QuestIcon;
   questInfo?: string;
   deadline: Date;
-  adventurers?: User[];
+  adventurers: User[];
   questbits?: QuestBit[];
 }
 
