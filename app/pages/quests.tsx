@@ -74,7 +74,7 @@ const Quests = () => {
           style={styles.backgroundImage}
           resizeMode="stretch"
         >
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity onPress={() => router.back()} className="mb-4 ml-4 mt-10">
             <MaterialIcons name="keyboard-backspace" size={30} color="black" />
           </TouchableOpacity>
           <FlatList
