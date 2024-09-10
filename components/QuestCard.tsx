@@ -16,12 +16,19 @@ interface QuestCardProps {
 const QuestCard: React.FC<QuestCardProps> = ({ item, onUpdate }) => {
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
 
-  const handleQuestPress = () => {
+  const handeQuestDetailsPress = () => {
     router.push({
       pathname: "/pages/questdetails",
       params: { quest: JSON.stringify(item) },
     });
   };
+
+  const handleQuestPress = () => {
+    router.push({
+      pathname: "/pages/quests",
+      params: { quest: JSON.stringify(item) }, 
+    });
+  };  
 
   const handleDelete = async () => {
     try {
@@ -37,13 +44,24 @@ const QuestCard: React.FC<QuestCardProps> = ({ item, onUpdate }) => {
     <View className="mb-5 px-5">
       <TouchableOpacity className="bg-blue-200 shadow-xl shadow-black rounded-xl p-5" onPress={handleQuestPress}>
         <View className="flex-row justify-between items-center">
-          <Image source={getQuestIcon(item.icon)} style={{ width: 48, height: 48 }} />
-          <TouchableOpacity
-            onPress={() => setDeleteModalVisible(true)}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
-            <Icon name="ellipsis-v" size={24} color="white" />
-          </TouchableOpacity>
+          <View className="flex-row items-center">
+            <Image source={getQuestIcon(item.icon)} style={{ width: 48, height: 48 }} />
+          </View>
+          <View className="flex-row items-center">
+            <TouchableOpacity
+              onPress={handeQuestDetailsPress}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              className="mr-4"
+            >
+              <Icon name="pen" size={22} color="#408C28" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setDeleteModalVisible(true)}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Icon name="trash" size={22} color="#408C28"/>
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.content}>
           <Text className="font-press text-xl" style={globalStyles.questTitle}>{item.title}</Text>

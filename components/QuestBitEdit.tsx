@@ -13,7 +13,6 @@ import { getUserBodyIcon } from "@/utils/icon";
 import CalendarModal from "./CalendarPopUp";
 import { Difficulty, Recurrence } from "../constants/enums";
 import { updateQuestBit } from '../lib/database';
-import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 interface QuestBitEditProps {
   item: QuestBit;

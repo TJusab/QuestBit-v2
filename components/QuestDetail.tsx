@@ -33,7 +33,6 @@ const QuestDetail: React.FC<QuestDetailProps> = ({ item }) => {
   }, [item.deadline]);
   
 
-
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
       <Image

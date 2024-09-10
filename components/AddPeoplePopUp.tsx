@@ -100,7 +100,7 @@ const AddPeoplePopUp: React.FC<AddPeoplePopUpProps> = ({
               <ScrollView
                 contentContainerStyle={{ alignItems: "center" }}
                 showsVerticalScrollIndicator={true}
-                style={{ maxHeight: 140, maxWidth: 250, marginLeft:20, marginRight:20}}
+                style={{ maxHeight: 140, maxWidth: 250, marginLeft:40}}
               >
                 <View className="flex-wrap flex-row justify-center">
                   {items.length > 0 &&
