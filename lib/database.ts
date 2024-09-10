@@ -176,7 +176,7 @@ export async function deleteQuest(id: string) {
 export async function addQuestBit(attributes: {
   title: string;
   dueDates: Date[];
-  quests: Quest;
+  questId: string;
   description: string;
   status: Status;
   difficulty: Difficulty;
@@ -196,7 +196,7 @@ export async function addQuestBit(attributes: {
       {
         title: attributes.title,
         dueDates: attributes.dueDates,
-        quests: attributes.quests.$id,
+        quests: attributes.questId,
         description: attributes.description,
         status: attributes.status,
         difficulty: attributes.difficulty,
@@ -206,7 +206,7 @@ export async function addQuestBit(attributes: {
     const createdQuestbit = documentToQuestBit(response);
 
     const quests = await getQuests();
-    const questToUpdate = quests.find(quest => quest.$id === attributes.quests.$id);
+    const questToUpdate = quests.find(quest => quest.$id === attributes.questId);
 
     if (!questToUpdate) {
       throw new Error("Quest not found");

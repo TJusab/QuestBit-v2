@@ -42,7 +42,7 @@ import { getUserBodyIcon } from "@/utils/icon";
 interface CreateQuestBitAttributes {
   title: string;
   dueDates: Date[];
-  quests: Quest;
+  questId: string;
   description: string;
   status: Status;
   difficulty: Difficulty;
@@ -62,7 +62,7 @@ const Create = () => {
   const [formattedDate, setFormattedDate] = useState("");
 
   const [questOpen, setQuestOpen] = useState(false);
-  const [quest, setQuest] = useState(null);
+  const [questId, setQuest] = useState(null);
 
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedAdventurers, setSelectedAdventurers] = useState<User[]>([]);
@@ -92,9 +92,9 @@ const Create = () => {
   }, []); // Dependency array is empty, so this effect only runs once on mount
 
   // Convert quest options into dropdown items
-  const questDropdown: ItemType<Quest>[] = questsOptions.map((key) => ({
+  const questDropdown: ItemType<ValueType>[] = questsOptions.map((key) => ({
     label: key.title,
-    value: key,
+    value: key.$id,
   }));
 
   const recurrenceOptions = [
@@ -252,7 +252,7 @@ const Create = () => {
   };
 
   const handleAddQuestBit = async () => {
-    if (!title || !selectedDate || !quest || !description) {
+    if (!title || !selectedDate || !questId || !description) {
       Alert.alert("Please fill in all the required fields.");
       return;
     }
@@ -260,7 +260,7 @@ const Create = () => {
       const attributes: CreateQuestBitAttributes = {
         title: title,
         dueDates: isRecurring ? newDueDates : [new Date(selectedDate)],
-        quests: quest,
+        questId: questId,
         description: description,
         status: status,
         difficulty: difficulty,
@@ -353,7 +353,7 @@ const Create = () => {
               <View className="mt-3 mb-5">
                 <DropDownPicker
                   open={questOpen}
-                  value={quest}
+                  value={questId}
                   items={questDropdown}
                   setOpen={handleQuestOpen} // Call synchronized function
                   setValue={setQuest}
