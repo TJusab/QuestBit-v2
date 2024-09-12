@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontFamily: 'ZCOOL',
     fontSize: 32,
+    marginBottom: 10,
   },
   username: {
     fontFamily: "ZCOOL",

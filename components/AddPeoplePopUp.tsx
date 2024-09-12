@@ -21,7 +21,7 @@ interface AddPeoplePopUpProps {
   selectedAdventurers: User[];
   refreshKey: number;
   text: string;
-  except?: User; // Adjusted to add optional except prop
+  except?: User[]; 
 }
 
 const AddPeoplePopUp: React.FC<AddPeoplePopUpProps> = ({
@@ -45,7 +45,7 @@ const AddPeoplePopUp: React.FC<AddPeoplePopUpProps> = ({
     try {
       const response = await fetchAdventurers();
       const filteredResponse = except 
-        ? response.filter(adventurer => adventurer.$id !== except.$id) 
+        ? response.filter(adventurer => !except.some(user => user.$id === adventurer.$id))
         : response;
       setItems(filteredResponse);
     } catch (error) {

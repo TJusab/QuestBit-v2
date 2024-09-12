@@ -18,6 +18,12 @@ const PagesLayout = () => {
           }}
         />
         <Stack.Screen
+          name="quests"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
           name="create_quest"
           options={{
             headerShown: false,

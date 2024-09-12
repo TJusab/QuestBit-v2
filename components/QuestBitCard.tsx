@@ -7,7 +7,6 @@ import { router } from "expo-router";
 import { getQuestIcon, getUserIcon } from "../utils/icon";
 import { deleteQuestBit } from "../lib/database";
 import { QuestBit } from "../constants/types";
-import { Status } from "../constants/enums";
 import {
   getColorFromStatus,
   getEnumFromStatus,
