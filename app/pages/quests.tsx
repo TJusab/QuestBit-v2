@@ -14,6 +14,7 @@ import QuestBitCard from "@/components/QuestBitCard";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { Quest, QuestBit } from "../../constants/types";
 import { useLocalSearchParams, router } from "expo-router";
+import NoQuestBits from "../../components/NoQuestbits";
 
 const Quests = () => {
   const parseQuest = (data: string): Quest => {
@@ -61,24 +62,25 @@ const Quests = () => {
       setLoading(false);  
     }
   };
-
   return (
     <View style={styles.container}>
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator color="#6E7591" size="large" />  
         </View>
+      ) : filteredQuestBits.length === 0 ? (
+        <NoQuestBits />
       ) : (
         <ImageBackground
           source={require("../../assets/HD/backgrounds/sky_clouds.png")}
           style={styles.backgroundImage}
           resizeMode="stretch"
         >
-          <TouchableOpacity onPress={() => router.back()} className="mb-4 ml-4 mt-10">
+          <TouchableOpacity onPress={() => router.back()} className="ml-10 mt-10">
             <MaterialIcons name="keyboard-backspace" size={30} color="black" />
           </TouchableOpacity>
           <FlatList
-            data={filteredQuestBits}  // Use filtered quest bits
+            data={filteredQuestBits}
             keyExtractor={(item) => item.$id}
             renderItem={({ item }) => (
               <QuestBitCard item={item} onUpdate={handleQuestBitUpdate} />
@@ -90,6 +92,8 @@ const Quests = () => {
     </View>
   );
 };
+
+  
 
 const styles = StyleSheet.create({
   container: {
