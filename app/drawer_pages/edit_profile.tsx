@@ -4,8 +4,9 @@ import PixelButton from "@/components/PixelButton";
 import { getUserIcon } from "../../utils/icon";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import FormField from "@/components/FormField";
-import { User } from "@/constants/types";
+import { DrawerParamList, User } from "@/constants/types";
 import { saveProfileSettings } from "@/lib/account";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
 
 interface EditProfileFields {
   username: string;

@@ -44,7 +44,7 @@ const AddPeoplePopUp: React.FC<AddPeoplePopUpProps> = ({
   const getAdventurers = async () => {
     try {
       const response = await fetchAdventurers();
-      const filteredResponse = except 
+      const filteredResponse = except && except.length > 0 
         ? response.filter(adventurer => !except.some(user => user.$id === adventurer.$id))
         : response;
       setItems(filteredResponse);

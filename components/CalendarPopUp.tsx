@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Modal } from "react-native";
+import { View, Text, Modal, StyleSheet } from "react-native";
 import { Calendar, DateData } from "react-native-calendars";
 import moment from "moment";
+import PixelButton from "./PixelButton";
+import { BlurView } from "expo-blur";
 
 interface CalendarPopUpProps {
   visible: boolean;
@@ -25,6 +27,7 @@ const CalendarPopUp: React.FC<CalendarPopUpProps> = ({
   }, [initialDate]);
 
   const customTheme = {
+    calendarBackground: "#E7EFF7",
     textMonthFontFamily: "ZCOOL",
     textDayFontFamily: "ZCOOL",
     textDayHeaderFontFamily: "ZCOOL",
@@ -66,36 +69,57 @@ const CalendarPopUp: React.FC<CalendarPopUpProps> = ({
 
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={visible}
       onRequestClose={onClose}
     >
-      <View className="flex-1 items-center justify-center">
-        <Calendar
-          theme={customTheme}
-          renderHeader={renderCustomHeader}
-          monthFormat={"yyyy MM"}
-          hideArrows={false}
-          hideExtraDays={true}
-          disableMonthChange={false}
-          firstDay={1}
-          hideDayNames={false}
-          showWeekNumbers={false}
-          onPressArrowLeft={handlePressArrowLeft}
-          onPressArrowRight={handlePressArrowRight}
-          disableAllTouchEventsForDisabledDays={true}
-          enableSwipeMonths={true}
-          onDayPress={handleDayPress}
-          markedDates={
-            selectedDate
-              ? { [selectedDate]: { selected: true, selectedColor: "#6abe30" } }
-              : {}
-          }
-        />
-      </View>
+      <BlurView intensity={100} style={styles.blurContainer}>
+        <View className="bg-lightgray rounded-3xl px-10 py-3">
+          <Calendar
+            theme={customTheme}
+            renderHeader={renderCustomHeader}
+            monthFormat={"yyyy MM"}
+            hideArrows={false}
+            hideExtraDays={true}
+            disableMonthChange={false}
+            firstDay={1}
+            hideDayNames={false}
+            showWeekNumbers={false}
+            onPressArrowLeft={handlePressArrowLeft}
+            onPressArrowRight={handlePressArrowRight}
+            disableAllTouchEventsForDisabledDays={true}
+            enableSwipeMonths={true}
+            onDayPress={handleDayPress}
+            markedDates={
+              selectedDate
+                ? {
+                    [selectedDate]: {
+                      selected: true,
+                      selectedColor: "#6abe30",
+                    },
+                  }
+                : {}
+            }
+          />
+          <PixelButton
+            text="Cancel"
+            textStyle="text-sm"
+            color="red"
+            onPress={onClose}
+          />
+        </View>
+      </BlurView>
     </Modal>
   );
 };
 
 export default CalendarPopUp;
+
+const styles = StyleSheet.create({
+  blurContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
+});
