@@ -28,6 +28,7 @@ const Home: React.FC = () => {
   const fetchQuestBits = async () => {
     try {
       const response = await getQuestBitsForUser();
+      console.log("Fetched questbits:", response);
       setQuestBits(response);
       setFilteredQuestBits(response);
     } catch (error) {
@@ -39,7 +40,8 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (searchText === "") {
-      setFilteredQuestBits(questbits);
+      // setFilteredQuestBits(questbits);
+      //fetchQuestBits();
     } else {
       const filtered = questbits.filter((qb) =>
         qb.title.toLowerCase().includes(searchText.toLowerCase())

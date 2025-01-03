@@ -92,14 +92,16 @@ const IconPickerPopUp: React.FC<IconPickerPopUpProps> = ({
                   </TouchableOpacity>
                 ))}
               </View>
-              <View className="flex-row items-center justify-center ml-10">
+              <View className="flex-row items-center justify-center">
                 <PixelButton
                   text="Cancel"
                   textStyle="text-sm"
                   color="red"
                   onPress={onClose}
                 />
-                <PixelButton text="Add" textStyle="text-sm" onPress={addIcon} />
+                <View className="ml-4">
+                  <PixelButton text="Add" textStyle="text-sm" onPress={addIcon}/>
+                </View>
               </View>
             </View>
           </ImageBackground>

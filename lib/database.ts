@@ -216,11 +216,11 @@ export async function addQuestBit(attributes: {
     questToUpdate.questbits = questToUpdate.questbits || [];  // Ensure questbits is initialized
     questToUpdate.questbits.push(createdQuestbit);
 
-    // Update the quest document with the new questbits
-    const questUpdate = await databases.updateDocument(
+    // // Update the quest document with the new questbits
+    await databases.updateDocument(
       config.databaseId,
       config.questCollectionId,
-      attributes.quests.$id,
+      attributes.questId,
       {
         questbits: questToUpdate.questbits  // Update the questbits array
       }
@@ -310,9 +310,9 @@ export async function getQuestBitsForUser(): Promise<QuestBit[]> {
     userQuests.forEach((quest) => {
       if (quest.questbits) {
         // Filter questbits where the user is an assignee
-        const questBitsForUser = quest.questbits.filter((questbit) =>
+        const questBitsForUser = quest.questbits.filter((questbit) => {
           questbit.assignees.some((assignee: User) => assignee.$id === user.$id)
-        );
+        });
 
         // Add the filtered questbits to the userQuestBits array
         userQuestBits.push(...questBitsForUser);
@@ -323,6 +323,26 @@ export async function getQuestBitsForUser(): Promise<QuestBit[]> {
   } catch (error) {
     console.error("Error fetching user questbits:", error);
     throw new Error((error as Error).message);
+  }
+}
+
+export async function getQuestBitsForQuest(quest: Quest): Promise<QuestBit[]> {
+  try {
+    // Fetch all questbits
+    const allQuestBits = await getQuestBits();
+
+    // Filter questbits that belong to the specified quest
+    const specificQuestBits = allQuestBits.filter(
+      (questbit) => questbit.quests.$id === quest.$id // Adjust `questbit.questId` as needed
+    );
+
+    console.log("Quest:", quest);
+    console.log("QuestBits for this Quest:", specificQuestBits);
+
+    return specificQuestBits;
+  } catch (error) {
+    console.error("Error fetching quest questbits:", error);
+    throw new Error((error as Error).message)
   }
 }
 

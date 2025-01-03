@@ -14,6 +14,7 @@ import { useFocusEffect, router, useLocalSearchParams } from "expo-router";
 import { Quest } from "@/constants/types";
 import QuestCard from "../../components/QuestCard";
 import { useGlobalContext } from "@/context/GlobalProvider";
+import NoQuests from "@/components/NoQuests";
 
 const QuestPage = () => {
   const { quests, setQuests } = useGlobalContext();
@@ -24,32 +25,34 @@ const QuestPage = () => {
     );
   };
 
-  if (quests.length > 0) {
-    return (
-      <View className="flex-1">
+  return (
+    <View className="flex-1">
+      {quests.length > 0 ? (
         <FlatList
-          data={quests}
-          keyExtractor={(item) => item.$id}
-          extraData={quests}
-          renderItem={({ item }) => (
-            <QuestCard item={item} onUpdate={handleUpdate} />
-          )}
-          ListHeaderComponent={() => (
-            <Header header={"My Quests !"} colorStyle={"green"} />
-          )}
+        data={quests}
+        keyExtractor={(item) => item.$id}
+        extraData={quests}
+        renderItem={({ item }) => (
+          <QuestCard item={item} onUpdate={handleUpdate} />
+        )}
+        ListHeaderComponent={() => (
+          <Header header={"My Quests !"} colorStyle={"green"} />
+        )}
+      />
+      ) : (
+        <NoQuests />
+      )}
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => router.push("/pages/create_quest")}
+      >
+        <Image
+          source={require("../../assets/HD/add_button.png")}
+          style={{ width: 48, height: 48 }}
         />
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => router.push("/pages/create_quest")}
-        >
-          <Image
-            source={require("../../assets/HD/add_button.png")}
-            style={{ width: 48, height: 48 }}
-          />
-        </TouchableOpacity>
-      </View>
-    );
-  }
+      </TouchableOpacity>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

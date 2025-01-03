@@ -20,8 +20,6 @@ export async function register(
   icon: UserIcon
 ) {
   try {
-
-
     const newUser = await databases.createDocument(
       config.databaseId,
       config.userCollectionId,
@@ -119,6 +117,7 @@ export async function saveProfileSettings(fields: {
 }) {
   try {
     const user = await getCurrentUser();
+    console.log("Current user:", user);
     if (!user) {
       throw new Error("No user found");
     }
@@ -137,7 +136,7 @@ export async function saveProfileSettings(fields: {
     if (fields.password !== "") {
       await account.updateEmail(
         fields.email,
-        fields.password,
+        fields.password
       );
     }
 

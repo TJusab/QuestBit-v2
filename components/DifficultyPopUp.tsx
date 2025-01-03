@@ -63,18 +63,20 @@ const DifficultyPopUp: React.FC<DifficultyPopUpProps> = ({
                   items={items}
                 />
               </View>
-              <View className="flex-row items-center justify-center ml-10">
+              <View className="flex-row items-center justify-center">
                 <PixelButton
                   text="Cancel"
                   textStyle="text-sm"
                   color="red"
                   onPress={onClose}
                 />
-                <PixelButton
-                  text="Update"
-                  textStyle="text-sm"
-                  onPress={handleUpdate}
-                />
+                <View className="ml-4">
+                  <PixelButton
+                    text="Update"
+                    textStyle="text-sm"
+                    onPress={handleUpdate}
+                  />
+                </View>
               </View>
             </View>
           </ImageBackground>

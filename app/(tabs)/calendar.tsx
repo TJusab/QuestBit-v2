@@ -118,13 +118,6 @@ const CustomCalendar: React.FC = () => {
     addMonth();
   };
 
-  const handleQuestBitUpdate = async (
-    questbitId: string,
-    newStatus: string
-  ) => {
-    
-  };
-
 
   return (
     <ScrollView>

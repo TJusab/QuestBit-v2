@@ -11,7 +11,7 @@ const NoQuestBits: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.message}>No questbits havec been made for this quest yet !</Text>
+      <Text style={styles.message}>No questbits have been made for this quest yet !</Text>
       <View className="flex-row">
           <PixelButton text="CREATE!" onPress={handlePress} />
         </View>

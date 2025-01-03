@@ -39,7 +39,6 @@ import {
   getPointsFromDifficulty,
 } from "@/utils/utils";
 import { getUserBodyIcon } from "@/utils/icon";
-import PixelButton from "@/components/PixelButton";
 
 interface CreateQuestBitAttributes {
   title: string;

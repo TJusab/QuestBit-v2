@@ -9,7 +9,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { updateQuestBitStatus, getQuestBits } from "../../lib/database";
+import { updateQuestBitStatus, getQuestBitsForQuest } from "../../lib/database";
 import QuestBitCard from "@/components/QuestBitCard";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { Quest, QuestBit } from "../../constants/types";
@@ -17,6 +17,7 @@ import { useLocalSearchParams, router } from "expo-router";
 import NoQuestBits from "../../components/NoQuestbits";
 
 const Quests = () => {
+
   const parseQuest = (data: string): Quest => {
     const parsedData = JSON.parse(data);
     if (parsedData.deadline) {
@@ -25,10 +26,20 @@ const Quests = () => {
     return parsedData as Quest;
   };
 
+  const { quest } = useLocalSearchParams();
+  const item: Quest = parseQuest(quest as string);  
+
+  const [questbits, setQuestBits] = useState<QuestBit[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const filteredQuestBits = questbits.filter(
+    (questbit: QuestBit) => questbit.quests.$id === item.$id
+  );
+
   const fetchQuestBits = async () => {
     setLoading(true); 
     try {
-      const response = await getQuestBits();
+      const response = await getQuestBitsForQuest(item);
       setQuestBits(response);  
     } catch (error) {
       Alert.alert("Error", (error as Error).message);  
@@ -36,16 +47,6 @@ const Quests = () => {
       setLoading(false); 
     }
   };
-
-  const { quest } = useLocalSearchParams();
-  const item: Quest = parseQuest(quest as string);  
-
-  const { questbits, setQuestBits } = useGlobalContext(); 
-  const [loading, setLoading] = useState(false);
-
-  const filteredQuestBits = questbits.filter(
-    (questbit: QuestBit) => questbit.quests.$id === item.$id
-  );
 
   useEffect(() => {
     console.log(item)
