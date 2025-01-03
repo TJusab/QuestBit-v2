@@ -138,7 +138,7 @@ export async function getQuests() {
       ),
     ];
 
-    return quests;
+    return userQuests;
   } catch (error) {
     console.error("Error fetching quests:", error);
     throw new Error((error as Error).message);
@@ -184,14 +184,9 @@ export async function deleteQuest(id: string) {
  */
 export async function addQuestBit(attributes: {
   title: string;
-  deadline: Date | null;
-  quest: Quest;
-  isRecurring: boolean;
-  recurrenceOption: string;
-  description: string;
   status: Status;
-  difficulty: Difficulty;
-  adventurerIds: string[];
+  description: string;
+  questId: string;
 }) {
   try {
     const currentUser = await getCurrentUser();
@@ -203,14 +198,9 @@ export async function addQuestBit(attributes: {
       ID.unique(),
       {
         title: attributes.title,
-        deadline: attributes.deadline,
-        quest: attributes.quest,
-        isRecurring: attributes.isRecurring,
-        recurrenceOption: attributes.recurrenceOption,
-        description: attributes.description,
         status: attributes.status,
-        difficulty: attributes.difficulty,
-        adventurers: attributes.adventurerIds, // only send adventurer ids
+        description: attributes.description,
+        quests: attributes.questId,
       }
     );
 

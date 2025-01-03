@@ -32,7 +32,7 @@ const Profile: React.FC<ProfileProps> =  ({ navigation }) => {
           style={{ width: 150, height: 150 }}
           className="ml-10"
         />
-        <View className="flex-col mr-20">
+        <View className="flex-col mr-20 mt-5">
           <Text className="font-press text-3xl text-navy">{user.username}</Text>
           <Text className="font-zcool text-xl text-navy">
             {user.icon} Class
@@ -40,10 +40,11 @@ const Profile: React.FC<ProfileProps> =  ({ navigation }) => {
           <Text className="font-zcool text-xl text-navy">
             Level {user.level}
           </Text>
+          <Text className="font-zcool text-base text-navy">{user.experiencePoints} XP</Text>
         </View>
       </View>
       <View className="flex-row justify-between mx-10 mt-5">
-        <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Edit Profile')}>
           <GrayButton text="Edit Profile" />
         </TouchableOpacity>
       </View>

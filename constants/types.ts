@@ -60,5 +60,5 @@ export interface Friendship {
 
 export type DrawerParamList = {
   Profile: undefined;
-  EditProfile: undefined;
+  'Edit Profile': undefined;
 }

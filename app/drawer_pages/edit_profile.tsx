@@ -14,11 +14,7 @@ interface EditProfileFields {
   password: string;
 }
 
-interface EditProfileProps {
-  navigation: DrawerNavigationProp<DrawerParamList, 'EditProfile'>
-}
-
-const EditProfile: React.FC<EditProfileProps> = ({ navigation }) => {
+const EditProfile = () => {
   const { user } = useGlobalContext();
   const loggedInUser = user as User;
 

@@ -51,7 +51,7 @@ const ProfileWithDrawer = () => {
         }}
       ></Drawer.Screen>
       <Drawer.Screen
-        name="EditProfile"
+        name="Edit Profile"
         component={EditProfile}
         options={{
           headerTitle: "Edit Profile",
