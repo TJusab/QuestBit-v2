@@ -63,55 +63,54 @@ const Home: React.FC = () => {
     }
   };
 
-  if (questbits.length > 0) {
-    return (
-      <View className="flex-1">
-        {loading ? (
-          <View className="flex-1 justify-center items-center">
-            <ActivityIndicator color="#6E7591" size="large" />
-          </View>
-        ) : (
-          <View>
-            <ImageBackground
-              source={require("../../assets/HD/blue_sky.png")}
-              className="w-full h-full"
-              resizeMode="stretch"
-            >
-              <View>
-                <Header header={`Hello ${user?.username}!`} />
-                <View className="mx-5 mb-5 shadow-xl shadow-black">
-                  <SearchInput
-                    placeholder="Search QuestBit..."
-                    value={searchText}
-                    handleChangeText={setSearchText}
-                  />
-                </View>
-                <Text className="font-press text-lg text-black text-justify mt-5 mx-5">
-                  My QuestBits
-                </Text>
+  return (
+    <View className="flex-1">
+      {loading ? (
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator color="#6E7591" size="large" />
+        </View>
+      ) : (
+        <View>
+          <ImageBackground
+            source={require("../../assets/HD/backgrounds/sky_clouds.png")}
+            className="w-full h-full"
+            resizeMode="stretch"
+          >
+            <View>
+              <Header header={`Hello ${user?.username}!`} />
+              <View className="mx-5 mb-5 shadow-xl shadow-black">
+                <SearchInput
+                  placeholder="Search QuestBit..."
+                  value={searchText}
+                  handleChangeText={setSearchText}
+                />
               </View>
-              <FlatList
-                data={filteredQuestBits}
-                keyExtractor={(item) => item.$id}
-                renderItem={({ item }) => (
-                  <QuestBitCard item={item} onUpdate={handleQuestBitUpdate} />
-                )}
-              />
-            </ImageBackground>
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={() => router.push("/pages/create_questbit")}
-            >
-              <Image
-                source={require("../../assets/HD/add_button.png")}
-                style={{ width: 48, height: 48 }}
-              />
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
-    );
-  }
+              <Text className="font-press text-lg text-black text-justify mt-5 mx-5">
+                My QuestBits
+              </Text>
+            </View>
+            <FlatList
+              data={filteredQuestBits}
+              keyExtractor={(item) => item.$id}
+              renderItem={({ item }) => (
+                <QuestBitCard item={item} onUpdate={handleQuestBitUpdate} />
+              )}
+              contentContainerStyle={{ paddingBottom: 20 }}
+            />
+          </ImageBackground>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => router.push("/pages/create_questbit")}
+          >
+            <Image
+              source={require("../../assets/HD/add_button.png")}
+              style={{ width: 48, height: 48 }}
+            />
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

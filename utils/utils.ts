@@ -4,16 +4,16 @@ import { Difficulty, Recurrence, Status, UserIcon } from "../constants/enums";
 export const getButtonImage = (color: "red" | "blue" | "pink" | "yellow" | "green") => {
   switch (color) {
     case "red":
-      return require("../assets/HD/button_red.png");
+      return require("../assets/HD/buttons/red.png");
     case "blue":
-      return require("../assets/HD/button_blue.png");
+      return require("../assets/HD/buttons/blue.png");
     case "pink":
-      return require("../assets/HD/button_pink.png");
+      return require("../assets/HD/buttons/pink.png");
     case "yellow":
-      return require("../assets/HD/button_yellow.png");
+      return require("../assets/HD/buttons/yellow.png");
     case "green":
     default:
-      return require("../assets/HD/button_green.png");
+      return require("../assets/HD/buttons/green.png");
   }
 };
 

@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 import {
+  FlatList,
   View,
   Text,
   TouchableOpacity,
@@ -10,7 +11,8 @@ import {
   ScrollView,
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import CheckBox from "expo-checkbox";
 import DropDownPicker, {
   ItemType,
@@ -24,6 +26,7 @@ import CalendarModal from "../../components/CalendarPopUp";
 import { addQuestBit, getQuests } from "../../lib/database";
 import { Status } from "../../constants/enums";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import PixelButton from "@/components/PixelButton";
 
 import { User, Quest } from "@/constants/types";
 
@@ -40,19 +43,17 @@ import PixelButton from "@/components/PixelButton";
 
 interface CreateQuestBitAttributes {
   title: string;
-  tags?: string[];
-  status: Status;
-  description: string;
-  assigneeIds?: string[];
-  dueDates?: Date[] | null;
+  dueDates: Date[];
   questId: string;
-  difficulty?: Difficulty;
+  description: string;
+  status: Status;
+  difficulty: Difficulty;
+  assignees: User[];
 }
 
 const Create = () => {
   const [title, setTitle] = useState("");
-  const [dueDate, setDueDate] = useState<Date | null>(null);
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [dueDates, setDueDates] = useState<Date[]>([]);
   const [isRecurring, setIsRecurring] = useState(false);
   const [recurrenceOption, setRecurrenceOption] = useState("");
   const [description, setDescription] = useState("");
@@ -63,53 +64,48 @@ const Create = () => {
   const [formattedDate, setFormattedDate] = useState("");
 
   const [questOpen, setQuestOpen] = useState(false);
-  const [quest, setQuest] = useState<Quest | null>(null);
+  const [questId, setQuest] = useState(null);
 
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedAdventurers, setSelectedAdventurers] = useState<User[]>([]);
 
-  const [open, setOpen] = useState(false);
+  const [recurrOpen, setRecurrOpen] = useState(false);
   const [visible, setVisible] = useState(false);
 
   const [questsOptions, setQuestsOptions] = useState<Quest[]>([]);
 
-  const fetchQuests = async () => {
-    try {
-      const response: Quest[] = await getQuests();
-      setQuestsOptions(response);
-    } catch (error) {
-      Alert.alert("Error", (error as Error).message);
-    }
-  };
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  fetchQuests();
+  const data = [{ key: "1" }]; // Dummy data for FlatList
 
-  const questDropdown: ItemType<ValueType>[] = [];
+  let newDueDates: Date[] = [];
 
-  for (const key of questsOptions) {
-    let currQuest: ItemType<ValueType> = {
-      label: key.title,
-      value: key.toString(),
+  useEffect(() => {
+    const fetchQuests = async () => {
+      try {
+        const response: Quest[] = await getQuests();
+        setQuestsOptions(response);
+      } catch (error) {
+        Alert.alert("Error", (error as Error).message);
+      }
     };
-    questDropdown.push(currQuest);
-  }
+
+    fetchQuests();
+  }, []); // Dependency array is empty, so this effect only runs once on mount
+
+  // Convert quest options into dropdown items
+  const questDropdown: ItemType<ValueType>[] = questsOptions.map((key) => ({
+    label: key.title,
+    value: key.$id,
+  }));
 
   const recurrenceOptions = [
     { label: "Daily", value: "Daily" },
     { label: "Weekly", value: "Weekly" },
     { label: "Biweekly", value: "Biweekly" },
     { label: "Monthly", value: "Monthly" },
-    { label: "Anually", value: "Anually" },
+    { label: "Annually", value: "Annually" },
   ];
-
-  const handleDateChange = (
-    event: DateTimePickerEvent,
-    selectedDate: Date | undefined
-  ) => {
-    const currentDate = selectedDate ? selectedDate : null;
-    setShowDatePicker(false);
-    setDueDate(currentDate);
-  };
 
   const handleDateUpdate = (dateString: string) => {
     setSelectedDate(dateString);
@@ -127,42 +123,150 @@ const Create = () => {
     setSelectedAdventurers(adventurers);
   };
 
-  const handleSubmit = () => {
-    // Handle form submission
-    console.log({
-      title,
-      dueDate,
-      isRecurring,
-      recurrenceOption,
-      description,
-      status,
-    });
+  useEffect(() => {
+    if (recurrenceOption) {
+      handleRecurrenceUpdate(recurrenceOption);
+    }
+  }, [recurrenceOption]);
+
+  const handleRecurrenceUpdate = useCallback((newRecurrence: string) => {
+    let newDueDates: Date[] = [];
+    const deadline = new Date(selectedDate);
+    setRecurrenceOption(newRecurrence);
+
+    switch (recurrenceOption) {
+      case Recurrence.NoRepeat:
+        newDueDates = [new Date(selectedDate)];
+        break;
+      case Recurrence.Daily:
+        newDueDates = calculateDailyDueDates(new Date(selectedDate), deadline);
+        break;
+      case Recurrence.Weekly:
+        newDueDates = calculateWeeklyDueDates(new Date(selectedDate), deadline);
+        break;
+      case Recurrence.BiWeekly:
+        newDueDates = calculateBiWeeklyDueDates(
+          new Date(selectedDate),
+          deadline
+        );
+        break;
+      case Recurrence.Monthly:
+        newDueDates = calculateMonthlyDueDates(
+          new Date(selectedDate),
+          deadline
+        );
+        break;
+      case Recurrence.Annually:
+        newDueDates = calculateAnnuallyDueDates(
+          new Date(selectedDate),
+          deadline
+        );
+        break;
+      default:
+        newDueDates = [new Date(selectedDate)];
+        break;
+    }
+    setDueDates(newDueDates);
+  }, []);
+
+  const calculateDailyDueDates = (startDate: Date, deadline: Date): Date[] => {
+    let dueDates: Date[] = [];
+    let currentDate = new Date(startDate);
+
+    const deadlineUTC = new Date(deadline);
+    const currentDateUTC = new Date(currentDate.toISOString());
+
+    while (currentDateUTC <= deadlineUTC) {
+      dueDates.push(new Date(currentDateUTC));
+      currentDateUTC.setDate(currentDateUTC.getDate() + 1);
+    }
+
+    return dueDates;
+  };
+
+  const calculateWeeklyDueDates = (startDate: Date, deadline: Date): Date[] => {
+    let dueDates: Date[] = [];
+    let currentDate = new Date(startDate);
+
+    const deadlineUTC = new Date(deadline);
+    const currentDateUTC = new Date(currentDate.toISOString());
+
+    while (currentDateUTC <= deadlineUTC) {
+      dueDates.push(new Date(currentDateUTC));
+      currentDateUTC.setDate(currentDateUTC.getDate() + 7);
+    }
+
+    return dueDates;
+  };
+
+  const calculateBiWeeklyDueDates = (
+    startDate: Date,
+    deadline: Date
+  ): Date[] => {
+    let dueDates: Date[] = [];
+    let currentDate = new Date(startDate);
+
+    const deadlineUTC = new Date(deadline);
+    const currentDateUTC = new Date(currentDate.toISOString());
+
+    while (currentDateUTC <= deadlineUTC) {
+      dueDates.push(new Date(currentDateUTC));
+      currentDateUTC.setDate(currentDateUTC.getDate() + 14);
+    }
+
+    return dueDates;
+  };
+
+  const calculateMonthlyDueDates = (
+    startDate: Date,
+    deadline: Date
+  ): Date[] => {
+    let dueDates: Date[] = [];
+    let currentDate = new Date(startDate);
+
+    const deadlineUTC = new Date(deadline);
+    const currentDateUTC = new Date(currentDate.toISOString());
+
+    while (currentDateUTC <= deadlineUTC) {
+      dueDates.push(new Date(currentDateUTC));
+      currentDateUTC.setMonth(currentDateUTC.getMonth() + 1);
+    }
+
+    return dueDates;
+  };
+
+  const calculateAnnuallyDueDates = (
+    startDate: Date,
+    deadline: Date
+  ): Date[] => {
+    let dueDates: Date[] = [];
+    let currentDate = new Date(startDate);
+
+    const deadlineUTC = new Date(deadline);
+    const currentDateUTC = new Date(currentDate.toISOString());
+
+    while (currentDateUTC <= deadlineUTC) {
+      dueDates.push(new Date(currentDateUTC));
+      currentDateUTC.setFullYear(currentDateUTC.getFullYear() + 1);
+    }
+
+    return dueDates;
   };
 
   const handleAddQuestBit = async () => {
-    if (!title || !description || !quest) {
+    if (!title || !selectedDate || !questId || !description) {
       Alert.alert("Please fill in all the required fields.");
       return;
     }
     try {
       const attributes: CreateQuestBitAttributes = {
         title: title,
-        status: status,
+        dueDates: isRecurring ? newDueDates : [new Date(selectedDate)],
+        questId: questId,
         description: description,
-        questId: quest
-        // tags: [],
-        // status: status,
-        // dueDates: selectedDate ? new Date(selectedDate) : null,
-        // quest: quest,
-        // isRecurring: isRecurring,
-        // recurrenceOption: isRecurring ? recurrenceOption : "",
-        // description: description,
-        // status: status,
-        // difficulty: difficulty,
-        // adventurerIds:
-        //   selectedAdventurers.length > 0
-        //     ? selectedAdventurers.map((adventurer) => adventurer.$id)
-        //     : [],
+        status: status,
+        difficulty: difficulty,
+        assignees: selectedAdventurers,
       };
 
       await addQuestBit(attributes);
@@ -173,214 +277,228 @@ const Create = () => {
     }
   };
 
+  // Updated function to handle either a boolean or a functional update
+  const handleQuestOpen = (
+    open: boolean | ((prevOpen: boolean) => boolean)
+  ) => {
+    const isOpen = typeof open === "function" ? open(questOpen) : open;
+    setQuestOpen(isOpen);
+    setIsDropdownOpen(isOpen); // Sync scroll-enabled state
+  };
+
+  // Updated function to handle either a boolean or a functional update
+  const handleRecurrOpen = (
+    open: boolean | ((prevOpen: boolean) => boolean)
+  ) => {
+    const isOpen = typeof open === "function" ? open(recurrOpen) : open;
+    setRecurrOpen(isOpen);
+    setIsDropdownOpen(isOpen); // Sync scroll-enabled state
+  };
+
   return (
-    <ScrollView>
-      <View className="flex-1">
-        <View className="z-0 bg-blue-200 z-10 mb-3">
-          <View className="w-full mt-5 mb-5">
-            <View className="flex-row items-center justify-between px-4 mt-10">
-              <TouchableOpacity onPress={() => router.back()}>
-                <MaterialIcons
-                  name="keyboard-backspace"
-                  size={30}
-                  color="white"
+    <FlatList
+      data={data}
+      renderItem={() => (
+        <View className="flex-1">
+          <View className="z-0 bg-blue-200 z-10 mb-3">
+            <View className="w-full mt-5 mb-5">
+              <View className="flex-row items-center justify-between px-4 mt-10">
+                <TouchableOpacity onPress={() => router.back()}>
+                  <MaterialIcons
+                    name="keyboard-backspace"
+                    size={30}
+                    color="white"
+                  />
+                </TouchableOpacity>
+                <View className="flex-1 items-center">
+                  <View className="flex-row items-center">
+                    <Text className="font-zcool text-3xl mr-5 text-white">
+                      Create a QuestBit
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View className="mx-7 mt-5 mb-10">
+                <Text className="text-white font-zcool text-lg">
+                  Title<Text className="text-red font-zcool text-lg">*</Text>
+                </Text>
+                <TextInput
+                  style={styles.textInput}
+                  value={title}
+                  onChangeText={setTitle}
+                  placeholderTextColor="white"
+                  className="text-xl mb-5"
                 />
-              </TouchableOpacity>
-              <View className="flex-1 items-center">
-                <View className="flex-row items-center">
-                  <Text className="font-zcool text-3xl mr-5 text-white">
-                    Create a QuestBit
-                  </Text>
+                <Text className="text-white font-zcool text-lg mt-5">
+                  Due Date<Text className="text-red font-zcool text-lg">*</Text>
+                </Text>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => setIsCalendarVisible(true)}
+                    className="flex-row items-center mt-2"
+                  >
+                    <Icon name="clock" size={20} color="#FFF" />
+                    <Text className="font-zcool text-white text-xl px-2">
+                      {formattedDate}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
-            <View className="mx-7 mt-5 mb-10">
-              <Text className="text-white font-zcool text-lg">
-                Title<Text className="text-red font-zcool text-lg">*</Text>
-              </Text>
-              <TextInput
-                style={styles.textInput}
-                value={title}
-                onChangeText={setTitle}
-                placeholderTextColor="white"
-                className="text-xl mb-5"
-              />
-              <Text className="text-white font-zcool text-lg mt-5">
-                Due Date
-              </Text>
-              <View>
-                <TouchableOpacity
-                  onPress={() => setIsCalendarVisible(true)}
-                  className="flex-row items-center mt-2"
-                >
-                  <Icon name="clock" size={20} color="#FFF" />
-                  <Text className="font-zcool text-white text-xl px-2">
-                    {formattedDate}
-                  </Text>
-                </TouchableOpacity>
-                {/* <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-                <Text style={styles.textInput}>
-                  {dueDate ? dueDate.toDateString() : ""}
-                </Text>
-              </TouchableOpacity>
-              {showDatePicker && (
-                <DateTimePicker
-                  value={dueDate || new Date()}
-                  mode="date"
-                  display="default"
-                  onChange={handleDateChange}
-                />
-              )} */}
-              </View>
-            </View>
           </View>
-        </View>
-        <View className="z-10 shadow-xl flex-1 bg-white rounded-t-2xl -mt-10">
-          <View className="mx-7 mb-10 mt-7">
-            <Text className="text-gray-100 font-zcool text-lg">
-              Quest
-              <Text className="text-red font-zcool text-lg">*</Text>
-            </Text>
-            <View className="mt-3 mb-5">
-              <DropDownPicker
-                open={questOpen}
-                value={quest}
-                items={questDropdown}
-                setOpen={setQuestOpen}
-                setValue={(newQuest) => setQuest(newQuest)}
-                placeholder="Select quest"
-                style={styles.dropdown}
-                dropDownContainerStyle={styles.dropdown}
-                textStyle={styles.labelStyle}
-              />
-            </View>
-            <View className="flex-row justify-between items-center mt-5 mb-5">
-              <View className="flex flex-col space-y-2">
-                <Text className="text-black font-zcool text-lg text-gray-100">
-                  Recurring QuestBit?
-                </Text>
-                <CheckBox
-                  disabled={false}
-                  value={isRecurring}
-                  onValueChange={(newValue) => setIsRecurring(newValue)}
-                  style={[
-                    styles.checkbox,
-                    isRecurring && styles.checkboxChecked,
-                  ]}
-                />
-              </View>
-              <View className="flex flex-col space-y-2">
+          <View className="z-10 shadow-xl flex-1 bg-white rounded-t-2xl -mt-10">
+            <View className="mx-7 mb-10 mt-7">
+              <Text className="text-gray-100 font-zcool text-lg">
+                Quest
+                <Text className="text-red font-zcool text-lg">*</Text>
+              </Text>
+              <View className="mt-3 mb-5">
                 <DropDownPicker
-                  open={open}
-                  value={recurrenceOption}
-                  items={recurrenceOptions}
-                  setOpen={setOpen}
-                  setValue={(newValue) => setRecurrenceOption(newValue)}
-                  placeholder="Select recurrence option"
-                  style={styles.dropdown}
+                  open={questOpen}
+                  value={questId}
+                  items={questDropdown}
+                  setOpen={handleQuestOpen} // Call synchronized function
+                  setValue={setQuest}
+                  placeholder="Select quest"
+                  style={[styles.dropdown, { zIndex: 2 }]}
                   dropDownContainerStyle={styles.dropdown}
                   textStyle={styles.labelStyle}
                 />
               </View>
-            </View>
-            <Divider color="black" />
-            <Text className="text-gray-100 font-zcool text-lg mt-3">
-              Description
-              <Text className="text-red font-zcool text-lg">*</Text>
-            </Text>
-            <TextInput
-              editable
-              multiline
-              numberOfLines={4}
-              maxLength={100}
-              style={styles.textInput2}
-              value={description}
-              onChangeText={setDescription}
-              placeholderTextColor="black"
-              className="text-xl mb-5"
-            />
-            <View className="flex-row">
-              <View className="flex-col mr-7">
-                <Text className="text-gray-100 font-zcool text-lg">Status</Text>
-                <View className="items-start">
-                  <StatusButton
-                    color={getColorFromStatus(status)}
-                    text={status}
-                    textStyle="text-sm"
+              <Divider color="black" />
+              <View className="flex-row justify-between items-center mt-5 mb-5">
+                <View className="flex flex-col space-y-2">
+                  <Text className="text-black font-zcool text-lg text-gray-100">
+                    Recurring QuestBit?
+                  </Text>
+                  <CheckBox
+                    disabled={false}
+                    value={isRecurring}
+                    onValueChange={(newValue) => setIsRecurring(newValue)}
+                    style={[
+                      styles.checkbox,
+                      isRecurring && styles.checkboxChecked,
+                    ]}
                   />
                 </View>
+                <View className="flex flex-col space-y-2">
+                  <DropDownPicker
+                    open={recurrOpen}
+                    value={recurrenceOption}
+                    items={recurrenceOptions}
+                    setOpen={handleRecurrOpen}
+                    setValue={setRecurrenceOption}
+                    onChangeValue={(value) => {}}
+                    placeholder="Select recurrence option"
+                    style={[styles.dropdown, { zIndex: 1 }]}
+                    dropDownContainerStyle={styles.dropdown}
+                    textStyle={styles.labelStyle}
+                    disabled={!isRecurring}
+                  />
+                </View>
+              </View>
+              <Divider color="black" />
+              <Text className="text-gray-100 font-zcool text-lg mt-3">
+                Description
+                <Text className="text-red font-zcool text-lg">*</Text>
+              </Text>
+              <TextInput
+                editable
+                multiline
+                numberOfLines={4}
+                maxLength={100}
+                style={styles.textInput2}
+                value={description}
+                onChangeText={setDescription}
+                placeholderTextColor="black"
+                className="text-xl mb-5"
+              />
+              <View className="flex-row">
+                <View className="flex-col mr-7">
+                  <Text className="text-gray-100 font-zcool text-lg">
+                    Status
+                  </Text>
+                  <View className="items-start">
+                    <StatusButton
+                      color={getColorFromStatus(status)}
+                      text={status}
+                      textStyle="text-sm"
+                    />
+                  </View>
+                </View>
+
+                <View className="flex-col">
+                  <Text className="text-gray-100 font-zcool text-lg">
+                    Difficulty
+                  </Text>
+                  <View className="items-start">
+                    <DifficultyButton
+                      color={getColorFromDifficulty(difficulty)}
+                      text={
+                        difficulty +
+                        "  |  " +
+                        getPointsFromDifficulty(difficulty) +
+                        " XP"
+                      }
+                      textStyle="text-sm"
+                    />
+                  </View>
+                </View>
+              </View>
+              <View className="flex-row mt-5">
+                <Text className="text-gray-100 font-zcool text-lg">
+                  Assignees
+                </Text>
+                <TouchableOpacity onPress={() => setVisible(true)}>
+                  <AntDesign name="pluscircle" size={25} color="green" />
+                </TouchableOpacity>
+                <AddPeopleModal
+                  visible={visible}
+                  onClose={() => setVisible(false)}
+                  onUpdate={handleAddAdventurers}
+                  selectedAdventurers={selectedAdventurers}
+                  refreshKey={refreshKey}
+                  text="Assign adventurers to this QuestBit"
+                />
               </View>
 
-              <View className="flex-col">
-                <Text className="text-gray-100 font-zcool text-lg">
-                  Difficulty
-                </Text>
-                <View className="items-start">
-                  <DifficultyButton
-                    color={getColorFromDifficulty(difficulty)}
-                    text={
-                      difficulty +
-                      "  |  " +
-                      getPointsFromDifficulty(difficulty) +
-                      " XP"
-                    }
-                    textStyle="text-sm"
-                  />
-                </View>
+              <View className="items-start grid grid-col-3 gap-4">
+                {selectedAdventurers &&
+                  selectedAdventurers.map((assignee) => (
+                    <View
+                      key={assignee.$id}
+                      style={{ alignItems: "center", marginRight: 10 }}
+                    >
+                      <Image
+                        source={getUserBodyIcon(assignee.icon)}
+                        style={styles.assigneeNames}
+                      />
+                      <TouchableOpacity style={styles.remove_assignee}>
+                        <AntDesign name="minuscircle" size={25} color="red" />
+                      </TouchableOpacity>
+                      <Text>{assignee.username}</Text>
+                    </View>
+                  ))}
               </View>
             </View>
-            <View className="flex-row mt-5">
-              <Text className="text-gray-100 font-zcool text-lg">
-                Assignees
-              </Text>
-              <TouchableOpacity onPress={() => setVisible(true)}>
-                <AntDesign name="pluscircle" size={25} color="green" />
-              </TouchableOpacity>
-              <AddPeopleModal
-                visible={visible}
-                onClose={() => setVisible(false)}
-                onUpdate={handleAddAdventurers}
-                selectedAdventurers={selectedAdventurers}
-                refreshKey={refreshKey}
-                text="Assign adventurers to this QuestBit"
+
+            <View className="mb-5">
+              <PixelButton
+                text="Create questBit!"
+                textStyle="text-sm"
+                onPress={handleAddQuestBit}
               />
             </View>
-
-            <View className="items-start grid grid-col-3 gap-4">
-              {selectedAdventurers &&
-                selectedAdventurers.map((assignee) => (
-                  <View
-                    key={assignee.$id}
-                    style={{ alignItems: "center", marginRight: 10 }}
-                  >
-                    <Image
-                      source={getUserBodyIcon(assignee.icon)}
-                      style={styles.assigneeNames}
-                    />
-                    <TouchableOpacity style={styles.remove_assignee}>
-                      <AntDesign name="minuscircle" size={25} color="red" />
-                    </TouchableOpacity>
-                    <Text>{assignee.username}</Text>
-                  </View>
-                ))}
-            </View>
           </View>
-
-          <View className="mb-5">
-            <PixelButton
-              text="CREATE!"
-              color="green"
-              onPress={handleAddQuestBit}
-            />
-          </View>
+          <CalendarModal
+            visible={isCalendarVisible}
+            onClose={() => setIsCalendarVisible(false)}
+            onUpdate={handleDateUpdate}
+          />
         </View>
-        <CalendarModal
-          visible={isCalendarVisible}
-          onClose={() => setIsCalendarVisible(false)}
-          onUpdate={handleDateUpdate}
-        />
-      </View>
-    </ScrollView>
+      )}
+      keyExtractor={(item) => item.key}
+    />
   );
 };
 

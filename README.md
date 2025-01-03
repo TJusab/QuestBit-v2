@@ -1,4 +1,4 @@
-# Welcome to your Expo app 👋
+# Welcome to QuestBit, an Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
@@ -24,6 +24,10 @@ In the output, you'll find options to open the app in a
 - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+
+## Screenshots of the application
+<img width="945" alt="Screenshot 2024-09-05 at 1 51 30 PM" src="https://github.com/user-attachments/assets/6c419804-0543-48e0-b8bd-6224ae02e3f7">
+<img width="945" alt="Screenshot 2024-09-05 at 1 55 12 PM" src="https://github.com/user-attachments/assets/b8c7f340-e79c-4547-b5fc-1987042d00c3">
 
 ## Get a fresh project
 

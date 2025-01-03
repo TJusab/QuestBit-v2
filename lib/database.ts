@@ -1,13 +1,8 @@
-import { Databases, Query, ID } from "react-native-appwrite";
+import { Databases, Query, ID, QueryTypesList } from "react-native-appwrite";
 import client, { config } from "./client";
 import { getCurrentUser } from "./account";
 import { Friendship, User, Quest } from "../constants/types";
-import {
-  Difficulty,
-  QuestIcon,
-  Recurrence,
-  Status,
-} from "../constants/enums";
+import { Difficulty, QuestIcon, Recurrence, Status } from "../constants/enums";
 import {
   documentToFriendship,
   documentToQuest,
@@ -99,7 +94,6 @@ export async function updateQuest(attributes: {
   }
 }
 
-
 /**
  * Gets all the quests that a user is a part of (as owner or as adventurer)
  * @returns all of the user's quests
@@ -132,10 +126,7 @@ export async function getQuests() {
     // Combine and remove duplicates
     const userQuests = [
       ...ownedQuests,
-      ...adventurersQuests.filter(
-        (quest) =>
-          !ownedQuests.some((ownedQuest) => ownedQuest.$id === quest.$id)
-      ),
+      ...adventurersQuests
     ];
 
     return userQuests;
@@ -184,13 +175,19 @@ export async function deleteQuest(id: string) {
  */
 export async function addQuestBit(attributes: {
   title: string;
-  status: Status;
-  description: string;
+  dueDates: Date[];
   questId: string;
+  description: string;
+  status: Status;
+  difficulty: Difficulty;
+  assignees: User[];
 }) {
   try {
     const currentUser = await getCurrentUser();
     if (!currentUser) throw new Error("No current user found");
+    console.log(attributes.dueDates);
+    // Map the assignees array to extract just the IDs
+    const assigneeIds = attributes.assignees.map(assignee => assignee.$id);
 
     const response = await databases.createDocument(
       config.databaseId,
@@ -198,13 +195,38 @@ export async function addQuestBit(attributes: {
       ID.unique(),
       {
         title: attributes.title,
-        status: attributes.status,
-        description: attributes.description,
+        dueDates: attributes.dueDates,
         quests: attributes.questId,
+        description: attributes.description,
+        status: attributes.status,
+        difficulty: attributes.difficulty,
+        assignees: assigneeIds
+      }
+    );
+    const createdQuestbit = documentToQuestBit(response);
+
+    const quests = await getQuests();
+    const questToUpdate = quests.find(quest => quest.$id === attributes.questId);
+
+    if (!questToUpdate) {
+      throw new Error("Quest not found");
+    }
+
+    // Add the new questbit to the quest's questbits
+    questToUpdate.questbits = questToUpdate.questbits || [];  // Ensure questbits is initialized
+    questToUpdate.questbits.push(createdQuestbit);
+
+    // Update the quest document with the new questbits
+    const questUpdate = await databases.updateDocument(
+      config.databaseId,
+      config.questCollectionId,
+      attributes.quests.$id,
+      {
+        questbits: questToUpdate.questbits  // Update the questbits array
       }
     );
 
-    return response;
+    return createdQuestbit;
   } catch (error) {
     console.error("Error adding questbit:", error);
     throw new Error((error as Error).message);
@@ -277,12 +299,24 @@ export async function getQuestBits(): Promise<QuestBit[]> {
 export async function getQuestBitsForUser(): Promise<QuestBit[]> {
   try {
     const userQuests = await getQuests();
-    const questIds = userQuests.map((quest) => quest.$id);
+    const user = await getCurrentUser();
 
-    const allQuestBits = await getQuestBits();
-    const userQuestBits = allQuestBits.filter((questbit) => {
-      const include = questIds.includes(questbit.quests.$id);
-      return include;
+    if (!user) throw new Error("No current user found");
+
+    // Collect all the questbits assigned to the current user
+    const userQuestBits: QuestBit[] = [];
+
+    // Loop through the quests
+    userQuests.forEach((quest) => {
+      if (quest.questbits) {
+        // Filter questbits where the user is an assignee
+        const questBitsForUser = quest.questbits.filter((questbit) =>
+          questbit.assignees.some((assignee: User) => assignee.$id === user.$id)
+        );
+
+        // Add the filtered questbits to the userQuestBits array
+        userQuestBits.push(...questBitsForUser);
+      }
     });
 
     return userQuestBits;
@@ -336,7 +370,7 @@ export async function deleteQuestBit(id: string) {
 }
 
 /**
- * This function fetches all users in the database (except the current one)
+ * This function fetches all users in the database including the current one
  * TODO: Fetch only the friends of the current user
  * @returns the list of possible adventurers to choose form for a quest
  */
@@ -353,7 +387,7 @@ export async function fetchAdventurers() {
     const users = await databases.listDocuments(
       config.databaseId,
       config.userCollectionId,
-      [Query.notEqual("$id", currentUserId)]
+      []
     );
 
     const adventurers = users.documents.map(documentToUser);
@@ -634,7 +668,7 @@ export async function saveTokenToUser(userId: string, newToken: string) {
     const result = await databases.listDocuments(
       config.databaseId,
       config.userCollectionId,
-      [Query.equal('$id', userId)]
+      [Query.equal("$id", userId)]
     );
 
     const existingToken = result.documents[0]?.token;

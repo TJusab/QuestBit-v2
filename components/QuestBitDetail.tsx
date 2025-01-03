@@ -89,7 +89,7 @@ const QuestBitDetail: React.FC<QuestBitDetailProps> = ({ item }) => {
         <Text style={styles.label}>QuestBit Diary</Text>
         <View style={styles.log}>
           <Image
-            source={require("../assets/HD/scroll_small.png")}
+            source={require("../assets/HD/scrolls/scroll_small.png")}
             style={styles.scroll}
           />
         </View>
@@ -117,12 +117,13 @@ const styles = StyleSheet.create({
   character: {
     width: 90,
     height: 90,
-    marginBottom: 10,
+    marginTop: 13,
   },
   title: {
     marginTop: 20,
     fontFamily: 'ZCOOL',
     fontSize: 32,
+    marginBottom: 10,
   },
   username: {
     fontFamily: "ZCOOL",
@@ -150,9 +151,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   row: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 10,
+      flexDirection: "row",
+      flexWrap: "wrap",
+      alignItems: "center",
+      justifyContent: "flex-start", 
+      marginBottom: 10,
   },
   rowElement: {
     marginRight: 10,

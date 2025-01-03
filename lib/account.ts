@@ -20,16 +20,7 @@ export async function register(
   icon: UserIcon
 ) {
   try {
-    const newAccount = await account.create(
-      ID.unique(),
-      email,
-      password,
-      username
-    );
 
-    if (!newAccount) throw new Error("Account creation failed");
-
-    await login(email, password);
 
     const newUser = await databases.createDocument(
       config.databaseId,
@@ -47,9 +38,18 @@ export async function register(
     if (!userDocument) {
       throw new Error("User document is undefined");
     }
+    
+    // Create account after succesfully creating the user in the database
+    const newAccount = await account.create(
+      ID.unique(),
+      email,
+      password,
+      username
+    );
+    if (!newAccount) throw new Error("Account creation failed");
+    await login(email, password);
 
     const user = documentToUser(userDocument);
-
     return user;
   } catch (error) {
     console.error("Registration Error:", (error as Error).message);

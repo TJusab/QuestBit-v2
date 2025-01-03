@@ -14,6 +14,8 @@ export function getUserIcon(icon: UserIcon): ImageSourcePropType {
       return require("../assets/HD/characters/witch_headshot.png");
     case UserIcon.Fairy:
       return require("../assets/HD/characters/fairy_headshot.png");
+    case UserIcon.Demon:
+      return require("../assets/HD/characters/demon_headshot.png")
     default:
       return require("../assets/HD/characters/witch_headshot.png");
   }
@@ -27,11 +29,13 @@ export function getUserIcon(icon: UserIcon): ImageSourcePropType {
 export function getUserBodyIcon(icon: UserIcon): ImageSourcePropType {
   switch (icon) {
     case UserIcon.Assassin:
-      return require("../assets/HD/characters/assasin.png");
+      return require("../assets/HD/characters/assassin.png");
     case UserIcon.Witch:
       return require("../assets/HD/witch.png");
     case UserIcon.Fairy:
       return require("../assets/HD/characters/fairy.png");
+    case UserIcon.Demon:
+      return require("../assets/HD/characters/demon.png");
     default:
       return require("../assets/HD/characters/witch.png");
   }
@@ -45,11 +49,11 @@ export function getUserBodyIcon(icon: UserIcon): ImageSourcePropType {
 export function getQuestIcon(icon: QuestIcon): ImageSourcePropType {
   switch (icon) {
     case QuestIcon.Broom:
-      return require("../assets/HD/broom_closer.png");
+      return require("../assets/HD/quest_icons/broom_closer.png");
     case QuestIcon.Chest:
-      return require("../assets/HD/chest.png");
+      return require("../assets/HD/quest_icons/chest.png");
     default:
-      return require("../assets/HD/broom_closer.png");
+      return require("../assets/HD/quest_icons/broom_closer.png");
   }
 }
 

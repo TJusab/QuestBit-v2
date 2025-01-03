@@ -11,7 +11,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#a9c065"
     },
     "ios": {
       "supportsTablet": true,
@@ -19,8 +19,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#a9c065"
       },
       "package": "com.tjusab.questbit"
     },
@@ -36,6 +36,6 @@
         "projectId": "f4653627-1725-4897-a64a-b93dd02e2d96"
       }
     },
-    "owner": "thaijuice"
+    "owner": "questbit"
   }
 }

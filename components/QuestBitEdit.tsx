@@ -13,7 +13,6 @@ import { getUserBodyIcon } from "@/utils/icon";
 import CalendarModal from "./CalendarPopUp";
 import { Difficulty, Recurrence } from "../constants/enums";
 import { updateQuestBit } from '../lib/database';
-import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 interface QuestBitEditProps {
   item: QuestBit;
@@ -89,8 +88,6 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing }) => {
 
     let newDueDates: Date[] = [];
 
-    console.log("selectedDate " + selectedDate)
-
     switch (newRecurrence) {
       case Recurrence.NoRepeat:
         newDueDates = [new Date(selectedDate)];
@@ -114,10 +111,6 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing }) => {
         newDueDates = [new Date(selectedDate)];
         break;
     }
-    console.log("info")
-    console.log(deadline)
-    console.log(newRecurrence);
-    console.log(newDueDates);
     setDueDates(newDueDates);
   };
 
@@ -312,21 +305,19 @@ const QuestBitEdit: React.FC<QuestBitEditProps> = ({ item, toggleEditing }) => {
             selectedAdventurers={selectedAdventurers}
             refreshKey={refreshKey}
             text='Assign adventurers to this QuestBit'
+            except={[...questBit.assignees]}
           />
         </View>
-        <View style={styles.edit_row}>
+        <View style={styles.centeredRow}>
           {questBit.assignees && questBit.assignees.map((assignee) => (
-            <View key={assignee.$id}>
-              <Image
-                source={getUserBodyIcon(assignee.icon)}
-                style={styles.character}
-              />
-              <TouchableOpacity 
-                style={styles.remove_assignee}
-                onPress={() => handleRemoveAssignee(assignee)}>
-                <AntDesign name="minuscircle" size={25} color="red" />
-              </TouchableOpacity>
-              <Text>{assignee.username}</Text>
+            <View key={assignee.$id} style={styles.assignee}>
+                <Image source={getUserBodyIcon(assignee.icon)} style={styles.character} />
+                <TouchableOpacity
+                  style={styles.remove_assignee}
+                  onPress={() => handleRemoveAssignee(assignee)}>
+                  <AntDesign name="minuscircle" size={25} color="red" />
+                </TouchableOpacity>
+              <Text style={styles.username}>{assignee.username}</Text>
             </View>
           ))}
         </View>
@@ -354,32 +345,23 @@ const styles = StyleSheet.create({
     margin: 5,
     marginTop: 70,
   },
-  log: {
-    height: 190,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 30,
-  },
-  scroll: {
-    width: "120%",
-    height: "100%",
-    marginBottom: 10,
-    marginTop: -35,
-  },
   character: {
     width: 90,
     height: 90,
-    marginBottom: 10,
+    marginTop: 13,
   },
   title: {
     marginTop: 20,
     fontFamily: 'ZCOOL',
     fontSize: 32,
+    borderWidth: 2,
+    borderRadius: 15,
+    padding: 4,
   },
   username: {
     fontFamily: "ZCOOL",
     fontSize: 18,
-    marginBottom: -10,
+    textAlign: "center",
   },
   section: {
     marginBottom: 15,
@@ -395,6 +377,9 @@ const styles = StyleSheet.create({
     fontFamily: "ZCOOL",
     marginBottom: 10,
     marginTop: 10,
+    borderWidth: 2,
+    borderRadius: 15,
+    padding: 5,
   },
   date: {
     fontSize: 18,
@@ -405,6 +390,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginVertical: 10,
+  },
+  centeredRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
   },
   buttons: {
     flexDirection: "row",
@@ -424,17 +414,18 @@ const styles = StyleSheet.create({
   assignee: {
     alignItems: "center",
     marginRight: 10,
+    position: 'relative'
   },
-    remove_assignee: {
-      position: 'absolute',
-      bottom: 0,
-      right: 0,
-      width: 28,
-      height: 28,
-      borderRadius: 12,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
+  remove_assignee: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 28,
+    height: 28,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
     button: {
       padding: 10,
       marginTop: 10,

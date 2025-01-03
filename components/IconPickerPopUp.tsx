@@ -66,7 +66,7 @@ const IconPickerPopUp: React.FC<IconPickerPopUpProps> = ({
       <View className="flex-1 items-center justify-center">
         <View className="w-4/5 h-4/5 items-center justify-center">
           <ImageBackground
-            source={require("../assets/HD/paper.png")}
+            source={require("../assets/HD/scrolls/paper.png")}
             className="w-full h-full items-center justify-center"
             resizeMode="contain"
           >

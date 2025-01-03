@@ -57,7 +57,7 @@ export default function App() {
       <ScrollView contentContainerStyle={{ height: "100%" }}>
         <View className="flex-1 w-full h-full">
           <ImageBackground
-            source={require("../assets/HD/background1.png")}
+            source={require("../assets/HD/backgrounds/sky_grass.png")}
             className="flex-1 items-center justify-center"
             resizeMode="stretch"
           >
@@ -86,7 +86,7 @@ export default function App() {
                 onPress={() => router.push("/log-in")}
               >
                 <Image
-                  source={require("../assets/HD/button_green.png")}
+                  source={require("../assets/HD/buttons/green.png")}
                   className="w-full h-full"
                   resizeMode="contain"
                 />

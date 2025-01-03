@@ -1,7 +1,8 @@
 export enum UserIcon {
     Assassin = "Assassin",
     Witch = "Witch",
-    Fairy = "Fairy"
+    Fairy = "Fairy",
+    Demon = "Demon"
 }
 
 export enum QuestIcon {

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
-import StatusButton from "./StatusButton";
 import { Quest } from "@/constants/types";
 import { getUserBodyIcon } from "@/utils/icon";
 import { getQuestIcon } from "@/utils/icon";
@@ -33,7 +32,6 @@ const QuestDetail: React.FC<QuestDetailProps> = ({ item }) => {
     }
   }, [item.deadline]);
   
-
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
@@ -110,6 +108,7 @@ const styles = StyleSheet.create({
     fontFamily: "ZCOOL",
     fontSize: 18,
     marginBottom: -10,
+    textAlign: "center",
   },
   section: {
     marginBottom: 15,
@@ -133,8 +132,10 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
+    flexWrap: "wrap",
     alignItems: "center",
-    marginVertical: 10,
+    justifyContent: "flex-start", 
+    marginBottom: 10,
   },
   rowElement: {
     marginRight: 10,

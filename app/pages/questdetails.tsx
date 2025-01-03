@@ -12,6 +12,7 @@ import QuestEdit from "../../components/QuestEdit";
 import { router } from "expo-router";
 import { Quest, User } from "@/constants/types";
 import { getCurrentUser } from "../../lib/account";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const QuestDetails = () => {
   const parseQuest = (data: string): Quest => {
@@ -25,6 +26,8 @@ const QuestDetails = () => {
 
   const { quest } = useLocalSearchParams();
   const item: Quest = parseQuest(quest as string);
+
+  const { questbits } = useGlobalContext();
   const [isEditing, setIsEditing] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null); 
 
